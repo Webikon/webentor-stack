@@ -41,7 +41,7 @@
     "@types/wordpress__block-editor": "^14.21.2",
     "@vitejs/plugin-react": "^5.1.1",
     "@webikon/webentor-core": "^0.9.0",
-    "@webikon/webentor-configs": "^1.0.0",
+    "@webikon/webentor-configs": "^1.0.1",
     "@wordpress/block-editor": "^15.9.0",
     "@wordpress/block-library": "^9.36.0",
     "@wordpress/blocks": "^15.9.0",

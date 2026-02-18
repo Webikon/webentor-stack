@@ -1,7 +1,7 @@
 {
   "name": "@webikon/webentor-configs",
   "homepage": "https://webikon.sk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Webikon s.r.o.",
   "description": "Shared lint and formatting presets for Webentor projects.",
   "license": "MIT",
@@ -17,15 +17,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/webikon/webentor-core.git"
+    "url": "https://github.com/Webikon/webentor-stack/tree/main/packages/webentor-configs"
   },
   "engines": {
     "node": ">=20.0.0"
   },
   "type": "module",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  },
   "exports": {
     "./eslint": "./eslint.config.js",
     "./stylelint": "./stylelint.config.js",

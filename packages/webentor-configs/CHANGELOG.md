@@ -1,5 +1,9 @@
 # Webentor Configs Changelog
 
+## 1.0.1
+
+- Fix Prettier import order
+
 ## 1.0.0
 
 - Added shared ESLint, Stylelint, and Prettier presets.
