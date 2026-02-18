@@ -1,0 +1,122 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      core: ${{ steps.filter.outputs.core }}
+      configs: ${{ steps.filter.outputs.configs }}
+      setup: ${{ steps.filter.outputs.setup }}
+      starter: ${{ steps.filter.outputs.starter }}
+      docs: ${{ steps.filter.outputs.docs }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            core:
+              - 'packages/webentor-core/**'
+            configs:
+              - 'packages/webentor-configs/**'
+            setup:
+              - 'packages/webentor-setup/**'
+            starter:
+              - 'packages/webentor-starter/**'
+            docs:
+              - 'docs/**'
+
+  core:
+    needs: [changes]
+    if: ${{ needs.changes.outputs.core == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Enable corepack
+        run: corepack enable
+      - name: Install core deps
+        run: pnpm install --ignore-scripts --filter './packages/webentor-core...'
+      - name: Lint/build/test core
+        run: |
+          pnpm --filter './packages/webentor-core' --if-present run lint
+          pnpm --filter './packages/webentor-core' --if-present run build
+          pnpm --filter './packages/webentor-core' --if-present run test
+
+  configs:
+    needs: [changes]
+    if: ${{ needs.changes.outputs.configs == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Enable corepack
+        run: corepack enable
+      - name: Install configs deps
+        run: pnpm install --ignore-scripts --filter './packages/webentor-configs...'
+      - name: Lint/build/test configs
+        run: |
+          pnpm --filter './packages/webentor-configs' --if-present run lint
+          pnpm --filter './packages/webentor-configs' --if-present run build
+          pnpm --filter './packages/webentor-configs' --if-present run test
+
+  setup:
+    needs: [changes]
+    if: ${{ needs.changes.outputs.setup == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate shell scripts
+        run: |
+          find packages/webentor-setup -type f -name '*.sh' -print0 | xargs -0 -n1 bash -n
+      - name: Validate setup CLI PHP
+        run: |
+          php -l packages/webentor-setup/src/webentor-setup.php
+
+  starter:
+    needs: [changes]
+    if: ${{ needs.changes.outputs.starter == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Enable corepack
+        run: corepack enable
+      - name: Install starter root dependencies
+        working-directory: packages/webentor-starter
+        run: composer install --no-interaction --prefer-dist
+      - name: Build starter theme
+        working-directory: packages/webentor-starter/web/app/themes/webentor-theme-v2
+        run: |
+          pnpm install --ignore-scripts
+          pnpm build
+
+  docs:
+    needs: [changes]
+    if: ${{ needs.changes.outputs.docs == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Enable corepack
+        run: corepack enable
+      - name: Build docs
+        run: |
+          pnpm --dir docs install --ignore-scripts
+          pnpm --dir docs docs:build

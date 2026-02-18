@@ -1,0 +1,110 @@
+/* Webentor Core Utilities */
+@import '../../../node_modules/@webikon/webentor-core/resources/styles/common/_utilities.css';
+
+@utility container {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: var(--container-padding);
+  max-width: var(--container-width);
+}
+
+/* Typography utilities */
+@utility text-h1 {
+  font-family: var(--font-heading);
+  font-size: var(--text-40);
+  line-height: 1.2;
+  font-weight: var(--font-weight-700);
+
+  @media (min-width: theme(--breakpoint-md)) {
+    font-size: var(--text-48);
+  }
+}
+
+@utility text-h2 {
+  font-family: var(--font-heading);
+  font-size: var(--text-36);
+  line-height: 1.2;
+  font-weight: var(--font-weight-700);
+
+  @media (min-width: theme(--breakpoint-md)) {
+    font-size: var(--text-44);
+  }
+}
+
+@utility text-h3 {
+  font-family: var(--font-heading);
+  font-size: var(--text-32);
+  line-height: 1;
+  letter-spacing: -2%;
+  font-weight: var(--font-weight-700);
+
+  @media (min-width: theme(--breakpoint-md)) {
+    font-size: var(--text-40);
+  }
+}
+
+@utility text-h4 {
+  font-family: var(--font-heading);
+  font-size: var(--text-24);
+  line-height: 1;
+  font-weight: var(--font-weight-700);
+}
+
+@utility text-h5 {
+  font-family: var(--font-heading);
+  font-size: var(--text-20);
+  line-height: 1.6;
+  font-weight: var(--font-weight-600);
+}
+
+@utility text-h6 {
+  font-family: var(--font-heading);
+  font-size: var(--text-20);
+  line-height: 1.2;
+  font-weight: var(--font-weight-700);
+}
+@utility text-subtitle {
+  font-family: var(--font-heading);
+  font-size: var(--text-20);
+  line-height: 1;
+  font-weight: var(--font-weight-700);
+}
+@utility text-heading {
+  font-family: var(--font-heading);
+  font-size: var(--text-24);
+  line-height: 1.2;
+  letter-spacing: -2%;
+  font-weight: var(--font-weight-600);
+}
+
+@utility text-subheading {
+  font-family: var(--font-heading);
+  font-size: var(--text-18);
+  line-height: 1.2;
+  font-weight: var(--font-weight-400);
+}
+
+@utility text-body {
+  font-family: var(--font-primary);
+  font-size: var(--text-16);
+  line-height: 1.4;
+  font-weight: var(--font-weight-400);
+}
+
+@utility text-body-l {
+  font-family: var(--font-primary);
+  font-size: var(--text-18);
+  line-height: 1.2;
+  font-weight: var(--font-weight-400);
+}
+
+@utility text-body-s {
+  font-family: var(--font-primary);
+  font-size: var(--text-14);
+  line-height: 1.4;
+  font-weight: var(--font-weight-400);
+}
+
+@utility text-small-caps {
+  font-variant: small-caps;
+}

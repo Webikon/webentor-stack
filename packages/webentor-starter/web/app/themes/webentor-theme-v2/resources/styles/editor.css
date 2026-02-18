@@ -1,0 +1,18 @@
+@import 'tailwindcss' important;
+@source "../core-components/";
+@source "../views/";
+@source "../blocks/";
+@source "../../app/";
+@source "../../whitelisted-tw-classes.json";
+
+/* Tailwind Config */
+@import './common/_theme';
+@import './common/_utilities';
+
+/** Common **/
+@import './common/_fonts';
+@import './common/_global';
+@import './common/_editor';
+
+/** Components */
+/* @import 'components/table'; */

@@ -1,0 +1,6 @@
+{
+	"XDebug Break": {
+		"prefix": "xd",
+		"body": "@xdebugBreak"
+	}
+}

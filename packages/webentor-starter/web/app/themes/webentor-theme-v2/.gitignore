@@ -1,0 +1,12 @@
+/node_modules
+/vendor
+/public
+npm-debug.log
+yarn-error.log
+.yarn
+
+resources/languages/*.po~
+resources/languages/*.po
+
+config.local.json
+whitelisted-tw-classes.json

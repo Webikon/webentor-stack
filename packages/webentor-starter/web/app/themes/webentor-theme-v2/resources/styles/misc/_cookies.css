@@ -1,0 +1,14 @@
+.webikon-cookies-bar__btn {
+  border-radius: 4px;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.webikon-cookies-switcher__btn,
+.webikon-cookies-bar__btn--accept {
+  background-color: var(--wbtr-color-primary);
+
+  border-radius: 4px;
+}

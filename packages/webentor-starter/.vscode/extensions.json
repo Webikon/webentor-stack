@@ -1,0 +1,30 @@
+{
+  "recommendations": [
+    // Linters & intellisense
+    "shevaua.phpcs",
+    "junstyle.php-cs-fixer",
+    "bmewburn.vscode-intelephense-client",
+    "namesmt.blade-php",
+    "onecentlin.laravel-blade",
+    "esbenp.prettier-vscode",
+    "editorconfig.editorconfig",
+    "dbaeumer.vscode-eslint",
+    "stylelint.vscode-stylelint",
+    "adrianwilczynski.alpine-js-intellisense",
+    "bradlc.vscode-tailwindcss",
+    "jacobcassidy.css-nesting-syntax-highlighting",
+    "xdebug.php-debug",
+    // WP related
+    "wordpresstoolbox.wordpress-toolbox",
+    "johnbillion.vscode-wordpress-hooks",
+    "tungvn.wordpress-snippet",
+    // Others
+    "alefragnani.project-manager",
+    "mhutchie.git-graph",
+    "waderyan.gitblame",
+    "donjayamanne.githistory",
+    "mrmlnc.vscode-duplicate",
+    "vilicvane.sensitive-replace",
+    "simonsiefke.svg-preview"
+  ]
+}

@@ -1,0 +1,160 @@
+@reference "../../styles/app.css";
+
+:root {
+  --btn-text-color: var(--color-white);
+  --btn-bg-color: var(--wbtr-color-primary);
+  --btn-border-color: var(--wbtr-color-primary);
+
+  --btn-hover-text-color: var(--color-white);
+  --btn-hover-bg-color: var(--wbtr-color-primary-hover);
+  --btn-hover-border-color: var(--wbtr-color-primary-hover);
+}
+
+.btn {
+  @apply gap-2 border;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-align: center;
+  position: relative;
+  text-decoration: none;
+  box-shadow: none;
+  width: fit-content;
+  padding: 16px 16px;
+  font-size: 18px;
+  line-height: 1.4;
+  color: var(--btn-text-color);
+  background-color: var(--btn-bg-color);
+  border-color: var(--btn-border-color);
+
+  &:hover,
+  &:focus,
+  &.is-selected,
+  &.btn--selected {
+    color: var(--btn-hover-text-color);
+    background-color: var(--btn-hover-bg-color);
+    border-color: var(--btn-hover-border-color);
+  }
+
+  .svg-icon {
+    @apply size-3 fill-current;
+
+    transition: transform 0.25s ease-in-out;
+  }
+
+  &.btn--primary {
+    --btn-bg-color: var(--wbtr-color-primary);
+    --btn-border-color: var(--wbtr-color-primary);
+  }
+
+  &.btn--secondary {
+    --btn-bg-color: var(--wbtr-color-secondary);
+    --btn-border-color: var(--wbtr-color-secondary);
+
+    --btn-hover-text-color: var(--color-white);
+    --btn-hover-bg-color: var(--wbtr-color-secondary-hover);
+    --btn-hover-border-color: var(--wbtr-color-secondary-hover);
+  }
+
+  &.btn--subtle {
+    --btn-bg-color: transparent;
+    --btn-border-color: var(--wbtr-color-primary);
+    --btn-text-color: var(--color-grey-900);
+
+    --btn-hover-text-color: var(--wbtr-color-primary);
+    --btn-hover-bg-color: transparent;
+    --btn-hover-border-color: var(--wbtr-color-primary);
+  }
+
+  &.btn--link {
+    &::after {
+      @apply rounded-full;
+
+      content: 'arrow_outward';
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--btn-text-color);
+      font-family: 'Material Symbols Outlined', sans-serif;
+      color: var(--btn-bg-color);
+      width: 16px;
+      height: 16px;
+      font-size: 14px;
+      font-weight: bold;
+      line-height: 1;
+    }
+  }
+
+  &.btn--size-small {
+    @apply gap-1;
+
+    padding: 8px 12px;
+    font-size: 16px;
+    border-radius: var(--radius-xs);
+
+    &.btn--icon-alone {
+      @apply p-2;
+    }
+
+    .svg-icon {
+      @apply size-3;
+    }
+  }
+
+  &.btn--size-medium {
+    &.btn--icon-alone {
+      @apply p-3;
+    }
+
+    .svg-icon {
+      @apply size-4 fill-current;
+    }
+  }
+
+  &.btn--size-large {
+    padding: 16px 24px;
+
+    &.btn--icon-alone {
+      @apply p-3;
+    }
+
+    .svg-icon {
+      @apply size-4 fill-current;
+    }
+  }
+
+  &.btn--icon-alone {
+    .btn__text {
+      display: none;
+    }
+  }
+
+  &.btn--icon-left {
+    .svg-icon {
+      order: -1;
+    }
+  }
+
+  &.btn--icon-rotate-90 {
+    .svg-icon {
+      transform: rotate(90deg);
+    }
+  }
+
+  &:disabled,
+  &.is-disabled,
+  &.btn--disabled {
+    @apply cursor-not-allowed;
+
+    --btn-text-color: var(--color-grey-300);
+    --btn-bg-color: transparent;
+    --btn-border-color: var(--color-grey-200);
+
+    --btn-hover-text-color: var(--color-grey-300);
+    --btn-hover-bg-color: transparent;
+    --btn-hover-border-color: var(--color-grey-200);
+  }
+}

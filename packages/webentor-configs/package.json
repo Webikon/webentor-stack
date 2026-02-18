@@ -1,0 +1,58 @@
+{
+  "name": "@webikon/webentor-configs",
+  "homepage": "https://webikon.sk",
+  "version": "1.0.0",
+  "author": "Webikon s.r.o.",
+  "description": "Shared lint and formatting presets for Webentor projects.",
+  "license": "MIT",
+  "maintainers": [
+    {
+      "name": "Webikon s.r.o.",
+      "email": "support@webikon.sk"
+    },
+    {
+      "name": "Pavol Caban",
+      "email": "pavol.caban@webikon.sk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webikon/webentor-core.git"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "type": "module",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "exports": {
+    "./eslint": "./eslint.config.js",
+    "./stylelint": "./stylelint.config.js",
+    "./prettier": "./prettier.config.js",
+    "./phpcs.xml": "./phpcs.xml",
+    "./bladeformatter": "./.bladeformatterrc",
+    "./editorconfig": "./.editorconfig"
+  },
+  "peerDependencies": {
+    "@eslint/js": "^9.0.0",
+    "eslint": "^9.0.0",
+    "eslint-config-prettier": "^10.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-react": "^7.0.0",
+    "globals": "^16.0.0",
+    "stylelint": "^16.0.0",
+    "stylelint-config-recommended": "^17.0.0",
+    "typescript-eslint": "^8.0.0"
+  },
+  "files": [
+    "eslint.config.js",
+    "stylelint.config.js",
+    "prettier.config.js",
+    "phpcs.xml",
+    ".bladeformatterrc",
+    ".editorconfig",
+    "README.md",
+    "CHANGELOG.md"
+  ]
+}

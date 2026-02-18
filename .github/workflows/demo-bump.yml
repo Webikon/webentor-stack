@@ -1,0 +1,19 @@
+name: demo-bump
+
+on:
+  workflow_run:
+    workflows: ['release']
+    types: [completed]
+
+jobs:
+  bump:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trigger demo bump automation
+        env:
+          WEBENTOR_DEMO_REPO: ${{ secrets.WEBENTOR_DEMO_REPO }}
+          WEBENTOR_DEMO_TOKEN: ${{ secrets.WEBENTOR_DEMO_TOKEN }}
+          RELEASE_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: bash scripts/bump-demo.sh

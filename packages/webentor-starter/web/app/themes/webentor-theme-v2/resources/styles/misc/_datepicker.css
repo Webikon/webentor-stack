@@ -1,0 +1,105 @@
+:root {
+  --datepicker-width: 300px;
+  --datepicker-padding: 15px;
+  --datepicker-border: 1px solid var(--color-grey-100);
+  --datepicker-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --datepicker-header-padding: 8px 0;
+  --datepicker-header-margin: 8px;
+  --datepicker-nav-size: 24px;
+  --datepicker-nav-top: 8px;
+  --datepicker-nav-side: 5px;
+  --datepicker-cell-padding: 8px;
+  --datepicker-border-radius: 4px;
+}
+
+.ui-datepicker {
+  background: var(--color-white);
+  border: var(--datepicker-border);
+  padding: var(--datepicker-padding);
+  width: var(--datepicker-width);
+  box-shadow: var(--datepicker-shadow);
+
+  .ui-datepicker-header {
+    position: relative;
+    padding: var(--datepicker-header-padding);
+    margin-bottom: var(--datepicker-header-margin);
+  }
+
+  .ui-datepicker-prev,
+  .ui-datepicker-next {
+    position: absolute;
+    top: var(--datepicker-nav-top);
+    width: var(--datepicker-nav-size);
+    height: var(--datepicker-nav-size);
+    text-indent: -9999px;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+  }
+
+  .ui-datepicker-prev {
+    left: var(--datepicker-nav-side);
+    &:before {
+      content: '←';
+      text-indent: 0;
+      position: absolute;
+      left: 0;
+      color: var(--color-grey-400);
+    }
+  }
+
+  .ui-datepicker-next {
+    right: var(--datepicker-nav-side);
+    &:before {
+      content: '→';
+      text-indent: 0;
+      position: absolute;
+      right: 0;
+      color: var(--color-grey-400);
+    }
+  }
+
+  .ui-datepicker-title {
+    text-align: center;
+    font-weight: 500;
+    color: var(--color-grey-900);
+  }
+
+  .ui-datepicker-calendar {
+    width: 100%;
+    border-collapse: collapse;
+
+    th {
+      padding: var(--datepicker-cell-padding);
+      text-align: center;
+      font-weight: 500;
+      color: var(--color-grey-400);
+    }
+
+    td {
+      padding: var(--datepicker-cell-padding);
+      text-align: center;
+
+      a {
+        display: block;
+        padding: var(--datepicker-cell-padding);
+        text-decoration: none;
+        color: var(--color-grey-900);
+        border-radius: var(--datepicker-border-radius);
+
+        &:hover {
+          background: var(--color-grey-50);
+        }
+      }
+
+      &.ui-datepicker-today a {
+        background: var(--color-grey-50);
+      }
+
+      &.ui-datepicker-current-day a {
+        background: var(--wbtr-color-primary);
+        color: var(--color-white);
+      }
+    }
+  }
+}

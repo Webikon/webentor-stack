@@ -1,0 +1,44 @@
+{
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[php]": {
+    "editor.defaultFormatter": "junstyle.php-cs-fixer"
+  },
+  "[blade]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "editor.formatOnSaveMode": "file",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "stylelint.enable": true,
+  "tailwindCSS.emmetCompletions": true,
+  "tailwindCSS.includeLanguages": {
+    "blade": "html"
+  },
+  // Support TW Intellisense for @class() blade directive
+  "tailwindCSS.experimental.classRegex": [["@class\\(\\[([\\s\\S]*?)\\]", "\\'([_a-zA-Z0-9-\\s]*)\\'"]],
+  "tailwindCSS.experimental.configFile": "web/app/themes/webentor-theme-v2/resources/styles/app.css",
+  "prettier.documentSelectors": ["**/*.blade.php"],
+  "php-cs-fixer.exclude": ["**/web/app/plugins/**", "**/web/wp/**", "**/vendor/**"]
+}

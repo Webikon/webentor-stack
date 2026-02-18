@@ -1,0 +1,44 @@
+{
+  "version": "1.0.0",
+  "description": "Initial migration from submodule-based starter to package/subtree contracts.",
+  "transforms": [
+    {
+      "type": "remove_path",
+      "path": ".gitmodules"
+    },
+    {
+      "type": "replace_text",
+      "path": "web/app/themes/webentor-theme-v2/package.json",
+      "search": "\"@webikon/webentor-core\": \"link:webentor-core\"",
+      "replace": "\"@webikon/webentor-core\": \"^1.0.0\""
+    },
+    {
+      "type": "replace_text",
+      "path": "web/app/themes/webentor-theme-v2/tsconfig.json",
+      "search": "\"@webentorCore/*\": [\"./webentor-core/core-js/*\"]",
+      "replace": "\"@webentorCore/*\": [\"./node_modules/@webikon/webentor-core/core-js/*\"]"
+    },
+    {
+      "type": "replace_text",
+      "path": "web/app/themes/webentor-theme-v2/vite.config.js",
+      "search": "'@webentorCore': '/webentor-core/core-js'",
+      "replace": "'@webentorCore': '/node_modules/@webikon/webentor-core/core-js'"
+    },
+    {
+      "type": "replace_text",
+      "path": "web/app/themes/webentor-theme-v2/webentor-config.ts",
+      "search": "from './webentor-core/core-js/config/webentor-config'",
+      "replace": "from './node_modules/@webikon/webentor-core/core-js/config/webentor-config'"
+    },
+    {
+      "type": "replace_text",
+      "path": "web/app/themes/webentor-theme-v2/webentor-config.ts",
+      "search": "from './webentor-core/core-js/types/_webentor-config'",
+      "replace": "from './node_modules/@webikon/webentor-core/core-js/types/_webentor-config'"
+    },
+    {
+      "type": "ensure_directory",
+      "path": ".webentor"
+    }
+  ]
+}

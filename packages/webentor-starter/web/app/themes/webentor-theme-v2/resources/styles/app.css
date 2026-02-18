@@ -1,0 +1,32 @@
+@import 'tailwindcss';
+@source "../core-components/";
+@source "../views/";
+@source "../blocks/";
+@source "../../app/";
+@source "../../whitelisted-tw-classes.json";
+
+/* Tailwind Config */
+@import './common/_theme';
+@import './common/_utilities';
+
+/** Common **/
+@import './common/_fonts';
+@import './common/_global';
+@import './common/_form';
+@import './common/_typography';
+
+/** Components */
+/* @import 'components/table'; */
+
+/** Partials */
+/* @import 'partials/header'; */
+
+/** Sections */
+/* @import 'sections/header'; */
+
+/** Page templates */
+/* @import 'templates/blog'; */
+
+/** Misc */
+@import './misc/_cookies';
+@import './misc/_datepicker';

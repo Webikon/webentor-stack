@@ -1,0 +1,63 @@
+{
+  "name": "webikon/webentor-theme",
+  "type": "wordpress-theme",
+  "version": "2.0.3",
+  "description": "Webentor starter theme",
+  "homepage": "https://webikon.sk",
+  "authors": [
+    {
+      "name": "Roots",
+      "homepage": "https://github.com/roots/sage"
+    },
+    {
+      "name": "Webikon s.r.o.",
+      "email": "support@webikon.sk",
+      "homepage": "https://webikon.sk"
+    },
+    {
+      "name": "Pavol Caban",
+      "email": "pavol.caban@webikon.sk",
+      "homepage": "https://webikon.sk"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "github",
+      "url": "https://github.com/webikon/webentor-core.git"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/"
+    }
+  },
+  "require": {
+    "php": ">=8.3",
+    "johnbillion/extended-cpts": "^5.0",
+    "log1x/acf-composer": "^3.0",
+    "log1x/sage-directives": "^2.0",
+    "log1x/sage-svg": "^2.0",
+    "roots/acorn": "^5.0",
+    "roots/acorn-prettify": "^1.0",
+    "stoutlogic/acf-builder": "^1.12",
+    "webikon/webentor-core": "^0.9"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.8.0"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "scripts": {
+    "post-autoload-dump": [
+      "Roots\\Acorn\\ComposerScripts::postAutoloadDump"
+    ],
+    "lint": [
+      "phpcs --extensions=php --standard=PSR12 app"
+    ]
+  }
+}

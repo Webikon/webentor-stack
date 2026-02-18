@@ -1,0 +1,28 @@
+name: split-webentor-starter
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to mirror (defaults to current ref tag)'
+        required: false
+
+jobs:
+  split:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Split and mirror starter package
+        env:
+          STARTER_MIRROR_REPO: ${{ secrets.STARTER_MIRROR_REPO }}
+          STARTER_MIRROR_TOKEN: ${{ secrets.STARTER_MIRROR_TOKEN }}
+          INPUT_TAG: ${{ github.event.inputs.tag }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+        run: bash scripts/split-webentor-starter.sh

@@ -1,0 +1,22 @@
+@reference '../../styles/app.css';
+
+.b-hero-banner {
+  height: calc(100svh - 73.6px);
+
+  @media screen and (min-width: theme(--breakpoint-md)) {
+    height: calc(100svh - 85.6px);
+  }
+
+  @media screen and (min-width: theme(--breakpoint-lg)) {
+    height: calc(100svh - 77.6px);
+  }
+
+  .b-hero-banner-content {
+    .swiper-initialized & {
+      @media screen and (theme(--breakpoint-md) <= width <= 1850px) {
+        padding-left: 6rem !important;
+        padding-right: 6rem !important;
+      }
+    }
+  }
+}

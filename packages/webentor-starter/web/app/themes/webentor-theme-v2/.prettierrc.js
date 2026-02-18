@@ -1,0 +1,37 @@
+import { createPrettierConfig } from '@webikon/webentor-configs/prettier';
+
+// Preserve project import grouping while inheriting shared formatting defaults.
+export default createPrettierConfig({
+  tailwindStylesheet: './resources/styles/app.css',
+  importOrder: [
+    '^react',
+    '<THIRD_PARTY_MODULES>',
+    '',
+    '^@webentorCore',
+    '^@webentorCore/(.*)$',
+    '',
+    '^@blocks',
+    '^@blocks/(.*)$',
+    '',
+    '^@scripts',
+    '^@scripts/(.*)$',
+    '^[.]',
+    '',
+    '^@images',
+    '^@images/(.*)$',
+    '',
+    '^@fonts',
+    '^@fonts/(.*)$',
+    '',
+    '^@styles',
+    '^@styles/(.*)$',
+    '',
+    '<TYPES>^[.]',
+    '<TYPES>',
+    '^@types',
+    '^@types/(.*)$',
+    '',
+    '^(?!.*[.]css$)[./].*$',
+    '.css$',
+  ],
+});

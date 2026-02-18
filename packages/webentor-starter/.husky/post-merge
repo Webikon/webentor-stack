@@ -1,0 +1,20 @@
+# Skip install on CI
+[ -n "$CI" ] && exit 0
+
+changed_files="$(git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD)"
+
+# Resolve theme path from scripts/.env.setup to keep notifications reusable.
+THEME_NAME="$(grep '^WP_THEMES=' scripts/.env.setup 2>/dev/null | head -1 | cut -d'=' -f2 | tr -d '\"' | awk '{print $1}')"
+THEME_NAME="${THEME_NAME:-webentor-theme-v2}"
+THEME_DIR="web/app/themes/${THEME_NAME}"
+
+check_run() {
+  echo "$changed_files" | grep -E --quiet "$1" && echo "!!!!!!\nFile $1 changed, make sure to run $2\n!!!!!! \n"
+}
+
+check_run "${THEME_DIR}/package.json" "'pnpm' in the theme directory"
+check_run "${THEME_DIR}/pnpm-lock.yaml" "'pnpm' in the theme directory"
+check_run "${THEME_DIR}/composer.json" "'composer install' in the theme directory"
+check_run "${THEME_DIR}/composer.lock" "'composer install' in the theme directory"
+check_run composer.json "'composer install' in the root directory"
+check_run composer.lock "'composer install' in the root directory"

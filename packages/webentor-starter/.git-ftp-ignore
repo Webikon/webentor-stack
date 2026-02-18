@@ -1,0 +1,15 @@
+web/app/plugins/*
+web/app/mu-plugins/*
+web/app/themes/webentor-theme/*
+web/app/themes/webentor-theme-v2/*
+readme.md
+LICENCE.md
+changelog.md
+
+.devcontainer/*
+LocalValetDriver.php
+herd.yml
+.vscode/*
+.husky/*
+.vscode/*
+scripts/*

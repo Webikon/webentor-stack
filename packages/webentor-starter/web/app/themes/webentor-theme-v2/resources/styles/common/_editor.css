@@ -1,0 +1,39 @@
+.editor-styles-wrapper {
+  h1:not([class*='text-h']) {
+    @apply text-h1;
+  }
+
+  h2:not([class*='text-h']) {
+    @apply text-h2;
+  }
+
+  h3:not([class*='text-h']) {
+    @apply text-h3;
+  }
+
+  h4:not([class*='text-h']) {
+    @apply text-h4;
+  }
+
+  h5:not([class*='text-h']) {
+    @apply text-h5;
+  }
+
+  h6:not([class*='text-h']) {
+    @apply text-h6;
+  }
+}
+
+/* Fix WP default styles */
+.editor-styles-wrapper
+  :where(:not(.is-layout-flex, .is-layout-grid))
+  > .wp-block {
+  margin-left: initial;
+  margin-right: initial;
+}
+
+html :where(.wp-block) {
+  max-width: 100%;
+  margin-top: initial;
+  margin-bottom: initial;
+}

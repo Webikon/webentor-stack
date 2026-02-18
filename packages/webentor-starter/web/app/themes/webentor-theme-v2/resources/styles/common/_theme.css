@@ -1,0 +1,118 @@
+/* See TW defaults here https://tailwindcss.com/docs/theme#default-theme-variable-reference */
+@theme {
+  /* Fonts */
+  --font-*: initial;
+  --font-primary: 'Source Sans Pro', 'Arial';
+  --font-secondary: 'Source Sans Pro', 'Arial';
+  --font-heading: 'Source Sans Pro', 'Arial';
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+    'Courier New', monospace;
+  --default-font-family: var(--font-primary);
+
+  --font-weight-300: 300;
+  --font-weight-400: 400;
+  --font-weight-500: 500;
+  --font-weight-600: 600;
+  --font-weight-700: 700;
+  --font-weight-900: 900;
+
+  --leading-*: initial;
+  --leading-100: 1;
+  --leading-110: 1.1;
+  --leading-125: 1.25;
+  --leading-150: 1.5;
+
+  --text-*: initial;
+  --text-10: 0.625rem;
+  --text-12: 0.75rem;
+  --text-14: 0.875rem;
+  --text-16: 1rem;
+  --text-18: 1.125rem;
+  --text-20: 1.25rem;
+  --text-22: 1.375rem;
+  --text-24: 1.5rem;
+  --text-26: 1.625rem;
+  --text-28: 1.75rem;
+  --text-30: 1.875rem;
+  --text-32: 2rem;
+  --text-34: 2.125rem;
+  --text-36: 2.25rem;
+  --text-38: 2.375rem;
+  --text-40: 2.5rem;
+  --text-44: 2.75rem;
+  --text-48: 3rem;
+  --text-50: 3.125rem;
+  --text-56: 3.5rem;
+  --text-60: 3.75rem;
+  --text-80: 5rem;
+
+  /* Container */
+  --container-padding: 16px;
+  --container-width: 1352px;
+
+  /* Breakpoints */
+  --breakpoint-*: initial;
+  --breakpoint-sm: 30rem; /* 480px */
+  --breakpoint-md: 48rem; /* 768px */
+  --breakpoint-lg: 64rem; /* 1024px */
+  --breakpoint-xl: 75rem; /* 1200px */
+  --breakpoint-2xl: 100rem; /* 1600px */
+
+  /* Borders */
+  --radius-*: initial;
+  --radius-none: 0;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-3xl: 24px;
+  --radius-full: 9999px;
+
+  /* Colors */
+  --color-*: initial;
+  --color-grey: #6b7280;
+  --color-editor-border: #ddd;
+
+  --color-white: #fff;
+  --color-black: #000;
+
+  --color-red-light: #fbdae2;
+  --color-red: #e93165;
+  --color-red-dark: #75142f;
+
+  --color-blue-light: #e2e2f4;
+  --color-blue: #2a2868;
+  --color-blue-dark: #22205b;
+
+  --color-grey-50: #f3f3f3;
+  --color-grey-100: #f4f4f4;
+  --color-grey-200: #a9b2c1;
+  --color-grey-300: #808da3;
+  --color-grey-400: #5a677c;
+  --color-grey-500: #3b4351;
+  --color-grey-600: #2f3641;
+  --color-grey-700: #252a32;
+  --color-grey-800: #181b20;
+  --color-grey-900: #0d0f12;
+  --color-grey-950: #060709;
+
+  --color-warning: #f9862f;
+  --color-success: #42a844;
+  --color-danger: #dc3545;
+}
+
+/* Custom variables */
+:root {
+  --wbtr-color-primary: var(--color-red);
+  --wbtr-color-primary-hover: var(--color-red-dark);
+
+  --wbtr-color-secondary: var(--color-blue);
+  --wbtr-color-secondary-hover: var(--color-blue-dark);
+
+  --wbtr-color-warning: var(--color-warning);
+  --wbtr-color-success: var(--color-success);
+  --wbtr-color-danger: var(--color-danger);
+}

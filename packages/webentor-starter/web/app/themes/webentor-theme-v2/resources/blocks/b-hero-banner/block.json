@@ -1,0 +1,31 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Webikon/webentor-core/refs/heads/main/schemas/webentor-block.json",
+  "name": "webentor/b-hero-banner",
+  "apiVersion": 3,
+  "title": "Hero Banner",
+  "description": "Hero Banner block with background image and content.",
+  "category": "webentor-blocks",
+  "icon": "cover-image",
+  "keywords": ["hero", "banner", "homepage", "banner"],
+  "attributes": {
+    "anchor": {
+      "type": "string",
+      "default": ""
+    },
+    "img": {
+      "type": "object",
+      "default": null
+    },
+    "mobileImg": {
+      "type": "object"
+    }
+  },
+  "supports": {
+    "anchor": true,
+    "color": {
+      "background": true,
+      "text": false
+    },
+    "webentor": {}
+  }
+}

@@ -1,0 +1,18 @@
+:root {
+  /* Primary brand palette used by links/buttons in light mode. */
+  --vp-c-brand-1: #9C2B51;
+  --vp-c-brand-2: #b23a62;
+  --vp-c-brand-3: #c44f76;
+  --vp-c-brand-soft: rgba(156, 43, 81, 0.16);
+
+  /* Backward-compatible alias expected by some VitePress internals/plugins. */
+  --vp-c-brand: #9C2B51;
+}
+
+.dark {
+  /* Slightly brighter variants improve contrast in dark mode. */
+  --vp-c-brand-1: #f6ab9a;
+  --vp-c-brand-2: #c44f76;
+  --vp-c-brand-3: #9C2B51;
+  --vp-c-brand-soft: rgba(178, 58, 98, 0.2);
+}

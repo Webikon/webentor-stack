@@ -1,0 +1,13 @@
+services:
+  typesense:
+    image: typesense/typesense:29.0
+    container_name: ts-webentor
+    restart: unless-stopped
+    ports:
+      - "${WTC_TS_NODE_PORT}:${WTC_TS_NODE_PORT}"
+    volumes:
+      - ./typesense-data:/data
+    environment:
+      TYPESENSE_DATA_DIR: /data
+      TYPESENSE_API_KEY: "${WTC_TS_API_KEY:-local}"
+      TYPESENSE_ENABLE_CORS: 'true'

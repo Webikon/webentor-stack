@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    // Basics
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "module": "ESNext",
+    "target": "ESNext",
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "moduleResolution": "node",
+    "noFallthroughCasesInSwitch": true,
+    "outDir": "dist",
+    "skipLibCheck": true,
+
+    /**
+     * Resolve aliases
+     */
+    "paths": {
+      "@webentorCore/*": ["./node_modules/@webikon/webentor-core/core-js/*"],
+      "@types": ["./resources/scripts/types"],
+      "@fonts/*": ["./resources/fonts/*"],
+      "@images/*": ["./resources/images/*"],
+      "@scripts/*": ["./resources/scripts/*"],
+      "@styles/*": ["./resources/styles/*"],
+      "@blocks/*": ["./resources/blocks/*"]
+    },
+
+    // Enable React JSX support
+    "jsx": "react-jsx"
+  },
+  "files": ["vite.config.js"],
+  "include": ["resources"],
+  "exclude": ["node_modules", "public", "vendor"]
+}

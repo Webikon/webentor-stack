@@ -1,0 +1,17 @@
+# Skip install on CI
+[ -n "$CI" ] && exit 0
+
+# Grumphp env vars
+export GRUMPHP_GIT_WORKING_DIR="$(git rev-parse --show-toplevel)"
+
+# Run GrumPHP & PHPCS
+(cd "./" && printf "%s\n" "${DIFF}" | exec './vendor/bin/grumphp' 'git:pre-commit')
+
+# Resolve theme path from scripts/.env.setup to keep hooks project-agnostic.
+THEME_NAME="$(grep '^WP_THEMES=' scripts/.env.setup 2>/dev/null | head -1 | cut -d'=' -f2 | tr -d '\"' | awk '{print $1}')"
+THEME_NAME="${THEME_NAME:-webentor-theme-v2}"
+THEME_DIR="web/app/themes/${THEME_NAME}"
+
+if [ -d "${THEME_DIR}" ]; then
+  (cd "${THEME_DIR}" && npx lint-staged)
+fi

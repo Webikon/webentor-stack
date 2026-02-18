@@ -1,0 +1,23 @@
+grumphp:
+  tasks:
+    phpcs:
+      standard: []
+      ignore_patterns:
+        [
+          LocalValetDriver.php,
+          ./vendor/*,
+          ./web/wp/*,
+          ./web/app/plugins/*,
+          ./web/app/uploads/*,
+          ./web/app/advanced-cache.php,
+          ./web/app/object-cache.php,
+          ./web/app/wp-rocket-config/*,
+          ./web/app/mu-plugins/disable-comments.php,
+          "nav-walker.php",
+          "*.blade.php",
+        ]
+    # phpcsfixer:
+    #   config: ".php-cs-fixer.dist.php"
+  fixer:
+    enabled: true
+    fix_by_default: true

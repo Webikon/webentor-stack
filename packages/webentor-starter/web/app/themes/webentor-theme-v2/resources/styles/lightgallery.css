@@ -1,0 +1,19 @@
+@import 'lightgallery/css/lightgallery';
+@import 'lightgallery/css/lg-zoom';
+@import 'lightgallery/css/lg-thumbnail';
+
+.admin-bar {
+  .lg-outer {
+    margin-top: 32px;
+    height: calc(100% - 32px);
+
+    @media screen and (max-width: 782px) {
+      margin-top: 46px;
+      height: calc(100% - 46px);
+    }
+  }
+}
+
+.lg-icon:focus-visible {
+  outline: rgba(0 0 0 / 60%);
+}

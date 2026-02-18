@@ -1,0 +1,45 @@
+# Application
+web/app/plugins/*
+!web/app/plugins/.gitkeep
+web/app/mu-plugins/*/
+web/app/themes/twentytwentyfour/
+web/app/upgrade
+web/app/uploads/*
+!web/app/uploads/.gitkeep
+web/app/cache/*
+web/app/languages/*
+web/app/wp-rocket-config/*
+web/app/advanced-cache.php
+web/app/object-cache.php
+
+# WordPress
+web/wp
+web/.htaccess
+
+# Logs
+*.log
+
+# Dotenv
+.env
+.env.*
+!.env.example
+
+# Composer
+/vendor
+
+# WP-CLI
+wp-cli.local.yml
+
+node_modules
+local-adminer-*
+.ddev
+wp-config-ddev.php
+*.sql
+*.sql.gz
+.lando.yml
+$XDG_CACHE_HOME
+.env
+.devbox
+auth.json
+.php-cs-fixer.cache
+upgrade-report-*.md

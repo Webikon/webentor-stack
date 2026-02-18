@@ -1,0 +1,9 @@
+{
+  "starterVersion": "1.0.0-local",
+  "coreVersion": "1.0.0-local",
+  "configsVersion": "1.0.0-local",
+  "phpVersion": ">=8.2",
+  "nodeVersion": ">=20.0.0",
+  "setupCliVersion": "1.0.0",
+  "createdAt": "2026-02-15T00:00:00Z"
+}

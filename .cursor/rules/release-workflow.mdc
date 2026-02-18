@@ -1,0 +1,39 @@
+---
+description: Monorepo release workflow for package versioning, publishing, and mirror handoff
+alwaysApply: false
+---
+
+# Webentor Release Workflow
+
+Use these steps whenever a request involves releasing, versioning, publishing, or post-release validation.
+
+1. Pre-release checks:
+   - Confirm CI is green for the target branch/PR.
+   - Confirm a changeset exists in `.changeset/` for package changes.
+2. Add/update changeset:
+   - Run `pnpm changeset`.
+   - Select affected package(s) and semver bump type.
+   - Write a short, user-facing summary.
+3. PR flow:
+   - Open PR and wait for `ci.yml` checks to pass.
+   - Merge to `main` only after CI and reviewer approval.
+4. Automated versioning/publish:
+   - `release.yml` runs on push to `main`.
+   - Changesets action opens/updates the "Version Packages" PR.
+   - Merging that PR updates package versions/changelogs and publishes to npm.
+5. Post-release automation:
+   - `demo-bump.yml` runs after release success and calls `scripts/bump-demo.sh`.
+   - This is currently a placeholder handoff for downstream integration.
+6. Mirror flow:
+   - Push a `v*` tag to trigger `split-webentor-setup.yml` and `split-webentor-starter.yml`.
+   - Mirrors use `git subtree split` to publish package contents to standalone repos.
+7. Validation:
+   - Verify published versions for `webentor-core` and `webentor-configs` on npm.
+   - Verify mirror repos received updates for `webentor-setup` and `webentor-starter`.
+
+## Guardrails
+
+- Only `webentor-core` and `webentor-configs` are npm-published via Changesets.
+- `webentor-setup` and `webentor-starter` are delivered via split-mirror workflows.
+- Changesets baseline config is `.changeset/config.json` (`baseBranch: main`, `access: public`).
+- Required GitHub secrets for demo bump workflow: `WEBENTOR_DEMO_REPO`, `WEBENTOR_DEMO_TOKEN`.
