@@ -1,6 +1,8 @@
 import { defineConfig } from 'vitepress';
 
 export default defineConfig({
+  // Required for GitHub Pages deployment at <org>.github.io/webentor-stack/
+  base: '/webentor-stack/',
   title: 'Webentor Stack',
   description: 'Monorepo architecture, onboarding, and upgrade guides',
   lastUpdated: true,
