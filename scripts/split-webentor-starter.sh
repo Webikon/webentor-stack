@@ -29,7 +29,14 @@ git subtree split --prefix=packages/webentor-starter -b split/webentor-starter-m
 
 MIRROR_URL="https://x-access-token:${STARTER_MIRROR_TOKEN}@github.com/${STARTER_MIRROR_REPO}.git"
 
-git push "$MIRROR_URL" split/webentor-starter-mirror:main --force-with-lease
+# Query mirror remote state and use an explicit lease against its current main tip.
+REMOTE_MAIN_SHA="$(git ls-remote --heads "$MIRROR_URL" main | awk '{print $1}')"
+if [ -n "$REMOTE_MAIN_SHA" ]; then
+  git push "$MIRROR_URL" split/webentor-starter-mirror:main --force-with-lease="main:${REMOTE_MAIN_SHA}"
+else
+  # First mirror run can target repos where main does not exist yet.
+  git push "$MIRROR_URL" split/webentor-starter-mirror:main --force
+fi
 git push "$MIRROR_URL" "split/webentor-starter-mirror:refs/tags/${TAG}" --force
 
 echo "Mirrored packages/webentor-starter to ${STARTER_MIRROR_REPO} with tag ${TAG}."

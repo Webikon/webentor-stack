@@ -30,8 +30,14 @@ git subtree split --prefix=packages/webentor-core -b split/webentor-core-mirror
 
 MIRROR_URL="https://x-access-token:${CORE_MIRROR_TOKEN}@github.com/${CORE_MIRROR_REPO}.git"
 
-# Force-with-lease protects against clobbering unexpected remote state changes.
-git push "$MIRROR_URL" split/webentor-core-mirror:main --force-with-lease
+# Query mirror remote state and use an explicit lease against its current main tip.
+REMOTE_MAIN_SHA="$(git ls-remote --heads "$MIRROR_URL" main | awk '{print $1}')"
+if [ -n "$REMOTE_MAIN_SHA" ]; then
+  git push "$MIRROR_URL" split/webentor-core-mirror:main --force-with-lease="main:${REMOTE_MAIN_SHA}"
+else
+  # First mirror run can target repos where main does not exist yet.
+  git push "$MIRROR_URL" split/webentor-core-mirror:main --force
+fi
 git push "$MIRROR_URL" "split/webentor-core-mirror:refs/tags/${TAG}" --force
 
 echo "Mirrored packages/webentor-core to ${CORE_MIRROR_REPO} with tag ${TAG}."
