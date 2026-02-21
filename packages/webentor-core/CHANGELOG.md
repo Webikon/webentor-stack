@@ -1,5 +1,11 @@
 # Webentor Core Changelog
 
+## 0.9.14
+
+### Patch Changes
+
+- [`178f1ee`](https://github.com/Webikon/webentor-stack/commit/178f1eed5f6071ee6f054ff78e5daadc95ab94b1) Thanks [@palicko](https://github.com/palicko)! - Fix CSS formatting (quote style normalization, multiline transitions, selector indentation)
+
 ## DEV
 
 ## 0.9.13
