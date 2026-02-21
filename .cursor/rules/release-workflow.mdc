@@ -25,15 +25,20 @@ Use these steps whenever a request involves releasing, versioning, publishing, o
    - `demo-bump.yml` runs after release success and calls `scripts/bump-demo.sh`.
    - This is currently a placeholder handoff for downstream integration.
 6. Mirror flow:
-   - Push a `v*` tag to trigger `split-webentor-setup.yml` and `split-webentor-starter.yml`.
+   - Push a namespaced tag to trigger the mirror workflow you intend:
+     - `core-v*` -> `split-webentor-core.yml`
+     - `setup-v*` -> `split-webentor-setup.yml`
+     - `starter-v*` -> `split-webentor-starter.yml`
    - Mirrors use `git subtree split` to publish package contents to standalone repos.
+   - Mirror scripts normalize namespaced tags to `vX.Y.Z` in target mirror repositories.
 7. Validation:
    - Verify published versions for `webentor-core` and `webentor-configs` on npm.
-   - Verify mirror repos received updates for `webentor-setup` and `webentor-starter`.
+   - Verify mirror repos received updates for `webentor-core`, `webentor-setup`, and `webentor-starter`.
+   - Update `docs/src/compatibility-matrix.md` with the tested-together release version set.
 
 ## Guardrails
 
 - Only `webentor-core` and `webentor-configs` are npm-published via Changesets.
-- `webentor-setup` and `webentor-starter` are delivered via split-mirror workflows.
+- `webentor-core`, `webentor-setup`, and `webentor-starter` are delivered via split-mirror workflows for standalone repositories.
 - Changesets baseline config is `.changeset/config.json` (`baseBranch: main`, `access: public`).
 - Required GitHub secrets for demo bump workflow: `WEBENTOR_DEMO_REPO`, `WEBENTOR_DEMO_TOKEN`.

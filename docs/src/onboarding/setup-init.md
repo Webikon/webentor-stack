@@ -14,9 +14,8 @@ You have nothing locally and want a runnable Webentor project. Start here.
 ## 2. Clone starter project
 
 ```bash
-# TODO: replace <starter-repo-url> with your internal starter/reference URL
-git clone <starter-repo-url> <project-dir>
-cd <project-dir>
+git clone https://github.com/Webikon/webentor-starter webentor-starter
+cd webentor-starter
 ```
 
 ## 3. Initialize project metadata and setup contract

@@ -3,7 +3,7 @@ name: split-webentor-setup
 on:
   push:
     tags:
-      - 'v*'
+      - 'setup-v*'
   workflow_dispatch:
     inputs:
       tag:

@@ -63,9 +63,10 @@ Repository automation is split by trigger type so CI stays fast and release step
 - `.github/workflows/demo-bump.yml`:
   - Runs after `release.yml` completes successfully.
   - Invokes `scripts/bump-demo.sh` to trigger downstream demo integration bump flow (placeholder implementation).
-- `.github/workflows/split-webentor-setup.yml` and `.github/workflows/split-webentor-starter.yml`:
-  - Run on `v*` tags (or manual dispatch).
+- `.github/workflows/split-webentor-core.yml`, `.github/workflows/split-webentor-setup.yml`, and `.github/workflows/split-webentor-starter.yml`:
+  - Run on namespaced monorepo tags (`core-v*`, `setup-v*`, `starter-v*`) or manual dispatch.
   - Use subtree split scripts to mirror package contents to standalone repositories.
+  - Mirror repositories receive normalized semver tags (`vX.Y.Z`) for downstream package tooling compatibility.
 
 ```mermaid
 flowchart LR
@@ -73,8 +74,9 @@ flowchart LR
   pushMain["Push_main"] --> release["release.yml"]
   release --> demoBump["demo-bump.yml"]
   pushMainDocs["Push_main_with_docs_changes"] --> docsDeploy["docs-deploy.yml"]
-  pushTag["Push_tag_v*"] --> splitSetup["split-webentor-setup.yml"]
-  pushTag --> splitStarter["split-webentor-starter.yml"]
+  pushCoreTag["Push_tag_core-v*"] --> splitCore["split-webentor-core.yml"]
+  pushSetupTag["Push_tag_setup-v*"] --> splitSetup["split-webentor-setup.yml"]
+  pushStarterTag["Push_tag_starter-v*"] --> splitStarter["split-webentor-starter.yml"]
 ```
 
 ## How to change and release a package
@@ -91,7 +93,11 @@ Use this sequence for package changes so CI, releases, and downstream integratio
 4. Merge the PR into `main`; `release.yml` then opens/updates the "Version Packages" PR.
 5. Merge the version PR; Changesets bumps versions/changelogs and publishes npm packages.
 6. Confirm `demo-bump.yml` ran successfully after release.
-7. Push a `v*` tag when you want to trigger split mirrors for setup/starter repositories.
+7. Push a namespaced tag when you want to trigger a specific split mirror:
+   1. `core-v*` -> `split-webentor-core.yml`
+   2. `setup-v*` -> `split-webentor-setup.yml`
+   3. `starter-v*` -> `split-webentor-starter.yml`
+   4. Mirror scripts normalize these to `vX.Y.Z` tags in target repositories.
 
 ## Release and rollout order
 
@@ -102,11 +108,14 @@ When changes span multiple packages, keep this order and map each stage to autom
    - `release.yml` + Changesets handles version PR and npm publish after merge.
 2. `webentor-setup` (include upgrade recipe when behavior changes)
    - Validate runtime/CLI contract updates.
-   - Trigger split mirror via `v*` tag when ready.
+   - Trigger split mirror via `setup-v*` tag when ready.
 3. `webentor-starter`
    - Validate integrated behavior against updated package outputs.
-   - Trigger split mirror via `v*` tag when ready.
-4. `webentor-demo` integration validation and bump
+   - Trigger split mirror via `starter-v*` tag when ready.
+4. `webentor-core` mirror (for standalone Composer delivery)
+   - Trigger split mirror via `core-v*` tag when ready.
+   - Confirm target mirror tag is normalized to `vX.Y.Z`.
+5. `webentor-demo` integration validation and bump
    - Validate downstream compatibility after release.
    - `demo-bump.yml` is the automation hook for this handoff.
 

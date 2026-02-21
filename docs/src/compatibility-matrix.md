@@ -43,3 +43,5 @@ IE11 is not supported.
 - PHP 8.2 may work in some configurations but is no longer the tested minimum.
 - The compatibility matrix is updated with each release. Consult the
   `CHANGELOG.md` in each package for version-specific changes.
+- Monorepo mirror triggers use namespaced tags (`core-v*`, `setup-v*`, `starter-v*`),
+  while mirror repositories receive normalized `vX.Y.Z` tags.

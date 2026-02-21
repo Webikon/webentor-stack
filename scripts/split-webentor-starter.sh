@@ -9,9 +9,19 @@ if [ -z "${STARTER_MIRROR_REPO:-}" ] || [ -z "${STARTER_MIRROR_TOKEN:-}" ]; then
   exit 1
 fi
 
-TAG="${INPUT_TAG:-${GITHUB_REF_NAME:-}}"
-if [ -z "$TAG" ]; then
+SOURCE_TAG="${INPUT_TAG:-${GITHUB_REF_NAME:-}}"
+if [ -z "$SOURCE_TAG" ]; then
   echo "No tag resolved. Pass workflow input 'tag' or run on a tag ref."
+  exit 1
+fi
+
+# Monorepo tags are namespaced (starter-vX.Y.Z), but mirrors should keep plain semver tags.
+if [[ "$SOURCE_TAG" =~ ^starter-v[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z]+)*$ ]]; then
+  TAG="${SOURCE_TAG#starter-}"
+elif [[ "$SOURCE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z]+)*$ ]]; then
+  TAG="$SOURCE_TAG"
+else
+  echo "Invalid tag '$SOURCE_TAG'. Expected starter-vX.Y.Z (or vX.Y.Z for manual dispatch)."
   exit 1
 fi
 
