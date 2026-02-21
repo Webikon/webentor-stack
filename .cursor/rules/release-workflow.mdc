@@ -20,7 +20,7 @@ Use these steps whenever a request involves releasing, versioning, publishing, o
 4. Automated versioning/publish:
    - `release.yml` runs on push to `main`.
    - Changesets action opens/updates the "Version Packages" PR.
-   - Merging that PR updates package versions/changelogs and publishes to npm.
+   - Merging that PR updates package versions/changelogs and publishes only newly bumped, unpublished packages to npm.
 5. Post-release automation:
    - `demo-bump.yml` runs after release success and calls `scripts/bump-demo.sh`.
    - This is currently a placeholder handoff for downstream integration.

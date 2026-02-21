@@ -122,6 +122,7 @@ Do not introduce additional split mirrors beyond setup/starter unless explicitly
 - Do not silently remove troubleshooting paths (1Password, env fallback, platform-specific behavior).
 - Keep file paths and command examples consistent with `scripts/setup-core` naming.
 - Avoid editing unrelated files in large migrations.
+- Always check and update documentation
 
 ## Validation Checklist for AI Changes
 

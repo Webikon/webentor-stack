@@ -27,7 +27,7 @@ jobs:
       - name: Version and publish
         uses: changesets/action@v1
         with:
-          publish: pnpm -r --filter './packages/webentor-configs' --filter './packages/webentor-core' publish --access public --no-git-checks
+          publish: pnpm changeset publish
           commit: 'chore(release): version packages'
           title: 'chore(release): version packages'
         env:

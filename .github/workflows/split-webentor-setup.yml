@@ -21,25 +21,6 @@ jobs:
           fetch-depth: 0
           # Avoid inheriting github-actions[bot] credentials for git push.
           persist-credentials: false
-      - name: Preflight mirror auth (setup)
-        env:
-          SETUP_MIRROR_REPO: ${{ secrets.SETUP_MIRROR_REPO }}
-          SETUP_MIRROR_TOKEN: ${{ secrets.SETUP_MIRROR_TOKEN }}
-        run: |
-          set -euo pipefail
-          if [[ ! "$SETUP_MIRROR_REPO" =~ ^[^/]+/[^/]+$ ]]; then
-            echo "SETUP_MIRROR_REPO must be 'owner/repo' (without URL or .git)."
-            exit 1
-          fi
-          echo "Mirror target: ${SETUP_MIRROR_REPO}"
-          echo "Token length: ${#SETUP_MIRROR_TOKEN}"
-          curl -fsSL \
-            -H "Authorization: Bearer ${SETUP_MIRROR_TOKEN}" \
-            -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/${SETUP_MIRROR_REPO}" >/dev/null
-          MIRROR_URL="https://x-access-token:${SETUP_MIRROR_TOKEN}@github.com/${SETUP_MIRROR_REPO}.git"
-          # Dry-run push validates write capability without creating refs.
-          git push --dry-run "$MIRROR_URL" HEAD:refs/heads/__mirror_write_probe >/dev/null
       - name: Split and mirror setup package
         env:
           SETUP_MIRROR_REPO: ${{ secrets.SETUP_MIRROR_REPO }}
