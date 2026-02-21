@@ -68,52 +68,90 @@ Shared release is not complete until demo CI is green.
 ## Versioning Policy
 
 - Use independent semver per package; do not force shared version numbers across the monorepo.
-- On every version bump or release request, update `docs/src/compatibility-matrix.md` with the tested-together version set.
-- AI agents must explicitly remind users about the compatibility matrix update when handling versioning/release tasks.
+- On every release request, update `docs/src/compatibility-matrix.md` with the tested-together version set.
 
-## Version Bump Map
+## Release Workflow (Changesets-first)
 
-Use this map to quickly locate all version sources per package.
+For npm-published packages (`webentor-core`, `webentor-configs`), versioning is fully
+automated via Changesets. **AI agents and humans must NOT manually edit version numbers
+or changelog files** for these packages. The only manual steps are:
+
+1. **Create a changeset** — run `pnpm changeset`, select the package(s) and bump type
+   (`patch` / `minor` / `major`), write a user-facing summary. This creates a `.changeset/*.md` file.
+2. **Commit and push** the changeset file to `main`.
+3. **Automation handles the rest:**
+   - `release.yml` detects the changeset and opens/updates a "Version Packages" PR.
+   - That PR contains the version bumps in `package.json`, updated `CHANGELOG.md`,
+     and synced `composer.json` (via `scripts/sync-composer-versions.mjs`).
+   - Merging the PR triggers `changeset publish` → npm publish.
+4. **Update `docs/src/compatibility-matrix.md`** with the new version set.
+5. **Push a namespaced tag** to trigger the split-mirror workflow (e.g. `core-v0.9.14`).
+
+### What Changesets automates (do NOT do manually)
+
+- Bumping `"version"` in `package.json`
+- Bumping `"version"` in `composer.json` (synced by `scripts/sync-composer-versions.mjs`)
+- Updating `CHANGELOG.md`
+
+### What remains manual
+
+- Creating the `.changeset/*.md` file (`pnpm changeset`)
+- Updating `docs/src/compatibility-matrix.md`
+- Pushing the namespaced tag for the split mirror
+
+### AI agent release instructions
+
+When asked to release a package:
+
+1. Run `pnpm changeset` (or create the `.changeset/*.md` file directly).
+2. Update `docs/src/compatibility-matrix.md`.
+3. Commit and push to `main`.
+4. After the "Version Packages" PR is merged and npm publish succeeds,
+   push the namespaced tag (e.g. `git tag core-vX.Y.Z && git push origin core-vX.Y.Z`).
+
+**NEVER** manually edit `package.json` version, `composer.json` version, or `CHANGELOG.md`
+for Changesets-managed packages. The automation will do it.
+
+## Version Source Map
+
+Reference map for locating version sources per package.
 
 - `webentor-core` (beta, `0.9.x`):
-  - `packages/webentor-core/package.json` -> `"version"`
-  - `packages/webentor-core/composer.json` -> `"version"`
-  - `packages/webentor-core/CHANGELOG.md` -> add new entry at top
-  - npm publishing/version PR is handled via Changesets (`pnpm changeset`, `release.yml`)
+  - `packages/webentor-core/package.json` -> `"version"` (managed by Changesets)
+  - `packages/webentor-core/composer.json` -> `"version"` (synced by `scripts/sync-composer-versions.mjs`)
+  - `packages/webentor-core/CHANGELOG.md` (managed by Changesets)
+  - npm publish via Changesets; Composer/Packagist via split-mirror + Packagist API ping
 - `webentor-configs` (stable, `1.x`):
-  - `packages/webentor-configs/package.json` -> `"version"`
-  - `packages/webentor-configs/CHANGELOG.md` -> add new entry at top
-  - npm publishing/version PR is handled via Changesets (`pnpm changeset`, `release.yml`)
+  - `packages/webentor-configs/package.json` -> `"version"` (managed by Changesets)
+  - `packages/webentor-configs/CHANGELOG.md` (managed by Changesets)
+  - npm publish via Changesets
 - `webentor-setup` (stable, `1.x`):
-  - `packages/webentor-setup/CHANGELOG.md` -> add new entry at top
+  - `packages/webentor-setup/CHANGELOG.md` -> add new entry at top (manual)
   - Runtime is mirrored via split workflow (no npm publish)
   - Note: `packages/webentor-setup/composer.json` currently has no `"version"` field; if added later, treat it as a version source
 - `webentor-starter` (stable, `2.x`):
-  - `packages/webentor-starter/composer.json` -> `"version"`
-  - `packages/webentor-starter/changelog.md` -> add new entry at top
+  - `packages/webentor-starter/composer.json` -> `"version"` (manual)
+  - `packages/webentor-starter/changelog.md` -> add new entry at top (manual)
   - Runtime is mirrored via split workflow (no npm publish)
 - `webentor-theme-v2` (stable, `2.x`, inside starter):
-  - `packages/webentor-starter/web/app/themes/webentor-theme-v2/package.json` -> `"version"`
-  - `packages/webentor-starter/web/app/themes/webentor-theme-v2/composer.json` -> `"version"`
-  - `packages/webentor-starter/web/app/themes/webentor-theme-v2/style.css` -> `Version:` header
-  - `packages/webentor-starter/web/app/themes/webentor-theme-v2/changelog.md` -> add new entry at top
+  - `packages/webentor-starter/web/app/themes/webentor-theme-v2/package.json` -> `"version"` (manual)
+  - `packages/webentor-starter/web/app/themes/webentor-theme-v2/composer.json` -> `"version"` (manual)
+  - `packages/webentor-starter/web/app/themes/webentor-theme-v2/style.css` -> `Version:` header (manual)
+  - `packages/webentor-starter/web/app/themes/webentor-theme-v2/changelog.md` -> add new entry at top (manual)
   - Keep all theme version sources synchronized in the same bump
 
 ## Mirror Policy
 
-Mirror target:
+Mirror targets and workflows:
 
-- `packages/webentor-setup` only
-- `packages/webentor-starter` only
+- `packages/webentor-core` -> `.github/workflows/split-webentor-core.yml` / `scripts/split-webentor-core.sh` (tag: `core-v*`)
+- `packages/webentor-setup` -> `.github/workflows/split-webentor-setup.yml` / `scripts/split-webentor-setup.sh` (tag: `setup-v*`)
+- `packages/webentor-starter` -> `.github/workflows/split-webentor-starter.yml` / `scripts/split-webentor-starter.sh` (tag: `starter-v*`)
 
-Mirror workflow:
+The `split-webentor-core.yml` workflow also pings Packagist after mirroring to update the Composer package.
+Secrets required: `PACKAGIST_USERNAME`, `PACKAGIST_API_TOKEN`.
 
-- `.github/workflows/split-webentor-setup.yml`
-- `.github/workflows/split-webentor-starter.yml`
-- `scripts/split-webentor-setup.sh`
-- `scripts/split-webentor-starter.sh`
-
-Do not introduce additional split mirrors beyond setup/starter unless explicitly requested.
+Do not introduce additional split mirrors unless explicitly requested.
 
 ## AI Editing Rules
 

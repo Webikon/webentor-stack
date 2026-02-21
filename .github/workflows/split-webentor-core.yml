@@ -28,3 +28,14 @@ jobs:
           INPUT_TAG: ${{ github.event.inputs.tag }}
           GITHUB_REF_NAME: ${{ github.ref_name }}
         run: bash scripts/split-webentor-core.sh
+
+      # Notify Packagist so the Composer package updates without a webhook on the mirror repo.
+      - name: Ping Packagist
+        if: success()
+        env:
+          PACKAGIST_USERNAME: ${{ secrets.PACKAGIST_USERNAME }}
+          PACKAGIST_API_TOKEN: ${{ secrets.PACKAGIST_API_TOKEN }}
+        run: |
+          curl -s -X POST "https://packagist.org/api/update-package?username=${PACKAGIST_USERNAME}&apiToken=${PACKAGIST_API_TOKEN}" \
+            -H 'Content-Type: application/json' \
+            -d '{"repository":{"url":"https://packagist.org/packages/webikon/webentor-core"}}'
