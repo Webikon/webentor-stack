@@ -396,8 +396,8 @@ _sync_db_core() {
     fi
 
     wp plugin activate wp-migrate-db-pro
-    wp migratedb setting update license "${MDB_LICENCE_KEY}" --user=webikon
-    wp migratedb pull "${MDB_AUTH_SECRET_KEY}" --find="${MDB_SEARCH_WEB_URL}" --replace="${MDB_REPLACE_WEB_URL}"
+    wp migratedb setting update license $MDB_LICENCE_KEY --user=webikon
+    wp migratedb pull $MDB_AUTH_SECRET_KEY --find=$MDB_SEARCH_WEB_URL --replace=$MDB_REPLACE_WEB_URL
     wp rewrite flush
     wp cache flush
 }
