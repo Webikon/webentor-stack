@@ -1,6 +1,6 @@
 {
   "starterVersion": "2.0.2",
-  "coreVersion": "0.9.13",
+  "coreVersion": "0.9.14",
   "configsVersion": "1.0.1",
   "phpVersion": ">=8.3",
   "nodeVersion": ">=20.0.0",
