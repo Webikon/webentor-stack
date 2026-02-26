@@ -1,5 +1,10 @@
 # Webentor Setup Changelog
 
+## 1.0.1
+
+- Fix migratedb command
+- Remove unused init script
+
 ## 1.0.0
 
 - Extracted setup runtime from starter into standalone repository.

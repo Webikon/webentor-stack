@@ -4,6 +4,6 @@
   "configsVersion": "1.0.1",
   "phpVersion": ">=8.3",
   "nodeVersion": ">=20.0.0",
-  "setupCliVersion": "1.0.0",
+  "setupCliVersion": "1.0.1",
   "createdAt": "2026-02-26T00:00:00Z"
 }
