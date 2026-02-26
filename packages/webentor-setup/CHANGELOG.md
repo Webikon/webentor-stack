@@ -4,6 +4,8 @@
 
 - Fix migratedb command
 - Remove unused init script
+- Fix error handling
+- Improve multisite handling
 
 ## 1.0.0
 

@@ -57,3 +57,16 @@ success() {
 info() {
   echo -e "${BLUE}ℹ️  $1${NC}"
 }
+
+# ERR trap handler — shows the failing command and points to its error output above.
+_on_error() {
+    local exit_code=$?
+    echo "" >&2
+    error "────────────────────────────────────────────"
+    error "Setup failed! (exit code ${exit_code})"
+    error "Command: ${BASH_COMMAND}"
+    error "Location: ${BASH_SOURCE[1]:-unknown}:${BASH_LINENO[0]}"
+    error ""
+    error "Check the output above for the full error."
+    error "────────────────────────────────────────────"
+}

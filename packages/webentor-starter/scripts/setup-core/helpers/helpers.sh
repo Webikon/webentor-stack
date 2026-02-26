@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -eE
 
 # Shared helper library for setup scripts. Keep this file dependency-light so it
 # can run before Composer/npm are installed in a fresh project clone.
@@ -360,17 +360,13 @@ _setup_wp_core() {
         wp db create
     fi
 
-    wp core install \
-        --url="${WP_HOME}" \
-        --title="Test" \
-        --admin_user="webikon" \
-        --admin_email="admin@webikon.test" \
-        --admin_password="password1" \
-        --skip-email
 
     if [ -n "${DOMAIN_CURRENT_SITE:-}" ]; then
         info "Installing multisite"
-        wp core multisite-install --url="${WP_HOME}" --title="Test" --admin_email="admin@webikon.test"
+        wp core multisite-install --url=${WP_HOME} --title="Test" --admin_user="webikon" --admin_email="admin@webikon.test" --admin_password="password1" --skip-email
+    else
+        info "Installing single site"
+        wp core install --url=${WP_HOME} --title="Test" --admin_user="webikon" --admin_email="admin@webikon.test" --admin_password="password1" --skip-email
     fi
 
     wp dotenv salts regenerate --skip-plugins --skip-themes 2>/dev/null || true

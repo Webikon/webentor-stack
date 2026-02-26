@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -eE
 
 source "${HELPERS_DIR}/shell-ui.sh"
 source "${HELPERS_DIR}/helpers.sh"

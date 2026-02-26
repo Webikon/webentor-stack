@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -eE
 
 # setup.sh is intended to be sourced from project-level scripts/setup.sh.
 # It resolves project paths in a subtree-safe way and then orchestrates setup.
@@ -22,6 +22,7 @@ export SCRIPT_DIR
 export HELPERS_DIR
 
 source "${HELPERS_DIR}/shell-ui.sh"
+trap '_on_error' ERR
 source "${HELPERS_DIR}/helpers.sh"
 
 # Load setup configuration early so non-interactive mode can be enforced globally.

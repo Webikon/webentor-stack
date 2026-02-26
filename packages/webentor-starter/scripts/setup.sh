@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -eE
 
 # Thin project wrapper around subtree-managed setup runtime.
 WORKSPACE_FOLDER="$(realpath "${LOCAL_WORKSPACE_FOLDER:-$(pwd)}")"
