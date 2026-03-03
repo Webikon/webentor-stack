@@ -16,6 +16,18 @@ const PROJECT_OWNED_PATH_PREFIXES = [
     'scripts/project-specific/',
 ];
 
+const ENV_SETUP_DEFAULTS = [
+    'SETUP_INTERACTIVE' => 'true',
+    'SETUP_ENV_CHECK'   => 'true',
+    'SETUP_1PASSWORD'   => 'true',
+    'SETUP_COMPOSER'    => 'true',
+    'SETUP_THEME_DEPS'  => 'true',
+    'SETUP_WORDPRESS'   => 'true',
+    'SETUP_DB_SYNC'     => 'true',
+    'SETUP_SUBMODULES'  => 'false',
+    'SETUP_TYPESENSE'   => 'false',
+];
+
 main($argv);
 
 function main(array $argv): void
@@ -56,7 +68,11 @@ function printHelp(): void
     echo <<<TXT
 webentor-setup commands:
 
-  webentor-setup init --project <slug> [--starter-version <semver|latest>] [--with-db-sync <true|false>] [--cwd <path>]
+  webentor-setup init [--project <slug>] [--starter-version <semver|latest>]
+    [--with-1password <true|false>] [--with-db-sync <true|false>]
+    [--with-typesense <true|false>] [--cwd <path>]
+    Options not provided via flags are prompted interactively.
+
   webentor-setup upgrade-starter --from <x.y.z> --to <x.y.z> [--cwd <path>] [--dry-run <true|false>]
   webentor-setup doctor [--cwd <path>]
 
@@ -92,39 +108,87 @@ function parseOptions(array $args): array
 
 function commandInit(array $options, string $runtimeRoot): void
 {
-    $project = $options['project'] ?? null;
-    if ($project === null || $project === '') {
-        fwrite(STDERR, "Missing required option: --project\n");
+    $cwd = realpath($options['cwd'] ?? getcwd()) ?: getcwd();
+    $starterVersion = $options['starter-version'] ?? 'latest';
+
+    // --- Collect options: use flag value when provided, prompt otherwise ---
+    $project = $options['project']
+        ?? promptStdin('Project slug:', basename($cwd));
+    if ($project === '') {
+        fwrite(STDERR, "Project slug cannot be empty.\n");
         exit(1);
     }
 
-    $cwd = realpath($options['cwd'] ?? getcwd()) ?: getcwd();
-    $starterVersion = $options['starter-version'] ?? 'latest';
-    // Default DB sync to enabled for newly initialized projects.
-    $withDbSync = toBool($options['with-db-sync'] ?? 'true');
+    $with1Password = isset($options['with-1password'])
+        ? toBool($options['with-1password'])
+        : promptYesNo('Use 1Password for .env?', true);
 
-    ensureDir("{$cwd}/scripts");
-    ensureDir("{$cwd}/scripts/hooks");
-    ensureDir("{$cwd}/scripts/project-specific");
-    ensureDir("{$cwd}/.webentor");
+    $opVaultId = 'YOUR_OP_VAULT_ID';
+    $opItemId  = 'YOUR_OP_ITEM_ID';
 
-    $envTarget = "{$cwd}/scripts/.env.setup";
-    $envExample = "{$runtimeRoot}/.env.setup.example";
-
-    if (!file_exists($envTarget) && file_exists($envExample)) {
-        copy($envExample, $envTarget);
+    if ($with1Password) {
+        $opVaultId = promptStdin('1Password Vault ID (op vault list to find):', 'YOUR_OP_VAULT_ID');
+        $opItemId  = promptStdin('1Password Item ID (op item get "..." to find):', 'YOUR_OP_ITEM_ID');
     }
+
+    $withDbSync = isset($options['with-db-sync'])
+        ? toBool($options['with-db-sync'])
+        : promptYesNo('Enable DB sync?', true);
+
+    $withTypesense = isset($options['with-typesense'])
+        ? toBool($options['with-typesense'])
+        : promptYesNo('Enable Typesense?', false);
+
+    // --- Create directory structure (track created vs already-present) ---
+    $created = [];
+
+    $created['scripts/']                = ensureDir("{$cwd}/scripts");
+    $created['scripts/hooks/']          = ensureDir("{$cwd}/scripts/hooks");
+    $created['scripts/project-specific/'] = ensureDir("{$cwd}/scripts/project-specific");
+    $created['.webentor/']              = ensureDir("{$cwd}/.webentor");
+
+    writeIfMissing("{$cwd}/scripts/hooks/.gitkeep", '');
+    writeIfMissing("{$cwd}/scripts/project-specific/.gitkeep", '');
+
+    // --- Generate scripts/.env.setup ---
+    $envValues = ENV_SETUP_DEFAULTS;
+    $envValues['SETUP_1PASSWORD'] = $with1Password ? 'true' : 'false';
+    $envValues['SETUP_DB_SYNC']   = $withDbSync ? 'true' : 'false';
+    $envValues['SETUP_TYPESENSE'] = $withTypesense ? 'true' : 'false';
+
+    $envContent = generateEnvSetup($opVaultId, $opItemId, $envValues);
+    $created['scripts/.env.setup'] = writeIfMissing("{$cwd}/scripts/.env.setup", $envContent);
+
+    // --- Generate scripts/.gitignore ---
+    $created['scripts/.gitignore'] = writeIfMissing("{$cwd}/scripts/.gitignore", "!.env.setup\n");
+
+    // --- Generate scripts/setup.sh (thin wrapper) ---
+    $created['scripts/setup.sh'] = writeIfMissing("{$cwd}/scripts/setup.sh", generateSetupSh());
+
+    // --- Conditionally generate Typesense files ---
+    if ($withTypesense) {
+        $created['scripts/ts-up.sh'] = writeIfMissing("{$cwd}/scripts/ts-up.sh", generateTsUpSh());
+        $created['scripts/docker-compose.typesense.yml'] = writeIfMissing(
+            "{$cwd}/scripts/docker-compose.typesense.yml",
+            generateDockerComposeTypesense(),
+        );
+    }
+
+    // --- Generate .webentor/project.json (always written with latest metadata) ---
+    $projectJsonExisted = file_exists("{$cwd}/.webentor/project.json");
 
     $metadata = [
         'starterVersion' => $starterVersion,
-        'coreVersion' => 'unknown',
-        'configsVersion' => 'unknown',
+        'coreVersion' => detectCoreVersion($cwd) ?? 'unknown',
+        'configsVersion' => detectConfigsVersion($cwd) ?? 'unknown',
         'phpVersion' => detectPhpConstraint($cwd) ?? PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION,
         'nodeVersion' => detectNodeConstraint($cwd) ?? 'unknown',
         'setupCliVersion' => detectSetupCliVersion($runtimeRoot),
         'createdAt' => gmdate(DATE_ATOM),
         'projectSlug' => $project,
         'withDbSync' => $withDbSync,
+        'withTypesense' => $withTypesense,
+        'with1Password' => $with1Password,
     ];
 
     file_put_contents(
@@ -132,8 +196,174 @@ function commandInit(array $options, string $runtimeRoot): void
         json_encode($metadata, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL,
     );
 
-    echo "Initialized Webentor project metadata in {$cwd}/.webentor/project.json\n";
-    echo "Prepared hooks directory in {$cwd}/scripts/hooks\n";
+    $created['.webentor/project.json'] = !$projectJsonExisted;
+
+    // --- Summary: show created vs already-present per item ---
+    $items = [
+        'scripts/.env.setup'        => 'runtime config',
+        'scripts/.gitignore'        => 'gitignore',
+        'scripts/setup.sh'          => 'thin wrapper',
+        'scripts/hooks/'            => 'lifecycle hook directory',
+        'scripts/project-specific/' => 'project helpers',
+    ];
+    if ($withTypesense) {
+        $items['scripts/ts-up.sh'] = 'Typesense launcher';
+        $items['scripts/docker-compose.typesense.yml'] = 'Typesense Docker Compose';
+    }
+    $items['.webentor/project.json'] = 'project metadata';
+
+    echo "\nInitialized Webentor project in {$cwd}\n";
+    foreach ($items as $path => $description) {
+        if ($created[$path] ?? false) {
+            echo sprintf("  %-34s — %s\n", $path, $description);
+        } elseif ($path === '.webentor/project.json' && $projectJsonExisted) {
+            echo sprintf("  %-34s — updated (already existed)\n", $path);
+        } else {
+            echo sprintf("  %-34s — skipped, already exists\n", $path);
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Scaffolding generators
+// ---------------------------------------------------------------------------
+
+function promptStdin(string $prompt, string $default = ''): string
+{
+    $display = $default !== '' ? "{$prompt} [{$default}]: " : $prompt;
+    fwrite(STDOUT, $display);
+    $line = fgets(STDIN);
+    $value = $line === false ? '' : trim($line);
+    return $value !== '' ? $value : $default;
+}
+
+/**
+ * Interactive yes/no prompt with input validation.
+ * Shows default in square brackets. Empty input returns the default.
+ * Re-prompts on invalid input.
+ */
+function promptYesNo(string $prompt, bool $default): bool
+{
+    $defaultHint = $default ? 'y' : 'n';
+
+    while (true) {
+        $input = strtolower(promptStdin("{$prompt} (y/n)", $defaultHint));
+
+        if (in_array($input, ['y', 'yes'], true)) {
+            return true;
+        }
+
+        if (in_array($input, ['n', 'no'], true)) {
+            return false;
+        }
+
+        fwrite(STDOUT, "Please answer y or n.\n");
+    }
+}
+
+/**
+ * Write file only if it doesn't exist. Returns true when created, false when skipped.
+ */
+function writeIfMissing(string $path, string $content): bool
+{
+    if (file_exists($path)) {
+        return false;
+    }
+    file_put_contents($path, $content);
+    return true;
+}
+
+function generateEnvSetup(string $opVaultId, string $opItemId, array $toggles): string
+{
+    $lines = [];
+    $lines[] = '# 1Password vault ID';
+    $lines[] = '# Find it with: op vault list';
+    $lines[] = "OP_VAULT_ID={$opVaultId}";
+    $lines[] = '';
+    $lines[] = '# 1Password item ID';
+    $lines[] = '# Find it with: op item get "Your .env item name" --format json | jq -r \'.id\'';
+    $lines[] = "OP_ITEM_ID={$opItemId}";
+    $lines[] = '';
+    $lines[] = 'WP_THEMES="webentor-theme-v2"';
+    $lines[] = '';
+    $lines[] = '# Setup runtime feature toggles.';
+    $lines[] = '# These values are project-owned and intentionally outside setup subtree updates.';
+
+    foreach ($toggles as $key => $value) {
+        $lines[] = "{$key}={$value}";
+    }
+
+    return implode("\n", $lines) . "\n";
+}
+
+/**
+ * Thin project wrapper — delegates to the subtree-managed setup runtime.
+ */
+function generateSetupSh(): string
+{
+    return <<<'BASH'
+#!/usr/bin/env bash
+set -eE
+
+# Thin project wrapper around subtree-managed setup runtime.
+WORKSPACE_FOLDER="$(realpath "${LOCAL_WORKSPACE_FOLDER:-$(pwd)}")"
+SCRIPT_DIR="${WORKSPACE_FOLDER}/scripts/setup-core"
+HELPERS_DIR="${SCRIPT_DIR}/helpers"
+
+export WORKSPACE_FOLDER
+export SCRIPT_DIR
+export HELPERS_DIR
+
+source "${SCRIPT_DIR}/setup.sh"
+BASH;
+}
+
+/**
+ * Typesense launcher — only generated when --with-typesense true.
+ */
+function generateTsUpSh(): string
+{
+    return <<<'BASH'
+#!/usr/bin/env bash
+set -e
+
+WORKSPACE_FOLDER="$(realpath "${LOCAL_WORKSPACE_FOLDER:-$(pwd)}")"
+SCRIPT_DIR=${SCRIPT_DIR:-"$WORKSPACE_FOLDER/scripts/setup-core"}
+HELPERS_DIR=${HELPERS_DIR:-"$SCRIPT_DIR/helpers"}
+
+export WORKSPACE_FOLDER
+export SCRIPT_DIR
+export HELPERS_DIR
+
+source "$HELPERS_DIR/shell-ui.sh"
+source "$HELPERS_DIR/helpers.sh"
+
+load_env
+
+bash "$SCRIPT_DIR/typesense-docker.sh"
+BASH;
+}
+
+/**
+ * Docker Compose for Typesense — only generated when --with-typesense true.
+ */
+function generateDockerComposeTypesense(): string
+{
+    return <<<'YAML'
+services:
+  typesense:
+    image: typesense/typesense:29.0
+    container_name: ts-webentor
+    restart: unless-stopped
+    ports:
+      - "${WTC_TS_NODE_PORT}:${WTC_TS_NODE_PORT}"
+    volumes:
+      - ./typesense-data:/data
+    environment:
+      TYPESENSE_DATA_DIR: /data
+      TYPESENSE_API_KEY: "${WTC_TS_API_KEY:-local}"
+      TYPESENSE_ENABLE_CORS: 'true'
+YAML;
 }
 
 function commandDoctor(array $options): void
@@ -348,11 +578,16 @@ function isProjectOwnedPath(string $path): bool
     return false;
 }
 
-function ensureDir(string $path): void
+/**
+ * Create directory if missing. Returns true when created, false when already present.
+ */
+function ensureDir(string $path): bool
 {
-    if (!is_dir($path)) {
-        mkdir($path, 0777, true);
+    if (is_dir($path)) {
+        return false;
     }
+    mkdir($path, 0777, true);
+    return true;
 }
 
 function rrmdir(string $path): void
@@ -413,6 +648,39 @@ function detectPhpConstraint(string $cwd): ?string
 
 function detectNodeConstraint(string $cwd): ?string
 {
+    return scanThemeFiles($cwd, 'package.json', function (array $data): ?string {
+        return isset($data['engines']['node']) ? (string) $data['engines']['node'] : null;
+    });
+}
+
+/**
+ * Detect webentor-core version constraint from theme composer.json.
+ */
+function detectCoreVersion(string $cwd): ?string
+{
+    return scanThemeFiles($cwd, 'composer.json', function (array $data): ?string {
+        return $data['require']['webikon/webentor-core'] ?? null;
+    });
+}
+
+/**
+ * Detect webentor-configs version constraint from theme package.json.
+ */
+function detectConfigsVersion(string $cwd): ?string
+{
+    return scanThemeFiles($cwd, 'package.json', function (array $data): ?string {
+        return $data['devDependencies']['@webikon/webentor-configs']
+            ?? $data['dependencies']['@webikon/webentor-configs']
+            ?? null;
+    });
+}
+
+/**
+ * Iterate theme directories under web/app/themes and apply $extractor to parsed JSON.
+ * Returns the first non-null result.
+ */
+function scanThemeFiles(string $cwd, string $filename, callable $extractor): ?string
+{
     $themesPath = "{$cwd}/web/app/themes";
     if (!is_dir($themesPath)) {
         return null;
@@ -428,14 +696,19 @@ function detectNodeConstraint(string $cwd): ?string
             continue;
         }
 
-        $packageJson = "{$themesPath}/{$entry}/package.json";
-        if (!file_exists($packageJson)) {
+        $filePath = "{$themesPath}/{$entry}/{$filename}";
+        if (!file_exists($filePath)) {
             continue;
         }
 
-        $data = json_decode((string) file_get_contents($packageJson), true);
-        if (isset($data['engines']['node'])) {
-            return (string) $data['engines']['node'];
+        $data = json_decode((string) file_get_contents($filePath), true);
+        if (!is_array($data)) {
+            continue;
+        }
+
+        $result = $extractor($data);
+        if ($result !== null) {
+            return $result;
         }
     }
 

@@ -1,5 +1,9 @@
 # Webentor Starter Changelog
 
+### 2.0.3
+
+- Remove `webentor-setup` core scripts from project as they have to be added as git subtree
+
 ### 2.0.2
 
 - Fix composer wp-rocket warnings

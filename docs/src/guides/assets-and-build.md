@@ -61,4 +61,23 @@ import.meta.glob('../blocks/**/*.block.{ts,tsx}', { eager: true });
 
 Put SVGs under `resources/images/svg/*.svg` and register via `_register-icons.ts` so the `e-icon-picker` sees them.
 
+## Linting
 
+Manual lint commands:
+
+- `./vendor/bin/grumphp run` — full PHP lint with PHPCS (from project root)
+- `./vendor/bin/php-cs-fixer fix` — auto-fix PHP style issues (from project root)
+- `pnpm lint:js` — ESLint (from theme directory)
+- `pnpm lint:css` — Stylelint (from theme directory)
+
+### Pre-commit hooks
+
+GrumPHP, ESLint, and Stylelint run automatically on `git commit` via Husky (see `.husky/pre-commit`). GrumPHP also auto-fixes issues with php-cs-fixer.
+
+## Editor setup
+
+Ensure your editor has support for:
+
+- PHPCS + php-cs-fixer
+- ESLint, Stylelint, EditorConfig, Prettier
+- Tailwind CSS IntelliSense

@@ -6,6 +6,8 @@ The setup runtime supports two project-safe extension models:
 2. **Function overrides** for replacing selected core setup steps
 
 Use these mechanisms instead of editing `scripts/setup-core/` directly.
+Both `scripts/hooks/` and `scripts/project-specific/` are created by
+`webentor-setup init` and are project-owned (never overwritten by upgrades).
 
 ## Hook lifecycle
 

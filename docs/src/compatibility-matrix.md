@@ -4,7 +4,7 @@
 
 | starterVersion | themeVersion | coreVersion | configsVersion | setupCliVersion | php | node |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2.0.2 | 2.0.3 | 0.9.14 | 1.0.0 | 1.0.0 | >=8.3 | >=20 |
+| 2.0.3 | 2.0.3 | 0.9.14 | 1.0.0 | 1.0.2 | >=8.3 | >=20 |
 
 ## Runtime dependencies
 
@@ -38,8 +38,6 @@ IE11 is not supported.
 
 - Package versions in this table must reflect the latest released set that is
   validated together.
-- `setupCliVersion` is currently tracked from `packages/webentor-setup/CHANGELOG.md`
-  because `packages/webentor-setup/composer.json` does not yet include a `version` field.
 - PHP 8.2 may work in some configurations but is no longer the tested minimum.
 - The compatibility matrix is updated with each release. Consult the
   `CHANGELOG.md` in each package for version-specific changes.

@@ -5,7 +5,7 @@ source "$HELPERS_DIR/shell-ui.sh"
 # Set workspace folder to current folder if not already defined
 WORKSPACE_FOLDER=${WORKSPACE_FOLDER:-$(pwd)}
 # Path to docker-compose file
-COMPOSE_FILE="$WORKSPACE_FOLDER/typesense-config/docker-compose.yml"
+COMPOSE_FILE="$WORKSPACE_FOLDER/scripts/docker-compose.typesense.yml"
 
 # 1. Check if docker-compose.yml exists
 if [ ! -f "$COMPOSE_FILE" ]; then

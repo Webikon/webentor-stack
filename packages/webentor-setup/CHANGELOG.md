@@ -1,5 +1,10 @@
 # Webentor Setup Changelog
 
+## 1.0.2
+
+- Improve init UX
+- Add basic project files scaffolding
+
 ## 1.0.1
 
 - Fix migratedb command

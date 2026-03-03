@@ -18,19 +18,20 @@ Use this guide for two different upgrade tracks:
 
 ## Manual setup-core update (recommended)
 
+The `webentor-setup` remote already exists from the initial `git subtree add`
+during project init:
+
 ```bash
-# in project root
 git checkout main
 git pull
 
-# fetch setup runtime tags (first time: add remote alias)
-git remote add webentor-setup https://github.com/Webikon/webentor-setup.git 2>/dev/null || true
+# Fetch latest tags
 git fetch webentor-setup --tags
 
-# create update branch
+# Create update branch
 git checkout -b chore/update-setup-core-vX-Y-Z
 
-# pull tagged runtime snapshot into subtree payload
+# Pull tagged runtime snapshot into subtree payload
 git subtree pull --prefix=scripts/setup-core webentor-setup vX.Y.Z --squash
 ```
 

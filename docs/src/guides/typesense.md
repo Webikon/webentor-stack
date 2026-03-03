@@ -16,7 +16,8 @@ during the setup process.
 
 ## Docker Compose configuration
 
-The Typesense container is defined in `typesense-config/docker-compose.yml`.
+When Typesense is enabled during `webentor-setup init`, the CLI generates
+`scripts/docker-compose.typesense.yml` alongside `scripts/ts-up.sh`.
 
 ### API key
 
@@ -34,8 +35,13 @@ WTC_TS_API_KEY=your-secure-api-key-here
 ### Starting Typesense manually
 
 ```bash
-cd typesense-config
-WTC_TS_API_KEY=your-key docker compose up -d
+WTC_TS_API_KEY=your-key docker compose -f scripts/docker-compose.typesense.yml up -d
+```
+
+Or use the generated launcher script:
+
+```bash
+bash scripts/ts-up.sh
 ```
 
 ### Checking status

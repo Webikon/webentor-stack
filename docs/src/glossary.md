@@ -19,21 +19,30 @@ A file or directory that belongs to the consuming project, not to the shared
 ## setup-core
 
 The shared setup runtime that lives in `scripts/setup-core/` inside a project.
-It is populated via `git subtree` from the `webentor-setup` package and should
-**not** be edited directly in projects. Update it by pulling a new tag.
+It is added via `git subtree add` from a tagged `webentor-setup` release during
+project init and should **not** be edited directly. Update it by pulling a new
+tag with `git subtree pull`.
 
 ## setup metadata
 
 The `.webentor/project.json` file at the project root. It is created by
 `webentor-setup init` and updated by `webentor-setup upgrade-starter`. It
 records which versions of the stack a project is using and stores setup-time
-configuration like `envSource` and `ciProvider`.
+configuration like `withDbSync` and `withTypesense`.
 
 ## setup runtime
 
 The combination of `scripts/setup-core/setup.sh` and platform-specific scripts
 (`mac/mac.sh`, `win/win.sh`, etc.) that orchestrate a full environment setup. Also
 referred to as "setup-core runtime".
+
+## setup scaffolding
+
+The generated files outside `setup-core` that `webentor-setup init` creates:
+`scripts/.env.setup`, `scripts/setup.sh`, `scripts/hooks/`,
+`scripts/project-specific/`, and optionally `scripts/ts-up.sh` and
+`scripts/docker-compose.typesense.yml`. These are project-owned and not part
+of the subtree.
 
 ## upgrade manifest
 
@@ -56,9 +65,12 @@ Provides shared ESLint, Stylelint, Prettier, PHPCS, and Blade formatter configs.
 
 The package that contains the `setup-core` runtime (bash scripts + PHP CLI).
 Published as a standalone GitHub repository and consumed via `git subtree`.
+The `init` command generates all project scaffolding (`scripts/`, `.webentor/`)
+from CLI flags.
 
 ## webentor-starter
 
-The complete WordPress starter template that ties together all webentor packages.
-Built on Bedrock + Sage 10. New projects are typically initialized from this
-template.
+The WordPress project skeleton template. Built on Bedrock + Sage 10. Contains
+only the WordPress/theme structure — all setup scaffolding is added via
+`git subtree add` (for `setup-core`) and `webentor-setup init` (for generated
+files).

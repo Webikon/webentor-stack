@@ -122,7 +122,7 @@ else
     info "Submodule step disabled"
 fi
 
-if is_feature_enabled "SETUP_TYPESENSE" "false" && [ -f "${WORKSPACE_FOLDER}/typesense-config/docker-compose.yml" ]; then
+if is_feature_enabled "SETUP_TYPESENSE" "false" && [ -f "${WORKSPACE_FOLDER}/scripts/docker-compose.typesense.yml" ]; then
     if should_run_step "SETUP_TYPESENSE" "Start Typesense with Docker?" "false"; then
         info "Starting Typesense"
         bash "${SCRIPT_DIR}/typesense-docker.sh"

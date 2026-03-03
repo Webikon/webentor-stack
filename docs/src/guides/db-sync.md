@@ -11,16 +11,16 @@ In `scripts/.env.setup`:
 SETUP_DB_SYNC=true
 ```
 
-Or pass `--with-db-sync true` when initializing a project:
+When initializing a new project, `webentor-setup init` prompts whether to
+enable DB sync (default: yes). You can also pre-set it via flag:
 
 ```bash
-scripts/setup-core/bin/webentor-setup init \
-  --project my-project \
-  --with-db-sync true
+scripts/setup-core/bin/webentor-setup init --with-db-sync true
 ```
 
-This records `withDbSync: true` in `.webentor/project.json` and sets the toggle
-in `scripts/.env.setup`.
+Either way, the `init` command writes `SETUP_DB_SYNC=true` directly into the
+generated `scripts/.env.setup` and records `withDbSync: true` in
+`.webentor/project.json`. No manual editing required.
 
 ## Hook integration
 

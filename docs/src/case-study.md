@@ -132,10 +132,11 @@ flowchart LR
 
 A typical migration now follows a consistent path:
 
-1. Sync `scripts/setup-core/` from `webentor-setup` mirror.
-2. Run `upgrade-starter` in dry-run mode and review the report.
-3. Move any project-specific setup logic out of `setup-core` and into hooks or project-specific scripts.
-4. Apply approved changes and run project checks.
+1. Add `scripts/setup-core/` via `git subtree add` from a tagged `webentor-setup` release.
+2. Run `webentor-setup init` to generate all scaffolding from CLI flags.
+3. Run `upgrade-starter` in dry-run mode and review the report.
+4. Move any project-specific setup logic out of `setup-core` and into hooks or project-specific scripts.
+5. Apply approved changes and run project checks.
 
 The key behavior change is predictability: teams review planned transforms before modifying project state.
 

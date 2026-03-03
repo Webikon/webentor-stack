@@ -1,5 +1,6 @@
 {
   "name": "webikon/webentor-setup",
+  "version": "1.0.2",
   "description": "Webentor setup runtime and upgrade CLI",
   "type": "library",
   "license": "MIT",

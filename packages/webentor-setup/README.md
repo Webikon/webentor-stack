@@ -57,8 +57,13 @@ Projects can override selected helper steps without patching `setup-core`.
 ## CLI
 
 ```bash
-# --with-db-sync defaults to true; pass --with-db-sync false to disable it.
-bin/webentor-setup init --project my-project --starter-version latest
+# Interactive mode — prompts for project slug, 1Password, DB sync, Typesense:
+bin/webentor-setup init
+
+# Non-interactive — all flags provided, no prompts shown:
+bin/webentor-setup init --project my-project --with-1password false --with-db-sync true --with-typesense false
+
+# Flags are optional overrides; omitted options are prompted interactively.
 bin/webentor-setup upgrade-starter --from 0.9.0 --to 1.0.0 --cwd /path/to/project --dry-run true
 bin/webentor-setup doctor --cwd /path/to/project
 ```

@@ -23,8 +23,10 @@
 ## Missing setup metadata file
 
 - If `webentor-setup doctor` reports missing `.webentor/project.json`, run:
-  `scripts/setup-core/bin/webentor-setup init --project <slug> --starter-version <version> --with-db-sync false --env-source 1password --ci-provider gitlab`
-- Commit `.webentor/project.json` after initialization.
+  `scripts/setup-core/bin/webentor-setup init`
+  (interactive prompts guide you through project slug and feature toggles)
+- This generates all scaffolding (`scripts/.env.setup`, `scripts/setup.sh`,
+  hooks, project-specific, and `.webentor/project.json`). Commit after init.
 
 ---
 
