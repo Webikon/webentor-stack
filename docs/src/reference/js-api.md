@@ -380,16 +380,16 @@ addFilter(
 );
 ```
 
-### Responsive settings (display)
+### Responsive settings
 
-#### `webentor-theme-display-settings`
+#### `webentor-theme-layout-settings`
 
 Extend property options.
 
 ```ts
 addFilter(
-  'webentor-theme-display-settings',
-  'theme/display',
+  'webentor-theme-layout-settings',
+  'theme/layout',
   (props, blockName) => [
     ...props,
     {
@@ -400,6 +400,47 @@ addFilter(
   ],
 );
 ```
+
+#### `webentor.core.responsiveSettings.layoutPresets`
+
+Customize the quick layout preset buttons shown in the Display & Layout panel.
+The filter receives a cloned preset array, the current `blockName`, and the
+resolved `twTheme`. Return a new array to append, replace, or scope presets per
+block.
+
+```ts
+addFilter(
+  'webentor.core.responsiveSettings.layoutPresets',
+  'theme/responsive/presets',
+  (presets, blockName) => {
+    if (blockName !== 'webentor/l-flexible-container') {
+      return presets;
+    }
+
+    return [
+      ...presets,
+      {
+        id: 'grid-6-col',
+        label: '6 Column Grid',
+        description: 'Grid layout with 6 equal columns',
+        applies: {
+          layout: {
+            display: { value: { basic: 'grid' } },
+          },
+          grid: {
+            'grid-cols': { value: { basic: 'grid-cols-6' } },
+            gap: { value: { basic: 'gap-4' } },
+          },
+        },
+      },
+    ];
+  },
+);
+```
+
+Return a completely new array if you want to override the built-in presets.
+When using `customClasses`, make sure those classes exist in theme CSS and are
+safelisted when necessary.
 
 ### Block inner controls (per block)
 

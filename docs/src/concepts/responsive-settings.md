@@ -10,7 +10,7 @@ In `block.json`:
 {
   "supports": {
     "webentor": {
-      "display": true,
+      "layout": true,
       "spacing": true
     }
   }
@@ -22,18 +22,27 @@ Here is the schema of `supports.webentor` in a scan-friendly format:
 | Property | Type | Description |
 | --- | --- | --- |
 | `spacing` | `boolean` | Enables Spacing controls (padding and margin). |
-| `display` | `boolean \| object` | `true` enables all Display controls. Use an object for granular control flags. |
+| `layout` | `boolean \| object` | `true` enables display mode controls. Use an object for granular control flags. |
+| `sizing` | `boolean \| object` | `true` enables sizing controls. Use an object for granular width and height flags. |
 | `grid` | `boolean` | Enables Grid controls. |
 | `gridItem` | `boolean` | Enables Grid Item controls. |
 | `flexbox` | `boolean` | Enables Flex controls. |
-| `flexboxItem` | `boolean` | Enables Flex Item controls. |
+| `flexItem` | `boolean` | Enables Flex Item controls. |
+| `border` | `boolean` | Enables Border controls. |
+| `borderRadius` | `boolean` | Enables Border Radius controls. |
 | `blockLink` | `boolean` | Enables Block Link controls. |
+| `presets` | `boolean` | Enables the quick layout preset buttons. |
 
-When `display` is an object, use these properties:
+When `layout` is an object, use these properties:
 
 | Property | Type | Description |
 | --- | --- | --- |
 | `display` | `boolean` | Shows display controls (e.g., `none`, `block`, `flex`, `grid`). |
+
+When `sizing` is an object, use these properties:
+
+| Property | Type | Description |
+| --- | --- | --- |
 | `width` | `boolean` | Shows width controls. |
 | `minWidth` | `boolean` | Shows `min-width` controls. |
 | `maxWidth` | `boolean` | Shows `max-width` controls. |
@@ -49,6 +58,17 @@ Editor tabs are driven by `webentor.core.twBreakpoints` (default: `basic, sm, md
 ## Theme tokens
 
 Tokens come from `webentor.core.twTheme` (colors, spacing, radii, sizes). Ensure your `webentor-config.ts` safelists generated classes.
+
+## Quick layout presets
+
+Themes can customize the preset catalog in editor JS with
+`webentor.core.responsiveSettings.layoutPresets`. The filter receives the default
+preset array, the current `blockName`, and the resolved theme tokens, so you
+can append presets, replace the defaults entirely, or scope presets per block.
+
+If you opt into `supports.webentor.presets`, the block gets the preset buttons
+even when it does not expose the rest of the layout controls. Any
+`customClasses` returned by a preset must exist in frontend CSS.
 
 ## Rendering
 
