@@ -404,21 +404,20 @@ addFilter(
 #### `webentor.core.responsiveSettings.layoutPresets`
 
 Customize the quick layout preset buttons shown in the Display & Layout panel.
-The filter receives a cloned preset array, the current `blockName`, and the
-resolved `twTheme`. Return a new array to append, replace, or scope presets per
-block.
+Core starts with an empty preset array. The filter receives a cloned preset
+array, the current `blockName`, and the resolved `twTheme`. Return the
+project-specific preset list for that block.
 
 ```ts
 addFilter(
   'webentor.core.responsiveSettings.layoutPresets',
   'theme/responsive/presets',
-  (presets, blockName) => {
+  (_presets, blockName) => {
     if (blockName !== 'webentor/l-flexible-container') {
-      return presets;
+      return [];
     }
 
     return [
-      ...presets,
       {
         id: 'grid-6-col',
         label: '6 Column Grid',
@@ -438,9 +437,9 @@ addFilter(
 );
 ```
 
-Return a completely new array if you want to override the built-in presets.
-When using `customClasses`, make sure those classes exist in theme CSS and are
-safelisted when necessary.
+Return `[]` when the current block should not expose presets. When using
+`customClasses`, make sure those classes exist in theme CSS and are safelisted
+when necessary.
 
 ### Block inner controls (per block)
 

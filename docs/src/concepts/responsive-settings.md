@@ -61,10 +61,11 @@ Tokens come from `webentor.core.twTheme` (colors, spacing, radii, sizes). Ensure
 
 ## Quick layout presets
 
-Themes can customize the preset catalog in editor JS with
-`webentor.core.responsiveSettings.layoutPresets`. The filter receives the default
-preset array, the current `blockName`, and the resolved theme tokens, so you
-can append presets, replace the defaults entirely, or scope presets per block.
+Core ships no preset catalog by default. Themes should register project-specific
+presets in editor JS with `webentor.core.responsiveSettings.layoutPresets`.
+The filter receives the current preset array, the active `blockName`, and the
+resolved theme tokens, so you can return presets per block or derive them from
+your theme config.
 
 If you opt into `supports.webentor.presets`, the block gets the preset buttons
 even when it does not expose the rest of the layout controls. Any
