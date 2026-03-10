@@ -1,7 +1,7 @@
 {
   "name": "@webikon/webentor-configs",
   "homepage": "https://webikon.sk",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "Webikon s.r.o.",
   "description": "Shared lint and formatting presets for Webentor projects.",
   "license": "MIT",

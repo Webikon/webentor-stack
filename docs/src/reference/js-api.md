@@ -2,6 +2,8 @@
 
 `@webikon/webentor-core` exports Alpine.js utilities, Gutenberg editor
 components, and general-purpose helpers from its `core-js/` package.
+Prefer the package root and documented subpath exports over custom aliases or
+direct `node_modules/...` imports.
 
 ## Installation
 
@@ -18,7 +20,7 @@ These are React components for use inside the Gutenberg block editor.
 A styled button component for use in the editor sidebar or toolbar.
 
 ```tsx
-import { WebentorButton } from '@webikon/webentor-core';
+import { WebentorButton } from '@webikon/webentor-core/blocks-components';
 
 <WebentorButton onClick={() => doSomething()}>
   Click me
@@ -32,7 +34,7 @@ import { WebentorButton } from '@webikon/webentor-core';
 A custom block appender for inserting blocks within a controlled area.
 
 ```tsx
-import { WebentorBlockAppender } from '@webikon/webentor-core';
+import { WebentorBlockAppender } from '@webikon/webentor-core/blocks-components';
 
 <WebentorBlockAppender rootClientId={clientId} />
 ```
@@ -44,7 +46,7 @@ import { WebentorBlockAppender } from '@webikon/webentor-core';
 A select control that presents available typography presets from global styles.
 
 ```tsx
-import { WebentorTypographyPickerSelect } from '@webikon/webentor-core';
+import { WebentorTypographyPickerSelect } from '@webikon/webentor-core/blocks-components';
 
 <WebentorTypographyPickerSelect
   value={attributes.typography}
@@ -60,7 +62,7 @@ Call once to register the global typography filter that injects custom
 typography classes into block wrapper attributes.
 
 ```ts
-import { initCustomTypographyFilter } from '@webikon/webentor-core';
+import { initCustomTypographyFilter } from '@webikon/webentor-core/blocks-filters';
 
 initCustomTypographyFilter();
 ```
@@ -74,7 +76,7 @@ initCustomTypographyFilter();
 An Alpine.js-compatible slider wrapper built on top of [Swiper](https://swiperjs.com/).
 
 ```ts
-import { SliderComponent } from '@webikon/webentor-core';
+import { SliderComponent } from '@webikon/webentor-core/_slider';
 
 // Register as an Alpine.js component
 Alpine.data('slider', SliderComponent);
@@ -101,7 +103,7 @@ Usage in a Blade template:
 Re-exported Swiper instance for custom slider implementations.
 
 ```ts
-import { Swiper } from '@webikon/webentor-core';
+import { Swiper } from '@webikon/webentor-core/_slider';
 
 const swiper = new Swiper('.my-slider', { loop: true });
 ```
@@ -212,7 +214,7 @@ const color = getColorBySlug(colors, 'brand');
 Returns the current block parent object in the editor context.
 
 ```ts
-import { useBlockParent } from '@webikon/webentor-core';
+import { useBlockParent } from '@webikon/webentor-core/blocks-utils';
 
 const parent = useBlockParent();
 ```
@@ -224,7 +226,7 @@ const parent = useBlockParent();
 Returns post-type options and taxonomy mapping used in query controls.
 
 ```ts
-import { usePostTypes } from '@webikon/webentor-core';
+import { usePostTypes } from '@webikon/webentor-core/blocks-utils';
 
 const { postTypesSelectOptions, postTypesTaxonomiesMap } = usePostTypes();
 ```
@@ -236,7 +238,7 @@ const { postTypesSelectOptions, postTypesTaxonomiesMap } = usePostTypes();
 Returns taxonomies for a selected post type.
 
 ```ts
-import { useTaxonomies } from '@webikon/webentor-core';
+import { useTaxonomies } from '@webikon/webentor-core/blocks-utils';
 
 const taxonomies = useTaxonomies('post');
 ```
@@ -462,19 +464,14 @@ Blocks exposing these:
 
 ---
 
-## Vite alias
+## Package entrypoints
 
-The package exports a Vite path alias `@webentorCore` pointing to the
-`core-js/` directory. Add it to your `vite.config.ts`:
+Use package imports for new integrations:
 
 ```ts
-import { defineConfig } from 'vite';
-
-export default defineConfig({
-  resolve: {
-    alias: {
-      '@webentorCore': '/node_modules/@webikon/webentor-core/core-js',
-    },
-  },
-});
+import { debounce } from '@webikon/webentor-core';
+import { initResponsiveSettings } from '@webikon/webentor-core/blocks-filters';
+import { Alpine } from '@webikon/webentor-core/_alpine';
+import config, { buildSafelist } from '@webikon/webentor-core/config';
+import type { WebentorConfig } from '@webikon/webentor-core/types';
 ```

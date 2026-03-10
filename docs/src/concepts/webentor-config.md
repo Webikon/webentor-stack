@@ -14,12 +14,8 @@ Use a dedicated `webentor-config.ts` file, extend the base config, and then expo
 
 ```ts
 // webentor-config.ts
-// Package must be imported with full path (not alias) to avoid Vite resolution issues.
-import baseConfig, {
-  buildSafelist,
-} from './node_modules/@webikon/webentor-core/core-js/config/webentor-config';
-
-import type { WebentorConfig } from './node_modules/@webikon/webentor-core/core-js/types/_webentor-config';
+import baseConfig, { buildSafelist } from '@webikon/webentor-core/config';
+import type { WebentorConfig } from '@webikon/webentor-core/types';
 
 const webentorConfig: WebentorConfig = {
   ...baseConfig,
@@ -47,6 +43,8 @@ webentorConfig.safelist = [
 
 export default webentorConfig;
 ```
+
+Use the package exports above as the supported consumer contract.
 
 ```ts
 // resources/scripts/blocks-filters/_core-init.tsx

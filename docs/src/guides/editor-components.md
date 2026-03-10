@@ -1,6 +1,14 @@
 # Core JS Components
 
-Import from `@webentorCore/blocks-components`.
+Import from `@webikon/webentor-core/blocks-components`.
+
+```tsx
+import {
+  WebentorBlockAppender,
+  WebentorButton,
+  WebentorTypographyPickerSelect,
+} from '@webikon/webentor-core/blocks-components';
+```
 
 ## WebentorButton
 

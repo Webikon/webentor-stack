@@ -33,6 +33,8 @@ export function createPrettierConfig(overrides = {}) {
       "",
       "^@webentorCore",
       "^@webentorCore/(.*)$",
+      "^@webikon/webentor-core$",
+      "^@webikon/webentor-core/(.*)$",
       "",
       "^@blocks",
       "^@blocks/(.*)$",

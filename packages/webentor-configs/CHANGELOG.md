@@ -1,5 +1,9 @@
 # Webentor Configs Changelog
 
+## 1.0.2
+
+- Add `@webikon/webentor-core` to Prettier
+
 ## 1.0.1
 
 - Fix Prettier import order

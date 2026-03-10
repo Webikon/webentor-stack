@@ -35,14 +35,14 @@ Understand how assets are discovered, built, and enqueued.
 - PHP scans block folders and registers FE `script.ts` + `style.css` by matching Vite manifest.
 - Handles get injected into block metadata so WordPress auto-enqueues them on the frontend.
 
-## Aliases
+## Imports
 
-Use friendly imports in TS/TSX:
+Use package imports for core APIs and local aliases for theme sources:
 
 ```ts
 import '@blocks/e-button/e-button.block';
 
-import { WebentorButton } from '@webentorCore/blocks-components';
+import { WebentorButton } from '@webikon/webentor-core/blocks-components';
 ```
 
 ## Theme editor bootstrap
