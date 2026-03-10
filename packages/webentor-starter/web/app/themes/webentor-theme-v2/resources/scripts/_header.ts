@@ -1,4 +1,4 @@
-import { debounce } from '@webentorCore/_utils';
+import { debounce } from '@webikon/webentor-core/_utils';
 
 document.addEventListener('DOMContentLoaded', function () {
   let prevScrollpos = window.scrollY;

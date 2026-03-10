@@ -1,9 +1,5 @@
-// Package must be imported with full path (not with alias) to avoid issues with Vite
-import config, {
-  buildSafelist,
-} from './node_modules/@webikon/webentor-core/core-js/config/webentor-config';
-
-import type { WebentorConfig } from './node_modules/@webikon/webentor-core/core-js/types/_webentor-config';
+import config, { buildSafelist } from '@webikon/webentor-core/config';
+import type { WebentorConfig } from '@webikon/webentor-core/types';
 
 const webentorConfig: WebentorConfig = {
   ...config,

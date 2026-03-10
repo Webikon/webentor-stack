@@ -2,7 +2,7 @@ import intersect from '@alpinejs/intersect';
 import ajax from '@imacrayon/alpine-ajax';
 import masonry from 'alpinejs-masonry';
 
-import { Alpine } from '@webentorCore/_alpine';
+import { Alpine } from '@webikon/webentor-core/_alpine';
 
 // Extend Alpine with more components, plugins, etc.
 document.addEventListener('alpine:init', () => {

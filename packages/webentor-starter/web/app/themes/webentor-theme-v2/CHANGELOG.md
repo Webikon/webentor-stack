@@ -1,5 +1,9 @@
 # Webentor Theme Changelog
 
+### Version 2.0.4
+
+- Move from alias `@webentorCore` to direct imports with `@webikon/webentor-core`
+
 ### Version 2.0.3
 
 - Fix Vite blocks build for Windows using Herd

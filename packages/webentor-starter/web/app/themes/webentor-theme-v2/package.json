@@ -1,14 +1,14 @@
 {
   "name": "@webikon/webentor-theme",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "private": true,
   "engines": {
     "node": ">=20.0.0"
   },
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "vite --configLoader runner",
+    "build": "vite build --configLoader runner",
     "lint": "npm run lint:js && npm run lint:css",
     "lint:js": "eslint resources/scripts resources/blocks",
     "lint:css": "stylelint \"resources/**/*.{vue,css,sass,scss,less}\"",

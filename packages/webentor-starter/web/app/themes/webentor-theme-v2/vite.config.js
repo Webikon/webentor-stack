@@ -78,8 +78,11 @@ export default defineConfig({
     }),
   ],
   optimizeDeps: {
-    // Fix imports from webpack built libraries
-    include: ['@10up/block-components'],
+    include: [
+      // Fix imports from webpack built libraries
+      '@10up/block-components',
+      '@webikon/webentor-core',
+    ],
   },
   server: {
     host: '127.0.0.1',
@@ -96,7 +99,6 @@ export default defineConfig({
       '@fonts': '/resources/fonts',
       '@images': '/resources/images',
       '@blocks': '/resources/blocks',
-      '@webentorCore': '/node_modules/@webikon/webentor-core/core-js',
     },
   },
 });

@@ -24,7 +24,6 @@ Advanced WP starter theme with modern workflow.
 
 - Run `composer install` from the theme directory to install composer dependencies
 - Run `pnpm` from the theme directory to install node dependencies
-- ~~(temporary) Run `pnpm` and `pnpm build` in `webentor-core` folder~~
 
 Then:
 
@@ -55,7 +54,7 @@ Linters used in project. Make sure your editor has proper extensions:
 
 We have core package named **[webentor-core](https://github.com/Webikon/webentor-core)**.
 Contains PHP library where all core blocks and views are defined. We also enqueue some basic styles and have available a bunch of helper functions, e.g. for images (more below).
-Contains JS library from which we can import JS core functionality for blocks, block components, etc. Import from `@webentorCore/**`.
+Contains JS library from which we can import JS core functionality for blocks, block components, etc. Prefer package imports such as `@webikon/webentor-core/_utils`, `@webikon/webentor-core/_alpine`, `@webikon/webentor-core/blocks-filters`, `@webikon/webentor-core/config`, and `@webikon/webentor-core/types`.
 
 #### Tailwind v4 Theme
 
@@ -72,48 +71,7 @@ Custom fonts should be uploaded to `resources/fonts/` and defined as `@fontface`
 
 #### Responsive images and resizing
 
-Responsive images are provided by `webikon/webentor-core` package.
-We have multiple helpers to work with images, see `webentor-core/app/images.php` namespaced with `Webentor\Core`.
-
-Example 1: We want to output `<picture>` element where default image size would be 1024x700 with cropping, resize and crop to 600x400 until 480px screen width and resize to 700x500 without crop up until 768px screen width, also add `block` class.
-We'll use `\Webentor\Core\get_resized_picture()` function.
-Look at the third parameter, it is multidimensional array, keys `480` or `768` mean "screen max-width", so sizes in nested array would be applied up until that max-width.
-Those keys should be the same as we use in Tailwind, `480`, `768`, `992`, `1200`
-
-```
-\Webentor\Core\get_resized_picture(
-    $img_id,
-    [1024, 700, true]
-    [
-        480 => [600, 400, true],
-        768 => [700, 500],
-    ],
-    ['class' => 'block'],
-)
-```
-
-Example 2: We don't need responsive image. We want to output `<img>` element where default image size would be 1024x700 with cropping, and also add `block` class.
-We'll use `\Webentor\Core\get_resized_image()` function.
-
-```
-\Webentor\Core\get_resized_picture(
-    $img_id,
-    [1024, 700],
-    true,
-    ['class' => 'block'],
-)
-```
-
-Example 3: We want to create our custom `<img>` (e.g. in blade template) and just need url of resized image which would be 1024x700 with croping.
-We'll use `\Webentor\Core\get_resized_image_url()` function.
-
-```
-\Webentor\Core\get_resized_image_url(
-    $img_id,
-    [1024, 700],
-    true
-)
-```
+See [Images docs](https://webikon.github.io/webentor-stack/guides/images.html)
 
 #### SVG
 

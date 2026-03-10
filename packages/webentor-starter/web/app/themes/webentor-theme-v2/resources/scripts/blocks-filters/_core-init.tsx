@@ -1,9 +1,11 @@
 import { addFilter } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
 
-import { initCustomTypographyFilter } from '@webentorCore/blocks-filters/_filter-core-typography';
-import { initSliderSettings } from '@webentorCore/blocks-filters/_slider-settings';
-import { initResponsiveSettings } from '@webentorCore/blocks-filters/responsive-settings';
+import {
+  initCustomTypographyFilter,
+  initResponsiveSettings,
+  initSliderSettings,
+} from '@webikon/webentor-core/blocks-filters';
 
 import webentorConfig, { customTypographyKeys } from '../../../webentor-config';
 

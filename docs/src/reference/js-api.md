@@ -118,7 +118,7 @@ Sets a deeply nested value in an object without mutating the original.
 Useful for updating Gutenberg block attributes.
 
 ```ts
-import { setImmutably } from '@webikon/webentor-core';
+import { setImmutably } from '@webikon/webentor-core/_utils';
 
 const updated = setImmutably(attributes, ['display', 'value', 'sm'], 'flex');
 setAttributes(updated);
@@ -131,7 +131,7 @@ setAttributes(updated);
 Returns a debounced version of a function.
 
 ```ts
-import { debounce } from '@webikon/webentor-core';
+import { debounce } from '@webikon/webentor-core/_utils';
 
 const handleResize = debounce(() => {
   recalculateLayout();
@@ -147,7 +147,7 @@ window.addEventListener('resize', handleResize);
 Returns a throttled version of a function.
 
 ```ts
-import { throttle } from '@webikon/webentor-core';
+import { throttle } from '@webikon/webentor-core/_utils';
 
 const handleScroll = throttle(() => {
   updateScrollPosition();
@@ -163,7 +163,7 @@ window.addEventListener('scroll', handleScroll);
 Converts a kebab-case or snake_case string to camelCase.
 
 ```ts
-import { camelize } from '@webikon/webentor-core';
+import { camelize } from '@webikon/webentor-core/_utils';
 
 camelize('my-block-name'); // 'myBlockName'
 camelize('some_value');    // 'someValue'
@@ -176,7 +176,7 @@ camelize('some_value');    // 'someValue'
 Checks if a value is empty.
 
 ```ts
-import { isEmpty } from '@webikon/webentor-core';
+import { isEmpty } from '@webikon/webentor-core/_utils';
 
 isEmpty({}); // true
 ```
@@ -188,7 +188,7 @@ isEmpty({}); // true
 Finds a color slug by hex/rgb color value.
 
 ```ts
-import { getColorSlugByColor } from '@webikon/webentor-core';
+import { getColorSlugByColor } from '@webikon/webentor-core/_utils';
 
 const slug = getColorSlugByColor(colors, '#0ea5e9');
 ```
@@ -200,7 +200,7 @@ const slug = getColorSlugByColor(colors, '#0ea5e9');
 Finds a color value by slug.
 
 ```ts
-import { getColorBySlug } from '@webikon/webentor-core';
+import { getColorBySlug } from '@webikon/webentor-core/_utils';
 
 const color = getColorBySlug(colors, 'brand');
 ```
