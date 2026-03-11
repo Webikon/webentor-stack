@@ -1,14 +1,17 @@
-import config, { buildSafelist } from '@webikon/webentor-core/config';
+import {
+  buildSafelist,
+  webentorDefaultConfig,
+} from '@webikon/webentor-core/config';
 import type { WebentorConfig } from '@webikon/webentor-core/types';
 
 const webentorConfig: WebentorConfig = {
-  ...config,
+  ...webentorDefaultConfig,
   theme: {
-    ...config.theme,
+    ...webentorDefaultConfig.theme,
 
     // Extend colors
     colors: {
-      ...config.theme.colors,
+      ...webentorDefaultConfig.theme.colors,
 
       'red-light': 'var(--color-red-light)',
       red: 'var(--color-red)',
@@ -21,7 +24,7 @@ const webentorConfig: WebentorConfig = {
 
     // Extend spacing
     // spacing: {
-    //   ...config.theme.spacing,
+    //   ...webentorDefaultConfig.theme.spacing,
     //   24: '6rem', // 96px
     // },
   },

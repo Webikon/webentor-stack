@@ -14,16 +14,19 @@ Use a dedicated `webentor-config.ts` file, extend the base config, and then expo
 
 ```ts
 // webentor-config.ts
-import baseConfig, { buildSafelist } from '@webikon/webentor-core/config';
+import {
+  buildSafelist,
+  webentorDefaultConfig,
+} from '@webikon/webentor-core/config';
 import type { WebentorConfig } from '@webikon/webentor-core/types';
 
 const webentorConfig: WebentorConfig = {
-  ...baseConfig,
+  ...webentorDefaultConfig,
   theme: {
-    ...baseConfig.theme,
+    ...webentorDefaultConfig.theme,
     // Extend only what your project needs; keep base tokens as the default.
     colors: {
-      ...baseConfig.theme.colors,
+      ...webentorDefaultConfig.theme.colors,
       brand: 'var(--color-brand)',
       'brand-dark': 'var(--color-brand-dark)',
     },

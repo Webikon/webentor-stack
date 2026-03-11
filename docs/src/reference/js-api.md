@@ -472,6 +472,6 @@ Use package imports for new integrations:
 import { debounce } from '@webikon/webentor-core';
 import { initResponsiveSettings } from '@webikon/webentor-core/blocks-filters';
 import { Alpine } from '@webikon/webentor-core/_alpine';
-import config, { buildSafelist } from '@webikon/webentor-core/config';
+import { buildSafelist, webentorDefaultConfig } from '@webikon/webentor-core/config';
 import type { WebentorConfig } from '@webikon/webentor-core/types';
 ```
