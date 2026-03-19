@@ -239,13 +239,43 @@ add_filter('webentor/skip_render_block_blade', function (bool $skip, array $bloc
 
 ### `webentor/block_classes_by_property`
 
-Modify the classes-by-property map before Tailwind class generation.
+Modify the filtered classes-by-property map before render-time class filters run.
 
 ```php
-add_filter('webentor/block_classes_by_property', function (array $classes_by_prop, array $attributes): array {
+add_filter('webentor/block_classes_by_property', function (array $classes_by_prop, WP_Block $block): array {
     // Add or modify class mappings
     return $classes_by_prop;
 }, 10, 2);
+```
+
+---
+
+### `webentor/block_wrapper_class_properties`
+
+Control which generated property groups survive into the default wrapper
+`block_classes` string and the downstream `classes_by_property` map seen by
+`webentor/block_classes` and `webentor/block_custom_classes`.
+
+The raw generated map remains available as an optional fourth argument on
+`webentor/block_classes` and `webentor/block_custom_classes` when you need to
+move excluded groups, such as `backgroundColor`, into custom container classes.
+Existing callbacks that accept only the original arguments continue to work.
+
+Excluding `backgroundColor` here does not affect `webentor/block_bg_classes`.
+
+```php
+add_filter(
+    'webentor/block_wrapper_class_properties',
+    function (array $properties, array $attributes, $block, $parent_block, array $classes_by_prop): array {
+        if (!$block || $block->name !== 'webentor/l-section') {
+            return $properties;
+        }
+
+        return array_values(array_diff($properties, ['backgroundColor', 'textColor']));
+    },
+    10,
+    5
+);
 ```
 
 ---
@@ -296,12 +326,34 @@ add_filter('webentor/register_block', function ($should_register, $slug) {
 Modify wrapper classes before render.
 
 ```php
-add_filter('webentor/block_classes', function ($classes, $block) {
+add_filter('webentor/block_classes', function ($classes, $block, array $classes_by_prop, array $all_classes_by_prop) {
     if ($block->name === 'webentor/l-section') {
         $classes .= ' container mx-auto';
     }
+
     return $classes;
-}, 10, 2);
+}, 10, 4);
+```
+
+---
+
+### `webentor/block_custom_classes`
+
+Build custom/container classes before render. The third argument is the filtered
+`classes_by_property` map, while the optional fourth argument exposes the raw
+generated map before `webentor/block_wrapper_class_properties` exclusions.
+
+```php
+add_filter('webentor/block_custom_classes', function ($custom_classes, $block, array $classes_by_prop, array $all_classes_by_prop) {
+    if ($block->name !== 'webentor/l-section') {
+        return $custom_classes;
+    }
+
+    return trim(implode(' ', [
+        \Webentor\Core\get_classes_by_property($all_classes_by_prop, ['backgroundColor']),
+        \Webentor\Core\get_classes_by_property($classes_by_prop, ['layout', 'display']),
+    ]));
+}, 10, 4);
 ```
 
 ---

@@ -58,8 +58,8 @@ Repository automation is split by trigger type so CI stays fast and release step
   - Builds docs and deploys to GitHub Pages.
 - `.github/workflows/release.yml`:
   - Runs on push to `main`.
-  - Uses Changesets action to open/update the "Version Packages" PR.
-  - After merging that PR, `pnpm changeset publish` publishes only newly bumped, unpublished npm package versions.
+  - Remains the repository release automation hook after maintainers prepare version bumps and changelog entries manually.
+  - Keeps the existing publish and downstream release wiring in place.
 - `.github/workflows/demo-bump.yml`:
   - Runs after `release.yml` completes successfully.
   - Invokes `scripts/bump-demo.sh` to trigger downstream demo integration bump flow (placeholder implementation).
@@ -84,16 +84,16 @@ flowchart LR
 Use this sequence for package changes so CI, releases, and downstream integration stay synchronized:
 
 1. Create a feature branch and implement changes in the relevant `packages/*` directory.
-2. Add a changeset:
-   1. Run `pnpm changeset`.
-   2. Select affected package(s).
-   3. Select semver bump type.
-   4. Write a short release summary.
+2. Prepare release metadata manually when the change needs a release:
+   1. Choose the affected package(s) and semver bump type.
+   2. Update the authoritative version files directly.
+   3. Add curated changelog entries for the affected package(s).
+   4. Keep multi-file version sources synchronized for packages that have them.
+   5. Update `docs/src/compatibility-matrix.md` with the tested-together version set.
 3. Open a pull request; `ci.yml` validates changed areas.
-4. Merge the PR into `main`; `release.yml` then opens/updates the "Version Packages" PR.
-5. Merge the version PR; Changesets bumps versions/changelogs and publishes only newly bumped, unpublished npm package versions.
-6. Confirm `demo-bump.yml` ran successfully after release.
-7. Push a namespaced tag when you want to trigger a specific split mirror:
+4. Merge the PR into `main`; `release.yml` remains the release automation hook after the manual release prep lands.
+5. Confirm `demo-bump.yml` ran successfully after release when that downstream handoff is needed.
+6. Push a namespaced tag when you want to trigger a specific split mirror:
    1. `core-v*` -> `split-webentor-core.yml`
    2. `setup-v*` -> `split-webentor-setup.yml`
    3. `starter-v*` -> `split-webentor-starter.yml`
@@ -101,11 +101,11 @@ Use this sequence for package changes so CI, releases, and downstream integratio
 
 ## Release and rollout order
 
-When changes span multiple packages, keep this order and map each stage to automation:
+When changes span multiple packages, keep this order and map each stage to the release pipeline:
 
 1. `webentor-core` and/or `webentor-configs`
-   - Add changesets in PRs.
-   - `release.yml` + Changesets handles version PR and selective npm publish after merge.
+   - Prepare version bumps and changelog entries manually in the repository.
+   - Keep the existing release workflow for publish and downstream handoff after merge.
 2. `webentor-setup` (include upgrade recipe when behavior changes)
    - Validate runtime/CLI contract updates.
    - Trigger split mirror via `setup-v*` tag when ready.

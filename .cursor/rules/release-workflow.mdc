@@ -9,27 +9,22 @@ Use these steps whenever a request involves releasing, versioning, publishing, o
 
 ## Critical Rule
 
-**NEVER manually edit version numbers (`package.json`, `composer.json`) or `CHANGELOG.md`
-for Changesets-managed packages (`webentor-core`, `webentor-configs`).**
-Changesets automation handles all of these. Manual edits cause double-bumps.
+**Version bumps and changelog entries are manual for released packages in this repository.**
+Edit the authoritative version files and changelog files directly. Do not rely on
+`.changeset` files or generated version PRs to choose versions or author release notes.
 
 ## Step-by-step Release Flow
 
-1. Create a changeset:
-   - Run `pnpm changeset`.
-   - Select affected package(s) and semver bump type (`patch` / `minor` / `major`).
-   - Write a short, user-facing summary of the changes.
-   - Commit and push the `.changeset/*.md` file to `main`.
-2. Automated "Version Packages" PR:
-   - `release.yml` runs on push to `main`.
-   - Changesets action runs `pnpm version-packages` which:
-     - `changeset version` — bumps `package.json`, updates `CHANGELOG.md`, deletes consumed changeset.
-     - `node scripts/sync-composer-versions.mjs` — syncs the new version into sibling `composer.json`.
-   - A "Version Packages" PR is opened/updated on `changeset-release/main`.
-3. Review and merge the PR:
-   - The PR contains version bumps, changelog updates, and synced `composer.json`.
-   - Merging triggers `changeset publish` → npm publish.
-4. Post-publish manual steps:
+1. Prepare the release files manually:
+   - Choose the semver bump for each affected package.
+   - Edit the authoritative version files for that package directly.
+   - Update the package changelog manually with a curated entry.
+   - Keep mirrored version fields in sync when a package has multiple version sources.
+2. Commit and push the release preparation through the normal review flow.
+3. Keep the existing release workflow in place:
+   - `release.yml` remains the repository release automation entry point on push to `main`.
+   - Keep the current publish and downstream workflow wiring unless the user explicitly asks to change it.
+4. Post-release manual steps:
    - Update `docs/src/compatibility-matrix.md` with the new version set.
    - Push a namespaced tag to trigger the split-mirror workflow:
      - `core-v*` -> `split-webentor-core.yml` (also pings Packagist)
@@ -37,31 +32,29 @@ Changesets automation handles all of these. Manual edits cause double-bumps.
      - `starter-v*` -> `split-webentor-starter.yml`
    - Example: `git tag core-v0.9.14 && git push origin core-v0.9.14`
 
-## What is automated vs. manual
+## Release ownership
 
-| Step | Automated | Manual |
-|---|---|---|
-| `package.json` version bump | Yes (Changesets) | NO |
-| `composer.json` version sync | Yes (`sync-composer-versions.mjs`) | NO |
-| `CHANGELOG.md` update | Yes (Changesets) | NO |
-| npm publish | Yes (`changeset publish`) | NO |
-| Changeset file creation | — | Yes (`pnpm changeset`) |
-| Compatibility matrix update | — | Yes |
-| Namespaced tag for mirror | — | Yes |
-| Packagist update | Yes (API ping in split workflow) | NO |
+| Step | Source of truth |
+|---|---|
+| Version selection | Manual |
+| `package.json` / `composer.json` / `style.css` version edits | Manual |
+| `CHANGELOG.md` updates | Manual |
+| Compatibility matrix update | Manual |
+| npm publish | Existing release workflow |
+| Namespaced tag for mirror | Manual |
+| Packagist update | Existing core split workflow |
 
 ## Guardrails
 
-- Only `webentor-core` and `webentor-configs` are npm-published via Changesets.
+- Use the "Version Source Map" in `AGENTS.md` to decide which files must be updated for a release.
+- `webentor-core` and `webentor-configs` are still npm-published packages, but their version and changelog files are maintained manually.
 - `webentor-core`, `webentor-setup`, and `webentor-starter` are delivered via split-mirror workflows for standalone repositories.
-- Changesets baseline config is `.changeset/config.json` (`baseBranch: main`, `access: public`).
 - Required GitHub secrets:
   - `CORE_MIRROR_REPO`, `CORE_MIRROR_TOKEN` — for core split mirror
   - `PACKAGIST_USERNAME`, `PACKAGIST_API_TOKEN` — for Packagist ping
   - `WEBENTOR_DEMO_REPO`, `WEBENTOR_DEMO_TOKEN` — for demo bump workflow
 
-## Non-Changesets Packages
+## Version files
 
-`webentor-setup`, `webentor-starter`, and `webentor-theme-v2` are NOT managed by Changesets.
-For these packages, version bumps, changelog updates, and `composer.json` edits are manual.
+All released packages use manual version bumps and manual changelog updates.
 See the "Version Source Map" section in `AGENTS.md` for the full list of files to update.

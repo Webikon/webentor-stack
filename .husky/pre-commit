@@ -1,0 +1,36 @@
+#!/bin/sh
+
+# Some automation creates commits in CI; skip the local asset build there.
+[ -n "$CI" ] && exit 0
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT" || exit 1
+
+STAGED_CORE_FILES="$(git diff --cached --name-only -- 'packages/webentor-core')"
+
+if [ -z "$STAGED_CORE_FILES" ]; then
+  echo "No webentor-core changes staged, skipping build."
+  exit 0
+fi
+
+# Only rebuild when staged source or package metadata can change the bundle output.
+if printf "%s\n" "$STAGED_CORE_FILES" | grep -E '(^packages/webentor-core/.*\.(ts|tsx|js|jsx|css|scss|sass|less)$)|(^packages/webentor-core/package\.json$)' > /dev/null; then
+  echo "webentor-core source changes detected, running package build..."
+
+  if ! pnpm --filter './packages/webentor-core' build; then
+    echo "webentor-core build failed. Commit aborted."
+    exit 1
+  fi
+
+  if [ -n "$(git status --porcelain -- packages/webentor-core/public/)" ]; then
+    echo "Staging rebuilt webentor-core public assets..."
+    git add packages/webentor-core/public/
+    git status --porcelain -- packages/webentor-core/public/ | sed 's/^/  /'
+  else
+    echo "No public asset changes detected after build."
+  fi
+else
+  echo "No staged webentor-core source files require a rebuild."
+fi
+
+echo "Proceeding with commit."

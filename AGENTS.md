@@ -78,61 +78,58 @@ Shared release is not complete until demo CI is green.
 - Use independent semver per package; do not force shared version numbers across the monorepo.
 - On every release request, update `docs/src/compatibility-matrix.md` with the tested-together version set.
 
-## Release Workflow (Changesets-first)
+## Release Workflow (Manual versioning)
 
-For npm-published packages (`webentor-core`, `webentor-configs`), versioning is fully
-automated via Changesets. **AI agents and humans must NOT manually edit version numbers
-or changelog files** for these packages. The only manual steps are:
+For released packages in this monorepo, maintainers choose version bumps and write
+changelog entries manually. Do not rely on `.changeset` files or generated version PRs
+to decide release contents. The source of truth is the version and changelog files
+committed in the repository.
 
-1. **Create a changeset** — run `pnpm changeset`, select the package(s) and bump type
-   (`patch` / `minor` / `major`), write a user-facing summary. This creates a `.changeset/*.md` file.
-2. **Commit and push** the changeset file to `main`.
-3. **Automation handles the rest:**
-   - `release.yml` detects the changeset and opens/updates a "Version Packages" PR.
-   - That PR contains the version bumps in `package.json`, updated `CHANGELOG.md`,
-     and synced `composer.json` (via `scripts/sync-composer-versions.mjs`).
-   - Merging the PR triggers `changeset publish` → npm publish.
-4. **Update `docs/src/compatibility-matrix.md`** with the new version set.
-5. **Push a namespaced tag** to trigger the split-mirror workflow (e.g. `core-v0.9.14`).
+### Release preparation
 
-### What Changesets automates (do NOT do manually)
+1. Decide the semver bump for each affected package.
+2. Edit the authoritative version files listed in the "Version Source Map" below.
+3. Update the package changelog manually with a curated release entry.
+4. Keep every mirrored version field in sync for packages that have multiple version sources.
+5. Update `docs/src/compatibility-matrix.md` with the tested-together version set.
+6. Commit and push the release preparation through the normal review flow.
 
-- Bumping `"version"` in `package.json`
-- Bumping `"version"` in `composer.json` (synced by `scripts/sync-composer-versions.mjs`)
-- Updating `CHANGELOG.md`
+### Existing release workflow
 
-### What remains manual
-
-- Creating the `.changeset/*.md` file (`pnpm changeset`)
-- Updating `docs/src/compatibility-matrix.md`
-- Pushing the namespaced tag for the split mirror
+- Keep the current release workflow structure in place after release preparation is merged.
+- `release.yml` remains the repository release automation entry point on push to `main`.
+- Push a namespaced tag to trigger split-mirror workflows when needed:
+ - `core-v*` -> `split-webentor-core.yml` (also pings Packagist)
+ - `setup-v*` -> `split-webentor-setup.yml`
+ - `starter-v*` -> `split-webentor-starter.yml`
+- Example: `git tag core-v0.9.14 && git push origin core-v0.9.14`
 
 ### AI agent release instructions
 
 When asked to release a package:
 
-1. Run `pnpm changeset` (or create the `.changeset/*.md` file directly).
-2. Update `docs/src/compatibility-matrix.md`.
-3. Commit and push to `main`.
-4. After the "Version Packages" PR is merged and npm publish succeeds,
-   push the namespaced tag (e.g. `git tag core-vX.Y.Z && git push origin core-vX.Y.Z`).
+1. Identify the affected package(s) and choose the correct bump level.
+2. Edit the version files directly in the repository.
+3. Update the relevant changelog file(s) manually.
+4. Keep all related version sources synchronized for that package.
+5. Update `docs/src/compatibility-matrix.md`.
+6. Commit and push through the normal release flow, then push the namespaced tag when needed.
 
-**NEVER** manually edit `package.json` version, `composer.json` version, or `CHANGELOG.md`
-for Changesets-managed packages. The automation will do it.
+Manual version and changelog edits are expected for release work in this repository.
 
 ## Version Source Map
 
 Reference map for locating version sources per package.
 
 - `webentor-core` (beta, `0.9.x`):
-  - `packages/webentor-core/package.json` -> `"version"` (managed by Changesets)
-  - `packages/webentor-core/composer.json` -> `"version"` (synced by `scripts/sync-composer-versions.mjs`)
-  - `packages/webentor-core/CHANGELOG.md` (managed by Changesets)
-  - npm publish via Changesets; Composer/Packagist via split-mirror + Packagist API ping
+ - `packages/webentor-core/package.json` -> `"version"` (manual)
+ - `packages/webentor-core/composer.json` -> `"version"` (manual; keep in sync with `package.json`)
+ - `packages/webentor-core/CHANGELOG.md` -> add new entry at top (manual)
+ - npm publish via the existing release workflow; Composer/Packagist via split-mirror + Packagist API ping
 - `webentor-configs` (stable, `1.x`):
-  - `packages/webentor-configs/package.json` -> `"version"` (managed by Changesets)
-  - `packages/webentor-configs/CHANGELOG.md` (managed by Changesets)
-  - npm publish via Changesets
+ - `packages/webentor-configs/package.json` -> `"version"` (manual)
+ - `packages/webentor-configs/CHANGELOG.md` -> add new entry at top (manual)
+ - npm publish via the existing release workflow
 - `webentor-setup` (stable, `1.x`):
   - `packages/webentor-setup/CHANGELOG.md` -> add new entry at top (manual)
   - Runtime is mirrored via split workflow (no npm publish)
