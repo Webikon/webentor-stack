@@ -296,6 +296,9 @@ addFilter('webentor.core.customTypographyKeys', 'theme/typo', () => [
 
 ### Button component
 
+For the full editor-to-frontend decision flow, see
+[Extend `e-button`](../guides/extend-e-button.md).
+
 #### `webentor.core.button.className`
 
 ```ts
@@ -327,12 +330,21 @@ addFilter('webentor.core.button.sizes', 'theme/btn/sizes', (sizes) => [
 #### `webentor.core.button.extensionComponent`
 
 ```tsx
-addFilter('webentor.core.button.extensionComponent', 'theme/btn/ext', (extensionComponent, props) => (
-  <div className="text-12 mt-2">Extra Button Settings</div>
-));
+addFilter(
+  'webentor.core.button.extensionComponent',
+  'theme/btn/ext',
+  (extensionComponent, props) => (
+    <>
+      {extensionComponent}
+      <div className="text-12 mt-2">Extra Button Settings</div>
+    </>
+  ),
+);
 ```
 
 #### `webentor.core.button.output`
+
+Editor preview only. This hook does not change frontend HTML.
 
 ```tsx
 addFilter(
@@ -341,26 +353,25 @@ addFilter(
   (output, props, buttonClassName) => {
     const attributes = props.attributes;
     const attributeName = props.attributeName;
-    const variant = attributes.variant;
-    const size = attributes.size;
+    const buttonAttributes = attributes[attributeName] ?? {};
+    const variant = buttonAttributes.variant ?? 'primary';
+    const size = buttonAttributes.size ?? 'medium';
 
     return (
       <button
         type="button"
-        className={`btn btn--${variant} btn--size-${size} ${buttonClassName ?? ''} wbtr:prevent-hover ${attributes[attributeName]?.showIcon && attributes[attributeName]?.icon?.name ? 'btn--icon' : ''} ${attributes[attributeName]?.iconPosition ? `btn--icon-${attributes[attributeName]?.iconPosition}` : ''} ${!attributes[attributeName]?.showButton ? 'wbtr:opacity-40' : ''}`}
+        className={`btn btn--${variant} btn--size-${size} ${buttonClassName ?? ''} wbtr:prevent-hover ${buttonAttributes.showIcon && buttonAttributes.icon?.name ? 'btn--icon' : ''} ${buttonAttributes.iconPosition ? `btn--icon-${buttonAttributes.iconPosition}` : ''} ${!buttonAttributes.showButton ? 'wbtr:opacity-40' : ''}`}
       >
         <span className="btn__text">
-          {attributes[attributeName] && attributes[attributeName]?.title
-            ? attributes[attributeName]?.title
-            : ''}
+          {buttonAttributes.title ?? ''}
         </span>
 
-        {attributes[attributeName]?.showIcon &&
-          attributes[attributeName]?.icon?.name && (
+        {buttonAttributes.showIcon &&
+          buttonAttributes.icon?.name && (
             <span className="btn__icon svg-icon">
               <Icon10up
-                name={attributes[attributeName]?.icon.name}
-                iconSet={attributes[attributeName]?.icon.iconSet}
+                name={buttonAttributes.icon.name}
+                iconSet={buttonAttributes.icon.iconSet}
               />
             </span>
           )}

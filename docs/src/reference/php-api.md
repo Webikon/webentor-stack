@@ -417,6 +417,9 @@ add_filter('render_blade_block', function ($html, $parsed, $block) {
 
 Post-process HTML of a specific block.
 
+For `webentor/e-button`, prefer a theme block view override when you need to pass
+new button props into `<x-button>`. See [Extend `e-button`](../guides/extend-e-button.md).
+
 ```php
 add_filter('render_blade_block_webentor/e-button', function ($html) {
     return str_replace('wp-block-webentor-e-button', 'wp-block-webentor-e-button has-shadow', $html);
@@ -438,6 +441,9 @@ add_filter('webentor/add_head_ajax_url', '__return_false');
 ### `webentor/block_type_metadata_settings`
 
 Modify block metadata settings/defaults before registration.
+
+Use this when you need PHP-side block defaults to match an `e-button` extension.
+For the full editor and frontend flow, see [Extend `e-button`](../guides/extend-e-button.md).
 
 ```php
 add_filter('webentor/block_type_metadata_settings', function ($settings, $metadata) {

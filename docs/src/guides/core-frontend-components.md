@@ -23,6 +23,12 @@ Tip: Keep images consistent heights (via CSS or object-fit) for smoother slides.
 - File: `resources/core-components/button/button.blade.php`
 - Reusable frontend Blade component used by `webentor/e-button` and custom theme views.
 - Markup-only component; no separate runtime JS init step is required.
+- Block attributes do not reach this component directly. `webentor/e-button` first
+  maps block data through its block `view.blade.php`, which then forwards props into
+  `<x-button>`.
+
+If you are extending `webentor/e-button` and need to carry a new property from the
+editor into frontend output, see [Extend `e-button`](./extend-e-button.md).
 
 ### Usage
 

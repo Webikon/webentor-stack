@@ -35,6 +35,10 @@ Filters:
 - `webentor.core.button.variants`
 - `webentor.core.button.sizes`
 - `webentor.core.button.extensionComponent`
+- `webentor.core.button.output`
+
+For an end-to-end example that covers stored data, editor UI, preview behavior,
+and frontend rendering together, see [Extend `e-button`](./extend-e-button.md).
 
 ## WebentorBlockAppender
 
