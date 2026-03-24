@@ -381,6 +381,40 @@ addFilter(
 );
 ```
 
+### Section
+
+#### `webentor.core.l-section.output`
+
+Editor preview only. This hook does not change frontend HTML.
+
+```tsx
+import { addFilter } from '@wordpress/hooks';
+import { cloneElement, isValidElement } from '@wordpress/element';
+
+addFilter(
+  'webentor.core.l-section.output',
+  'mytheme/section-output',
+  (output, props, blockProps, innerBlocksProps, children) => {
+    // Example: wrap the section in a decorative container
+    return (
+      <div className="my-section-decorator">
+        {output}
+      </div>
+    );
+  },
+);
+```
+
+Parameters:
+
+- `output` – default section JSX (the `<div>` with class `w-section`)
+- `props` – full `BlockEditProps` (attributes, setAttributes, clientId, …)
+- `blockProps` – result of `useBlockProps()`
+- `innerBlocksProps` – result of `useInnerBlocksProps()` (without children)
+- `children` – inner block children (React nodes)
+
+---
+
 ### Icon picker
 
 #### `webentor.core.e-icon-picker.colors`
