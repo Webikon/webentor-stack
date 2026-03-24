@@ -4,7 +4,7 @@
 
 | starterVersion | themeVersion | coreVersion | configsVersion | setupCliVersion | php | node |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2.0.3 | 2.0.4 | 0.9.14 | 1.0.2 | 1.0.2 | >=8.3 | >=20 |
+| 2.0.3 | 2.0.4 | 0.10.0 | 1.0.2 | 1.0.2 | >=8.3 | >=20 |
 
 ## Runtime dependencies
 
