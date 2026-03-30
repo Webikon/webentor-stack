@@ -1,5 +1,9 @@
 # Webentor Setup Changelog
 
+## 1.0.3
+
+- Add configurable `WP_THEMES_DIR` for non-Bedrock project support
+
 ## 1.0.2
 
 - Improve init UX

@@ -236,10 +236,11 @@ update_env_urls() {
 # Detect WordPress themes using WP_THEMES from scripts/.env.setup.
 discover_themes() {
     local themes="${WP_THEMES:-}"
+    local themes_dir="${WP_THEMES_DIR:-web/app/themes}"
 
-    if [ -z "$themes" ] && [ -d "${WORKSPACE_FOLDER}/web/app/themes" ]; then
+    if [ -z "$themes" ] && [ -d "${WORKSPACE_FOLDER}/${themes_dir}" ]; then
         # Fallback for first-run projects where WP_THEMES is not set yet.
-        themes=$(find "${WORKSPACE_FOLDER}/web/app/themes" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | tr '\n' ' ')
+        themes=$(find "${WORKSPACE_FOLDER}/${themes_dir}" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | tr '\n' ' ')
     fi
 
     echo "$themes"
@@ -323,15 +324,16 @@ setup_composer() {
 
 _setup_deps_core() {
     local theme
+    local themes_dir="${WP_THEMES_DIR:-web/app/themes}"
     for theme in $(discover_themes); do
-        if [ -f "${WORKSPACE_FOLDER}/web/app/themes/${theme}/composer.json" ]; then
-            composer --working-dir="${WORKSPACE_FOLDER}/web/app/themes/${theme}" install --optimize-autoloader
+        if [ -f "${WORKSPACE_FOLDER}/${themes_dir}/${theme}/composer.json" ]; then
+            composer --working-dir="${WORKSPACE_FOLDER}/${themes_dir}/${theme}" install --optimize-autoloader
         fi
 
-        if [ -f "${WORKSPACE_FOLDER}/web/app/themes/${theme}/package.json" ]; then
+        if [ -f "${WORKSPACE_FOLDER}/${themes_dir}/${theme}/package.json" ]; then
             info "Installing ${theme} dependencies via pnpm"
             (
-                cd "${WORKSPACE_FOLDER}/web/app/themes/${theme}"
+                cd "${WORKSPACE_FOLDER}/${themes_dir}/${theme}"
                 pnpm install
                 pnpm build
             )

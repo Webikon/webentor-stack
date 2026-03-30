@@ -25,6 +25,7 @@ fi
 : "${SETUP_DB_SYNC:=true}"
 : "${SETUP_SUBMODULES:=false}"
 : "${SETUP_TYPESENSE:=false}"
+: "${WP_THEMES_DIR:=web/app/themes}"
 
 run_hook "pre-env"
 

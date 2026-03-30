@@ -432,7 +432,7 @@ ENV_OK=true
 # Set paths
 # Resolve the first configured theme from WP_THEMES to avoid hardcoding starter internals.
 PRIMARY_THEME="$(first_theme)"
-PACKAGE_JSON="$WORKSPACE_FOLDER/web/app/themes/${PRIMARY_THEME}/package.json"
+PACKAGE_JSON="$WORKSPACE_FOLDER/${WP_THEMES_DIR:-web/app/themes}/${PRIMARY_THEME}/package.json"
 COMPOSER_JSON="$WORKSPACE_FOLDER/composer.json"
 
 # Check Node version
@@ -562,7 +562,7 @@ else
     info "Next steps:"
     echo "1. Install Composer dependencies: composer install"
     if [ -n "$PRIMARY_THEME" ]; then
-        echo "2. Install theme dependencies: cd web/app/themes/${PRIMARY_THEME} && pnpm install"
+        echo "2. Install theme dependencies: cd ${WP_THEMES_DIR:-web/app/themes}/${PRIMARY_THEME} && pnpm install"
         echo "3. Build theme assets: pnpm build"
     else
         echo "2. Configure WP_THEMES in scripts/.env.setup, then install theme dependencies."

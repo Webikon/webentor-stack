@@ -26,7 +26,7 @@ done
 # Resolve representative theme package.json dynamically from WP_THEMES.
 THEME_NAME="$(first_theme)"
 if [ -n "$THEME_NAME" ]; then
-    PACKAGE_JSON="${WORKSPACE_FOLDER}/web/app/themes/${THEME_NAME}/package.json"
+    PACKAGE_JSON="${WORKSPACE_FOLDER}/${WP_THEMES_DIR:-web/app/themes}/${THEME_NAME}/package.json"
 else
     PACKAGE_JSON=""
 fi

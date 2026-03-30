@@ -286,6 +286,10 @@ function generateEnvSetup(string $opVaultId, string $opItemId, array $toggles): 
     $lines[] = '';
     $lines[] = 'WP_THEMES="webentor-theme-v2"';
     $lines[] = '';
+    $lines[] = '# Relative path from project root to the themes directory.';
+    $lines[] = '# Default: web/app/themes (Bedrock). Use wp-content/themes for traditional WP.';
+    $lines[] = 'WP_THEMES_DIR=web/app/themes';
+    $lines[] = '';
     $lines[] = '# Setup runtime feature toggles.';
     $lines[] = '# These values are project-owned and intentionally outside setup subtree updates.';
 
@@ -676,12 +680,40 @@ function detectConfigsVersion(string $cwd): ?string
 }
 
 /**
- * Iterate theme directories under web/app/themes and apply $extractor to parsed JSON.
+ * Read WP_THEMES_DIR from scripts/.env.setup with fallback to web/app/themes.
+ */
+function resolveThemesDir(string $cwd): string
+{
+    $envSetupPath = "{$cwd}/scripts/.env.setup";
+    if (file_exists($envSetupPath)) {
+        $lines = file($envSetupPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        if ($lines !== false) {
+            foreach ($lines as $line) {
+                $line = trim($line);
+                if ($line === '' || str_starts_with($line, '#')) {
+                    continue;
+                }
+                if (str_starts_with($line, 'WP_THEMES_DIR=')) {
+                    $value = substr($line, strlen('WP_THEMES_DIR='));
+                    $value = trim($value, "\"' \t");
+                    if ($value !== '') {
+                        return $value;
+                    }
+                }
+            }
+        }
+    }
+
+    return 'web/app/themes';
+}
+
+/**
+ * Iterate theme directories and apply $extractor to parsed JSON.
  * Returns the first non-null result.
  */
 function scanThemeFiles(string $cwd, string $filename, callable $extractor): ?string
 {
-    $themesPath = "{$cwd}/web/app/themes";
+    $themesPath = "{$cwd}/" . resolveThemesDir($cwd);
     if (!is_dir($themesPath)) {
         return null;
     }
