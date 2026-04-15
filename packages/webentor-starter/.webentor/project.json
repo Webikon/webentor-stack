@@ -1,10 +1,10 @@
 {
     "starterVersion": "latest",
-    "coreVersion": "^0.9",
-    "configsVersion": "^1.0.1",
+    "coreVersion": "^0.10",
+    "configsVersion": "^1.0.2",
     "phpVersion": ">=8.3",
     "nodeVersion": ">=20.0.0",
-    "setupCliVersion": "1.0.2",
+    "setupCliVersion": "1.0.3",
     "createdAt": "2026-03-03T09:37:47+00:00",
     "projectSlug": "webentor-starter",
     "withDbSync": true,

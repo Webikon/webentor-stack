@@ -1,5 +1,10 @@
 # Webentor Starter Changelog
 
+### 2.0.4
+
+- Bump `webentor-core` to `^0.10` and `webentor-configs` to `^1.0.2`
+- Regenerate theme lock files
+
 ### 2.0.3
 
 - Remove `webentor-setup` core scripts from project as they have to be added as git subtree
