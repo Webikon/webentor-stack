@@ -448,6 +448,20 @@ addFilter(
 );
 ```
 
+#### `webentor.core.wpCoreBlocksWithSpacing`
+
+Control which WP Core blocks receive webentor responsive spacing controls.
+Defaults to `core/paragraph` and `core/heading`. Native WP spacing controls
+are automatically disabled on these blocks to avoid duplication.
+
+```ts
+addFilter(
+  'webentor.core.wpCoreBlocksWithSpacing',
+  'theme/wp-core-spacing',
+  (blocks) => [...blocks, 'core/list', 'core/quote'],
+);
+```
+
 #### `webentor.core.responsiveSettings.layoutPresets`
 
 Customize the quick layout preset buttons shown in the Display & Layout panel.

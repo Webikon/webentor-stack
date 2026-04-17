@@ -472,6 +472,21 @@ add_filter('webentor/add_head_ajax_url', '__return_false');
 
 ---
 
+### `webentor/wp_core_blocks_with_spacing`
+
+Control which WP Core blocks receive webentor responsive spacing support.
+The PHP counterpart of the JS `webentor.core.wpCoreBlocksWithSpacing` filter.
+Defaults to `core/paragraph` and `core/heading`. Spacing classes are injected
+into the rendered HTML via `WP_HTML_Tag_Processor`.
+
+```php
+add_filter('webentor/wp_core_blocks_with_spacing', function (array $blocks): array {
+    return array_merge($blocks, ['core/list', 'core/quote']);
+});
+```
+
+---
+
 ### `webentor/block_type_metadata_settings`
 
 Modify block metadata settings/defaults before registration.
