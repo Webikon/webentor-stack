@@ -1,6 +1,6 @@
 <?php
 
-namespace App\View\Components;
+namespace Webentor\Core\View\Components;
 
 use Roots\Acorn\View\Component;
 

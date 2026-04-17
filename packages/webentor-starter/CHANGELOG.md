@@ -1,5 +1,10 @@
 # Webentor Starter Changelog
 
+### 2.0.5
+
+- Remove Blade directives and View Components from theme (now provided by `webentor-core` ServiceProvider)
+- Remove core block `data.php` loading from `ThemeServiceProvider` (now handled by `WebentorCoreServiceProvider`)
+
 ### 2.0.4
 
 - Bump `webentor-core` to `^0.10` and `webentor-configs` to `^1.0.2`

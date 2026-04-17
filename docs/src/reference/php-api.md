@@ -105,6 +105,40 @@ get_resized_image_url(
 
 ---
 
+## Blade Directives
+
+Registered by `WebentorCoreServiceProvider`. Available automatically in all consumer projects.
+
+### `@sliderContent($html)`
+
+Wraps each top-level child element of the given HTML in a `<div class="h-auto">` for slider slides.
+
+```blade
+@sliderContent($innerBlocksContent)
+```
+
+---
+
+### `@enqueueScripts('bundle-name')`
+
+Enqueues a Vite JS bundle via `bundle()->enqueue()` in `wp_head`.
+
+```blade
+@enqueueScripts('resources/scripts/lightbox')
+```
+
+---
+
+### `@xdebugBreak`
+
+Triggers an XDebug breakpoint if the extension is available. Dev-only.
+
+```blade
+@xdebugBreak
+```
+
+---
+
 ## Breakpoint utilities
 
 ### `get_theme_breakpoints()`

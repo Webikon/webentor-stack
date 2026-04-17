@@ -1,6 +1,6 @@
 <?php
 
-namespace App\View\Components;
+namespace Webentor\Core\View\Components;
 
 use Roots\Acorn\View\Component;
 
@@ -16,7 +16,7 @@ class Button extends Component
     /**
      * The button variant.
      *
-     * @var string 'primary', 'secondary' or 'grey-primary' or 'grey-secondary'.
+     * @var string 'primary', 'secondary'
      */
     public string $variant;
 

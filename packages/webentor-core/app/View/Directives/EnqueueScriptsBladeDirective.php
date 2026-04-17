@@ -1,6 +1,6 @@
 <?php
 
-namespace App\View\Directives;
+namespace Webentor\Core\View\Directives;
 
 use function Roots\bundle;
 

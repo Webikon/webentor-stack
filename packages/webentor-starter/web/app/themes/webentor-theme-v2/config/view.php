@@ -83,8 +83,7 @@ return [
     */
 
     'directives' => [
-        'sliderContent' => \App\View\Directives\SliderContentBladeDirective::class,
-        'enqueueScripts' => \App\View\Directives\EnqueueScriptsBladeDirective::class,
-        'xdebugBreak' => \App\View\Directives\XDebugBladeDirective::class,
+        // Core directives (@sliderContent, @enqueueScripts, @xdebugBreak) are
+        // registered by WebentorCoreServiceProvider. Add theme-specific directives here.
     ],
 ];

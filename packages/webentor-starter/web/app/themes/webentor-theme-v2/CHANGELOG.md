@@ -1,5 +1,11 @@
 # Webentor Theme Changelog
 
+### Version 2.0.5
+
+- Remove Blade directives (`@sliderContent`, `@enqueueScripts`, `@xdebugBreak`) — now registered by `WebentorCoreServiceProvider`
+- Remove `Button` and `Slider` View Components — now provided by `webentor-core`, themes can override by extending `Webentor\Core\View\Components\Button`
+- Remove core block `data.php` glob from `ThemeServiceProvider` — now loaded by `WebentorCoreServiceProvider`
+
 ### Version 2.0.4
 
 - Move from alias `@webentorCore` to direct imports with `@webikon/webentor-core`
