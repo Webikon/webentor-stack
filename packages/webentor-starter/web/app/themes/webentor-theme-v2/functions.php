@@ -72,5 +72,3 @@ collect([
             );
         }
     });
-
-require_once WEBENTOR_CORE_PHP_PATH . '/init.php';

@@ -4,7 +4,7 @@ High-level overview of how Webentor Core integrates with a Sage theme.
 
 ## Boot flow
 
-- init.php: defines paths and loads Core modules (blocks, images, utils, build glue).
+- `WebentorCoreServiceProvider` (auto-discovered by Acorn via `extra.acorn.providers` in `webentor-core/composer.json`): defines Core path constants, loads Core modules (blocks, images, utils, build glue), registers Blade directives and View Components.
 - Block registration: scans `resources/blocks/**/block.json` in theme and Core, registers each block.
 - Frontend assets: for each block, matches Vite manifest to add `script.ts` and `style.css` handles, injected into block metadata.
 - Server-side rendering: blocks render via Blade views (`resources/blocks/<slug>/view.blade.php`) with computed classes and optional `additional_data`.

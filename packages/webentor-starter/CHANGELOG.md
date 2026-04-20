@@ -1,5 +1,10 @@
 # Webentor Starter Changelog
 
+### 2.0.6
+
+- Bump `webentor-core` to `^0.12`
+- Remove manual `require_once WEBENTOR_CORE_PHP_PATH . '/init.php'` from `functions.php` — webentor-core now loads via `WebentorCoreServiceProvider` (Acorn auto-discovery)
+
 ### 2.0.5
 
 - Remove Blade directives and View Components from theme (now provided by `webentor-core` ServiceProvider)

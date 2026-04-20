@@ -1,5 +1,10 @@
 # Webentor Theme Changelog
 
+### Version 2.0.6
+
+- Bump `webentor-core` to `^0.12`
+- Remove `require_once WEBENTOR_CORE_PHP_PATH . '/init.php'` from `functions.php` — webentor-core now auto-loads via `WebentorCoreServiceProvider` (Acorn auto-discovery). The `WEBENTOR_CORE_PHP_PATH` constant define is kept because `config/view.php` still uses it for core view paths.
+
 ### Version 2.0.5
 
 - Remove Blade directives (`@sliderContent`, `@enqueueScripts`, `@xdebugBreak`) — now registered by `WebentorCoreServiceProvider`
