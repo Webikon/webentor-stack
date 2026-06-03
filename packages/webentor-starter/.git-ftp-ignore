@@ -13,3 +13,13 @@ herd.yml
 .husky/*
 .vscode/*
 scripts/*
+
+# Dev-only files — committed but never deployed to production
+CLAUDE.md
+docs/*
+tasks/*
+.planning/*
+.claude/*
+.artifacts/*
+.playwright-mcp/*
+.superpowers-webentor/*

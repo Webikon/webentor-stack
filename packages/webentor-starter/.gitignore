@@ -43,3 +43,10 @@ $XDG_CACHE_HOME
 auth.json
 .php-cs-fixer.cache
 upgrade-report-*.md
+
+# superpowers-webentor hook log cache (auto-added)
+.superpowers-webentor/
+
+# Scratch / throwaway artifacts (verification screenshots, MCP captures)
+.playwright-mcp/
+.artifacts/
