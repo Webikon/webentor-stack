@@ -23,6 +23,10 @@
     "test": "pnpm -r --if-present --filter './packages/*' run test",
     "ci": "pnpm run lint && pnpm run build",
     "test-release": "bash scripts/test-release.sh",
+    "test:setup": "bash scripts/test-env-setup.sh",
+    "test:teardown": "bash scripts/test-env-teardown.sh",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
     "changeset": "changeset",
     "version-packages": "changeset version && node scripts/sync-composer-versions.mjs",
     "prepare": "husky || true"
@@ -30,7 +34,9 @@
   "devDependencies": {
     "@changesets/changelog-github": "^0.5.1",
     "@changesets/cli": "^2.29.7",
-    "husky": "^9.1.7"
+    "husky": "^9.1.7",
+    "@playwright/test": "^1.58.2",
+    "@wordpress/e2e-test-utils-playwright": "^1.41.0"
   },
   "packageManager": "pnpm@10.15.1"
 }

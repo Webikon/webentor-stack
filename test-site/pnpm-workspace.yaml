@@ -1,0 +1,5 @@
+# Isolates the test-site from the parent monorepo workspace.
+# Without this, pnpm walks up and finds the monorepo's pnpm-workspace.yaml,
+# causing conflicts during theme install/build.
+packages:
+  - 'web/app/themes/webentor-theme-v2'

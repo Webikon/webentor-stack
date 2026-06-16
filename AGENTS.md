@@ -14,6 +14,8 @@ The monorepo exists to keep versioning and integration changes coordinated.
 - `packages/webentor-setup`: shared setup runtime + setup CLI.
 - `packages/webentor-starter`: pure project skeleton (WordPress/theme only; no setup scaffolding).
 - `docs`: VitePress documentation project.
+- `test-site/`: spin-up Bedrock E2E harness mirroring the starter, with `webentor-core` symlinked (see **Testing Suite (E2E)**).
+- `tests/`: Playwright E2E specs + fixtures that run against the provisioned `test-site`.
 
 ## Non-Negotiable Boundaries
 
@@ -61,6 +63,51 @@ In consumer projects:
 - Do not put generated scaffolding files back into `packages/webentor-starter`.
 
 When `packages/webentor-setup` changes, keep consumer runtime in sync intentionally.
+
+## Testing Suite (E2E)
+
+`test-site/` is a Bedrock install used to test blocks/runtime against a real WordPress site.
+`pnpm test:setup` provisions it; `pnpm test:e2e` runs the Playwright specs in `tests/`;
+`pnpm test:teardown` removes it. The site serves at `http://webentor-test.test` (admin `admin`/`admin`).
+
+Linkage (this is the key mental model):
+
+- `webentor-core` is **symlinked** into the test-site for BOTH PHP (Composer path repo) and JS
+  (pnpm `link:`). Edits to `packages/webentor-core` are picked up directly.
+- The **theme is a copy**, not a symlink — `test-env-setup.sh` rsyncs it from
+  `packages/webentor-starter/web/app/themes/webentor-theme-v2`. Edit the starter source and
+  re-run setup to re-sync, or edit the test-site copy directly while iterating (it is the source
+  of truth that matters for a committed change).
+
+Reflecting `webentor-core` changes in the running site:
+
+- **PHP** (Providers, hooks, block render, Blade views): live via the symlink — run
+  `wp acorn optimize:clear` from `test-site/` to flush Acorn's cached views/config/services.
+- **JS / CSS** (editor components, block edit, Alpine, Tailwind): `webentor-core` ships TS/CSS
+  **source, no `dist`** — the theme's Vite bundles it. Run `pnpm build` (or `pnpm dev` for HMR)
+  in the test-site theme to rebuild.
+
+Operational gotchas:
+
+- **Run on a specific PHP version** (e.g. 8.4 / 8.5): `herd isolate <ver> --site webentor-test`
+  (the site is linked as `webentor-test` though the directory is `test-site`, so `--site` is
+  required). CLI provisioning runs `composer`/`wp`, which resolve `php` from `PATH` — to provision
+  on a non-global PHP, prepend a `php`→target-binary shim to `PATH`.
+- **Database**: set `DB_HOST` in `test-site/.env` to the server over TCP (`127.0.0.1`) when its
+  socket differs from the client default (e.g. DBngin listens on `/tmp/mysql_3306.sock`).
+- **WP core version bumps**: setup runs `wp core update-db`; without it the editor (and every
+  editor-dependent test) is stuck on the "Database Update Required" screen.
+- **E2E auth** requires `wps-hide-login` to be inactive (it 404s `wp-login.php`); setup/tests
+  expect the standard login path.
+- **WP 7.0 iframed editor**: the editor canvas is in an iframe, so block-editor specs must use
+  `frameLocator('[name="editor-canvas"]')` for canvas selectors — top-frame selectors like
+  `.block-editor-writing-flow` time out.
+- **ACF Pro key** (needed for `pnpm test:setup`): 1Password item "ACF PRO licence", Clients vault,
+  in the `notesPlain` field. Goes into `test-site/.env` as `PLUGIN_ACF_KEY`; never commit `.env`.
+
+Block-console checker: `node scripts/check-blocks-console.mjs` logs into the test-site, inserts
+every top-level `webentor/*` block into a published page, and reports editor + frontend console
+messages (block validation errors, deprecation notices). Use it to catch block-editor regressions.
 
 ## Release and Rollout Order
 
@@ -180,6 +227,9 @@ Before handoff, run relevant checks:
   - `php -l packages/webentor-setup/src/webentor-setup.php`
 - JSON validity for changed `package.json` or manifest files.
 - If starter touched, verify it contains no setup scaffolding (no `scripts/`, no `.webentor/`).
+- If blocks or `webentor-core`/theme runtime changed, validate against the test-site:
+  `pnpm test:setup` (first run) then `pnpm test:e2e`; for block-editor changes also run
+  `node scripts/check-blocks-console.mjs` (see **Testing Suite (E2E)**).
 
 ## Common Mistakes to Avoid
 

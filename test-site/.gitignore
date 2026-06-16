@@ -1,0 +1,36 @@
+# Composer
+/vendor/
+auth.json
+composer.lock
+
+# WordPress core
+/web/wp/
+
+# Plugins (installed by Composer)
+/web/app/plugins/*
+!/web/app/plugins/.gitkeep
+
+# MU-plugins (copied by setup script + Composer-installed dirs)
+/web/app/mu-plugins/
+
+# Theme (copied by setup script)
+/web/app/themes/webentor-theme-v2/
+
+# Uploads
+/web/app/uploads/
+
+# Cache
+/web/app/cache/
+
+# Environment
+.env
+.env.local
+
+# Logs
+*.log
+
+# WP-CLI
+wp-cli.local.yml
+
+# Node
+node_modules/

@@ -1,0 +1,98 @@
+{
+  "name": "webikon/webentor-test-site",
+  "type": "project",
+  "description": "E2E test site — mirrors webentor-starter with local path repo for webentor-core",
+  "license": "MIT",
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../packages/webentor-core",
+      "options": {
+        "symlink": true
+      }
+    },
+    {
+      "type": "composer",
+      "url": "https://wpackagist.org",
+      "only": [
+        "wpackagist-plugin/*",
+        "wpackagist-theme/*"
+      ]
+    },
+    {
+      "type": "composer",
+      "url": "https://connect.advancedcustomfields.com"
+    }
+  ],
+  "require": {
+    "php": ">=8.3",
+    "composer/installers": "^1.2",
+    "vlucas/phpdotenv": "^5.5",
+    "oscarotero/env": "^2.1",
+    "roots/bedrock-autoloader": "^1.0",
+    "roots/bedrock-disallow-indexing": "^2.0",
+    "roots/wordpress": "^6.5 || ^7.0",
+    "roots/wp-config": "^1.0.0",
+    "roots/multisite-url-fixer": "^1.1",
+    "wpengine/advanced-custom-fields-pro": "^6.3",
+    "wpackagist-plugin/autodescription": "^5.0",
+    "wpackagist-plugin/better-image-sizes": "^3.4",
+    "wpackagist-plugin/block-visibility": "^3.4",
+    "wpackagist-plugin/duplicate-page": "^4.5",
+    "wpackagist-plugin/loco-translate": "^2.6",
+    "wpackagist-plugin/menus-for-block-theme": "^1.0",
+    "wpackagist-plugin/redirection": "^5.1",
+    "wpackagist-plugin/redis-cache": "^2.0",
+    "wpackagist-plugin/shortpixel-image-optimiser": "^6.0",
+    "wpackagist-plugin/wp-sentry-integration": "^8.2.0",
+    "wpackagist-plugin/wp-mail-smtp": "^4.0",
+    "wpackagist-plugin/wps-hide-login": "^1.8",
+    "wpackagist-plugin/wp-crontrol": "^1.16",
+    "wpackagist-plugin/transients-manager": "^2.0",
+    "wpackagist-plugin/user-role-editor": "^4.64",
+    "wpackagist-plugin/block-catalog": "^1.6",
+    "wpackagist-plugin/duracelltomi-google-tag-manager": "^1.20"
+  },
+  "require-dev": {
+    "phpro/grumphp": "^1.4.0",
+    "squizlabs/php_codesniffer": "^3.7.1",
+    "roave/security-advisories": "dev-latest",
+    "friendsofphp/php-cs-fixer": "^3.13",
+    "tracy/tracy": "^2.10"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "allow-plugins": {
+      "composer/installers": true,
+      "roots/wordpress-core-installer": true,
+      "ffraenz/private-composer-installer": true,
+      "phpro/grumphp": true,
+      "php-http/discovery": true
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "extra": {
+    "installer-paths": {
+      "web/app/mu-plugins/{$name}/": [
+        "type:wordpress-muplugin"
+      ],
+      "web/app/plugins/{$name}/": [
+        "type:wordpress-plugin"
+      ],
+      "web/app/themes/{$name}/": [
+        "type:wordpress-theme"
+      ]
+    },
+    "wordpress-install-dir": "web/wp"
+  },
+  "scripts": {
+    "post-autoload-dump": [
+      "@php -r \"if(file_exists('vendor/bin/grumphp')) {echo exec('vendor/bin/grumphp git:init');}\""
+    ],
+    "test": [
+      "phpcs"
+    ]
+  }
+}

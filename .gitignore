@@ -5,3 +5,9 @@ dist/
 .DS_Store
 .claude/settings.local.json
 .superpowers-webentor
+
+# Playwright
+/playwright-report/
+/blob-report/
+/tests/e2e/results/
+/tests/e2e/.auth/
