@@ -122,6 +122,38 @@ export async function deleteTestPages(
   }, pageIds);
 }
 
+/** Selector for the WP 7.0 block-editor canvas iframe. */
+export const EDITOR_CANVAS = 'iframe[name="editor-canvas"]';
+
+/**
+ * Open a fresh page in the block editor and wait until the editor data layer
+ * (`wp.data` + `wp.blocks`) is ready. Dismisses the welcome guide. Subsequent
+ * code can drive the editor via the `window.wp.*` API from the top frame; the
+ * rendered block canvas lives inside the `EDITOR_CANVAS` iframe.
+ */
+export async function openBlockEditor(page: Page): Promise<void> {
+  await page.goto('/wp/wp-admin/post-new.php?post_type=page', {
+    waitUntil: 'domcontentloaded',
+  });
+  await page.waitForFunction(
+    () => {
+      const wp = (window as any).wp;
+      return !!(wp?.data?.select('core/block-editor') && wp?.blocks?.getBlockTypes);
+    },
+    undefined,
+    { timeout: 60_000 },
+  );
+  await page.evaluate(() => {
+    try {
+      (window as any).wp.data
+        .dispatch('core/preferences')
+        .set('core/edit-post', 'welcomeGuide', false);
+    } catch {
+      /* preferences store may not be present — non-fatal */
+    }
+  });
+}
+
 /**
  * Dismiss the Gutenberg "Welcome" modal if it appears.
  */
