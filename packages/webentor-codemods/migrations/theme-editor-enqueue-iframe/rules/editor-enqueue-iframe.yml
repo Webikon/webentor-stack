@@ -1,0 +1,62 @@
+id: theme-editor-enqueue-iframe
+language: php
+severity: hint
+message: >-
+  Move editor canvas styles to `enqueue_block_assets` (is_admin) so WP 7.0's
+  iframed editor styles them correctly.
+note: >-
+  Matches the canonical theme `app/setup.php` that enqueues the editor JS plus
+  the `editor.css` and `button.style.css` styles all on
+  `enqueue_block_editor_assets`. Rewrites it so the JS stays on
+  `enqueue_block_editor_assets` while the two styles move to a new
+  `enqueue_block_assets` hook guarded by `is_admin()` (WP 7.0 iframe editor).
+  Already-migrated files (no styles left on that hook) do not match — idempotent.
+rule:
+  all:
+    - pattern: "add_action('enqueue_block_editor_assets', function (): void { $$$BODY }, 10);"
+    - has:
+        pattern: "\\Kucrut\\Vite\\enqueue_asset($JSDIR, 'resources/scripts/editor.ts', $JSOPTS)"
+        stopBy: end
+    - has:
+        pattern: "\\Kucrut\\Vite\\enqueue_asset($SDIR, 'resources/styles/editor.css', $SOPTS)"
+        stopBy: end
+    - has:
+        pattern: "\\Kucrut\\Vite\\enqueue_asset($BDIR, 'resources/core-components/button/button.style.css', $BOPTS)"
+        stopBy: end
+fix: |-
+  add_action('enqueue_block_editor_assets', function (): void {
+      $dependencies = File::exists(get_template_directory() . '/public/build/editor.deps.json') ? File::json(get_template_directory() . '/public/build/editor.deps.json') : [];
+
+      \Kucrut\Vite\enqueue_asset(
+          $JSDIR,
+          'resources/scripts/editor.ts',
+          $JSOPTS
+      );
+  }, 10);
+
+  /**
+   * Enqueue global block-editor styles into the editor canvas.
+   *
+   * Since WP 6.9/7.0 the editor runs in an iframe. Global canvas styles must be
+   * registered on `enqueue_block_assets` (not `enqueue_block_editor_assets`) so
+   * WordPress routes them into the iframe; otherwise it warns that the style was
+   * "added to the iframe incorrectly". The `is_admin()` guard keeps them off the
+   * public frontend, where this hook also fires.
+   */
+  add_action('enqueue_block_assets', function (): void {
+      if (!is_admin()) {
+          return;
+      }
+
+      \Kucrut\Vite\enqueue_asset(
+          $SDIR,
+          'resources/styles/editor.css',
+          $SOPTS
+      );
+
+      \Kucrut\Vite\enqueue_asset(
+          $BDIR,
+          'resources/core-components/button/button.style.css',
+          $BOPTS
+      );
+  }, 10);

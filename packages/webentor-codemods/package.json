@@ -1,0 +1,52 @@
+{
+  "name": "@webikon/webentor-codemods",
+  "version": "0.1.0",
+  "description": "Reusable, polyglot codemods for migrating Webentor Stack consumer projects (theme PHP/TS/CSS/JSON) across webentor-core updates",
+  "homepage": "https://webikon.sk",
+  "license": "MIT",
+  "author": "Webikon s.r.o.",
+  "maintainers": [
+    {
+      "name": "Webikon s.r.o.",
+      "email": "support@webikon.sk"
+    },
+    {
+      "name": "Pavol Caban",
+      "email": "pavol.caban@webikon.sk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Webikon/webentor-stack/tree/main/packages/webentor-codemods"
+  },
+  "keywords": [
+    "wordpress",
+    "webentor",
+    "codemod",
+    "migration",
+    "ast-grep"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "bin": {
+    "webentor-codemods": "bin/webentor-codemods.mjs"
+  },
+  "files": [
+    "bin",
+    "migrations",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "lint": "node --check bin/webentor-codemods.mjs",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@ast-grep/cli": "^0.43.0"
+  }
+}

@@ -6,6 +6,9 @@ dist/
 .claude/settings.local.json
 .superpowers-webentor
 
+# Scratch dir for throwaway scripts / captured output (never committed)
+/.artifacts/
+
 # Playwright
 /playwright-report/
 /blob-report/

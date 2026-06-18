@@ -75,6 +75,7 @@ export default defineConfig({
         text: 'Upgrading',
         items: [
           { text: 'Starter Upgrades', link: '/upgrading/starter-upgrades' },
+          { text: 'Codemods', link: '/upgrading/codemods' },
         ]
       },
       {

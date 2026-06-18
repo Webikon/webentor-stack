@@ -13,6 +13,7 @@ jobs:
       configs: ${{ steps.filter.outputs.configs }}
       setup: ${{ steps.filter.outputs.setup }}
       starter: ${{ steps.filter.outputs.starter }}
+      codemods: ${{ steps.filter.outputs.codemods }}
       docs: ${{ steps.filter.outputs.docs }}
     steps:
       - uses: actions/checkout@v4
@@ -28,6 +29,8 @@ jobs:
               - 'packages/webentor-setup/**'
             starter:
               - 'packages/webentor-starter/**'
+            codemods:
+              - 'packages/webentor-codemods/**'
             docs:
               - 'docs/**'
 
@@ -81,6 +84,24 @@ jobs:
       - name: Validate setup CLI PHP
         run: |
           php -l packages/webentor-setup/src/webentor-setup.php
+
+  codemods:
+    needs: [changes]
+    if: ${{ needs.changes.outputs.codemods == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Enable corepack
+        run: corepack enable
+      - name: Install codemods deps
+        run: pnpm install --filter './packages/webentor-codemods...'
+      - name: Lint/test codemods
+        run: |
+          pnpm --filter './packages/webentor-codemods' --if-present run lint
+          pnpm --filter './packages/webentor-codemods' --if-present run test
 
   starter:
     needs: [changes]

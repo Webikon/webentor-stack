@@ -12,6 +12,7 @@ The monorepo exists to keep versioning and integration changes coordinated.
 - `packages/webentor-core`: shared PHP + JS runtime package.
 - `packages/webentor-configs`: shared ESLint/Stylelint/Prettier/static config package.
 - `packages/webentor-setup`: shared setup runtime + setup CLI.
+- `packages/webentor-codemods`: reusable ast-grep codemods for migrating consumer theme code across `webentor-core` updates (npm-published; run via `pnpm dlx`).
 - `packages/webentor-starter`: pure project skeleton (WordPress/theme only; no setup scaffolding).
 - `docs`: VitePress documentation project.
 - `test-site/`: spin-up Bedrock E2E harness mirroring the starter, with `webentor-core` symlinked (see **Testing Suite (E2E)**).
@@ -83,9 +84,17 @@ Reflecting `webentor-core` changes in the running site:
 
 - **PHP** (Providers, hooks, block render, Blade views): live via the symlink — run
   `wp acorn optimize:clear` from `test-site/` to flush Acorn's cached views/config/services.
-- **JS / CSS** (editor components, block edit, Alpine, Tailwind): `webentor-core` ships TS/CSS
-  **source, no `dist`** — the theme's Vite bundles it. Run `pnpm build` (or `pnpm dev` for HMR)
-  in the test-site theme to rebuild.
+- **JS / CSS** (`webentor-core` ships TS/CSS **source, no `dist`** — it's bundled by Vite). There
+  are TWO separate bundles, and which one to rebuild depends on what changed:
+  - **Block editor JS** (block `edit` components, inspector controls, block toolbars, block
+    registration) is compiled into `webentor-core`'s OWN bundle (`public/build`, enqueued as
+    `webentor-core-editor-js`). Rebuild with `pnpm build` in **`packages/webentor-core`** — the
+    theme build does NOT recompile this. (`block.json` changes like `apiVersion`/`supports` are
+    read server-side at registration, so they apply via the symlink without any JS rebuild.)
+  - **Theme-side JS/CSS** (theme `editor.ts`, `app.ts`, app styles, anything importing
+    `@webikon/webentor-core/*` helpers) is bundled by the **test-site theme**'s Vite — rebuild with
+    `pnpm build` (or `pnpm dev` for HMR) in the test-site theme.
+  - When in doubt after editing `webentor-core`, rebuild both.
 
 Operational gotchas:
 
@@ -181,6 +190,10 @@ Reference map for locating version sources per package.
   - `packages/webentor-setup/CHANGELOG.md` -> add new entry at top (manual)
   - Runtime is mirrored via split workflow (no npm publish)
   - `packages/webentor-setup/composer.json` -> `"version"` (manual)
+- `webentor-codemods` (beta, `0.x`):
+  - `packages/webentor-codemods/package.json` -> `"version"` (manual)
+  - `packages/webentor-codemods/CHANGELOG.md` -> add new entry at top (manual)
+  - npm publish via the existing release workflow (no Composer mirror)
 - `webentor-starter` (stable, `2.x`):
   - `packages/webentor-starter/composer.json` -> `"version"` (manual)
   - `packages/webentor-starter/changelog.md` -> add new entry at top (manual)
@@ -213,6 +226,7 @@ Do not introduce additional split mirrors unless explicitly requested.
 - Keep file paths and command examples consistent with `scripts/setup-core` naming.
 - Avoid editing unrelated files in large migrations.
 - Always check and update documentation
+- Throwaway scripts and captured output (diagnostics, screenshots, scratch `*.mjs`) go in `.artifacts/` (gitignored) — never commit them. Only durable, reusable tooling belongs in `scripts/` (e.g. `scripts/check-blocks-console.mjs`, `scripts/build-demo-page.mjs`).
 
 ## Validation Checklist for AI Changes
 
