@@ -1,5 +1,11 @@
 # Webentor Theme Changelog
 
+### Version 2.0.7
+
+- Bump `webentor-core` to `^0.13` (WordPress 7.0 / PHP 8.4 block-editor deprecation fixes).
+- Enqueue theme block-editor styles on `enqueue_block_assets` (guarded by `is_admin()`) instead of `enqueue_block_editor_assets`, so WordPress routes them into the editor iframe correctly (fixes "added to the iframe incorrectly" on WP 7.0). Styles remain off the public frontend.
+- Update `@wordpress/*` dev dependencies to latest stable (block-editor/blocks 15.21, components 35, block-library 9.48, i18n 6.21, icons 14, dependency-extraction 6.48), `@10up/block-components` 1.22.2, `@alpinejs/intersect` 3.15.12.
+
 ### Version 2.0.6
 
 - Bump `webentor-core` to `^0.12`

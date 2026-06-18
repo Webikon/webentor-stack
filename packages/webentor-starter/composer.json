@@ -1,7 +1,7 @@
 {
   "name": "webikon/webentor-starter",
   "type": "project",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "license": "MIT",
   "description": "WordPress boilerplate with Composer, easier configuration, and an improved folder structure",
   "homepage": "https://roots.io/bedrock/",
@@ -70,7 +70,7 @@
     "oscarotero/env": "^2.1",
     "roots/bedrock-autoloader": "^1.0",
     "roots/bedrock-disallow-indexing": "^2.0",
-    "roots/wordpress": "^6.5",
+    "roots/wordpress": "^6.5 || ^7.0",
     "roots/wp-config": "^1.0.0",
     "roots/multisite-url-fixer": "^1.1",
     "wpengine/advanced-custom-fields-pro": "^6.3",

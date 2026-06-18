@@ -21,6 +21,21 @@ add_action('enqueue_block_editor_assets', function (): void {
             'in-footer' => true, // Optional. Defaults to false.
         ]
     );
+}, 10);
+
+/**
+ * Enqueue global block-editor styles into the editor canvas.
+ *
+ * Since WP 6.9/7.0 the editor runs in an iframe. Global canvas styles must be
+ * registered on `enqueue_block_assets` (not `enqueue_block_editor_assets`) so
+ * WordPress routes them into the iframe; otherwise it warns that the style was
+ * "added to the iframe incorrectly". The `is_admin()` guard keeps them off the
+ * public frontend, where this hook also fires.
+ */
+add_action('enqueue_block_assets', function (): void {
+    if (!is_admin()) {
+        return;
+    }
 
     \Kucrut\Vite\enqueue_asset(
         get_template_directory() . '/public/build',
