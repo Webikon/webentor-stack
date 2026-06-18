@@ -75,7 +75,7 @@ This boundary prevents project logic from leaking into core runtime and makes up
 
 ### Upgrade Safety Became a First-Class Workflow
 
-Starter upgrades use versioned manifests, dry-run reporting, and protected project-owned paths. Teams can inspect planned changes before applying them, which reduces migration risk and improves confidence.
+Setup-core is synced from tagged `webentor-setup` releases via `git subtree pull`, and code changes a core update requires are applied with versioned, dry-runnable codemods. Teams can inspect planned changes before applying them, which reduces migration risk and improves confidence.
 
 ### Documentation Was Treated as Operating Model, Not Afterthought
 
@@ -134,7 +134,7 @@ A typical migration now follows a consistent path:
 
 1. Add `scripts/setup-core/` via `git subtree add` from a tagged `webentor-setup` release.
 2. Run `webentor-setup init` to generate all scaffolding from CLI flags.
-3. Run `upgrade-starter` in dry-run mode and review the report.
+3. Run any required codemods in dry-run mode and review the diff.
 4. Move any project-specific setup logic out of `setup-core` and into hooks or project-specific scripts.
 5. Apply approved changes and run project checks.
 

@@ -14,12 +14,6 @@
 
 - Re-sync setup subtree from `webentor-setup` and re-run `webentor-setup doctor`.
 
-## Upgrade manifest not found
-
-- `upgrade-starter` requires `scripts/setup-core/upgrades/<target>/manifest.json`.
-- Sync `scripts/setup-core` to a `webentor-setup` tag that contains your target
-  manifest, then run dry-run again.
-
 ## Missing setup metadata file
 
 - If `webentor-setup doctor` reports missing `.webentor/project.json`, run:

@@ -36,7 +36,6 @@ Current usage:
 
 - created by `webentor-setup init`
 - validated by `webentor-setup doctor`
-- updated by `webentor-setup upgrade-starter`
 
 Current non-usage:
 

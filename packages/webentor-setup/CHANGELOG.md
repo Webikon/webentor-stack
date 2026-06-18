@@ -1,5 +1,9 @@
 # Webentor Setup Changelog
 
+## 1.1.0
+
+- Remove the `upgrade-starter` command and its manifest-based file transforms (`replace_text`, `remove_path`, `ensure_directory`) along with the `upgrades/` recipe directory. The mechanism was unused (no manifests ever shipped) and is superseded by [`@webikon/webentor-codemods`](../webentor-codemods), which handles consumer code transforms across `webentor-core` updates. `init` and `doctor` are unchanged; syncing `scripts/setup-core` from tagged releases via `git subtree pull` is unaffected.
+
 ## 1.0.3
 
 - Add configurable `WP_THEMES_DIR` for non-Bedrock project support

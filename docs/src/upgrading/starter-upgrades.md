@@ -1,11 +1,12 @@
 # Starter Upgrades
 
-Use this guide for two different upgrade tracks:
+Keeping a project current spans two independent tracks:
 
-1. Syncing shared setup runtime (`scripts/setup-core`) from `webentor-setup`
-   tags
-2. Applying starter file transforms between starter versions via
-   `webentor-setup upgrade-starter`
+1. **Sync the shared setup runtime** (`scripts/setup-core`) from a tagged
+   `webentor-setup` release (covered below).
+2. **Apply code changes** a `webentor-core` update requires in consumer theme
+   code (PHP / TS / CSS / JSON) — handled by
+   [codemods](./codemods.md), not by the setup CLI.
 
 ## Prerequisites
 
@@ -53,65 +54,6 @@ git commit -m "chore(setup): sync setup-core to webentor-setup vX.Y.Z"
 git push -u origin chore/update-setup-core-vX-Y-Z
 ```
 
-## Version-to-version starter upgrade
-
-Use this when moving project starter contract from one version to another:
-for example `1.0.0` to `1.1.0`.
-
-### 1) Dry-run first
-
-```bash
-scripts/setup-core/bin/webentor-setup upgrade-starter \
-  --from <current-starter-version> \
-  --to <target-starter-version> \
-  --cwd . \
-  --dry-run true
-```
-
-This command generates:
-
-- console summary
-- markdown report at `upgrade-report-<from>-to-<to>.md`
-
-Review the report before applying changes.
-
-### 2) Apply transforms
-
-```bash
-scripts/setup-core/bin/webentor-setup upgrade-starter \
-  --from <current-starter-version> \
-  --to <target-starter-version> \
-  --cwd . \
-  --dry-run false
-```
-
-### 3) Validate after apply
-
-```bash
-scripts/setup-core/bin/webentor-setup doctor --cwd .
-bash scripts/setup.sh
-```
-
-### Transform behavior
-
-`upgrade-starter` reads manifest from:
-`scripts/setup-core/upgrades/<target-version>/manifest.json`
-
-Current transform types:
-
-- `remove_path`
-- `replace_text`
-- `ensure_directory`
-
-Project-owned paths are intentionally protected and skipped:
-
-- `scripts/.env.setup`
-- `scripts/hooks/`
-- `scripts/project-specific/`
-
-`.webentor/project.json` is updated by the command to track new starter
-version metadata.
-
 ## Conflict handling
 
 - If conflicts occur inside `scripts/setup-core`, resolve them with minimal
@@ -119,3 +61,16 @@ version metadata.
 - If the conflict is project-specific behavior, move that behavior to
   `scripts/.env.setup`, `scripts/hooks/`, or `scripts/project-specific/` and
   keep `scripts/setup-core` generic.
+
+## Applying code changes from a core update
+
+When a `webentor-core` release requires a mechanical change to your theme code,
+run the matching codemod instead of editing by hand:
+
+```bash
+pnpm dlx @webikon/webentor-codemods list
+pnpm dlx @webikon/webentor-codemods run <id>           # dry-run
+pnpm dlx @webikon/webentor-codemods run <id> --apply
+```
+
+See [Codemods](./codemods.md) for the full list and details.

@@ -9,8 +9,8 @@ behavior without modifying shared runtime code. See [Overriding Setup Scripts](.
 ## project-owned path
 
 A file or directory that belongs to the consuming project, not to the shared
-`setup-core` runtime. Project-owned paths are never overwritten by
-`webentor-setup upgrade-starter`. The current list:
+`setup-core` runtime. Project-owned paths live outside the `scripts/setup-core`
+subtree, so they are never touched when it is updated. The current list:
 
 - `scripts/.env.setup`
 - `scripts/hooks/`
@@ -26,9 +26,8 @@ tag with `git subtree pull`.
 ## setup metadata
 
 The `.webentor/project.json` file at the project root. It is created by
-`webentor-setup init` and updated by `webentor-setup upgrade-starter`. It
-records which versions of the stack a project is using and stores setup-time
-configuration like `withDbSync` and `withTypesense`.
+`webentor-setup init` and records which versions of the stack a project is
+using, plus setup-time configuration like `withDbSync` and `withTypesense`.
 
 ## setup runtime
 
@@ -43,12 +42,6 @@ The generated files outside `setup-core` that `webentor-setup init` creates:
 `scripts/project-specific/`, and optionally `scripts/ts-up.sh` and
 `scripts/docker-compose.typesense.yml`. These are project-owned and not part
 of the subtree.
-
-## upgrade manifest
-
-A `manifest.json` file inside `scripts/setup-core/upgrades/<version>/` that
-describes a set of deterministic transforms (text replacements, path deletions,
-directory creations) to apply during a `webentor-setup upgrade-starter` run.
 
 ## webentor-core
 

@@ -53,11 +53,9 @@ and fill in values yourself, or fetch them from another secrets manager.
 
 It is CLI-facing metadata created by `webentor-setup init`. It records which
 version of `webentor-starter`, `webentor-core`, and the setup CLI a project was
-initialized with. The `upgrade-starter` command reads it to determine the
-current version and updates `starterVersion` after a successful upgrade.
+initialized with.
 
-It is not read by the bash setup runtime. Do not edit it manually unless you
-understand the implications for `upgrade-starter`.
+It is not read by the bash setup runtime. Do not edit it manually.
 
 ---
 
@@ -96,25 +94,11 @@ git subtree pull \
   --squash
 ```
 
-Then run the upgrade command:
+Validate the pull, then commit it. See
+[Starter Upgrades](./upgrading/starter-upgrades.md) for the full process.
 
-```bash
-scripts/setup-core/bin/webentor-setup upgrade-starter \
-  --from X.Y.Z-old \
-  --to X.Y.Z-new \
-  --dry-run true
-```
-
-Review the dry-run report, then run with `--dry-run false` to apply.
-
-See [Starter Upgrades](./upgrading/starter-upgrades.md) for the full process.
-
----
-
-### What is a dry-run upgrade?
-
-When `--dry-run true` (the default), `upgrade-starter` reports what it *would*
-change without actually modifying any files. Review the report before applying.
+For code changes a `webentor-core` update requires in your theme, run the
+matching [codemod](./upgrading/codemods.md) — `pnpm dlx @webikon/webentor-codemods list`.
 
 ---
 

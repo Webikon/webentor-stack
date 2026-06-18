@@ -10,12 +10,6 @@ declare(strict_types=1);
  * are installed in freshly cloned starter projects.
  */
 
-const PROJECT_OWNED_PATH_PREFIXES = [
-    'scripts/.env.setup',
-    'scripts/hooks/',
-    'scripts/project-specific/',
-];
-
 const ENV_SETUP_DEFAULTS = [
     'SETUP_INTERACTIVE' => 'true',
     'SETUP_ENV_CHECK'   => 'true',
@@ -48,10 +42,6 @@ function main(array $argv): void
             commandInit($options, $runtimeRoot);
             return;
 
-        case 'upgrade-starter':
-            commandUpgradeStarter($options, $runtimeRoot);
-            return;
-
         case 'doctor':
             commandDoctor($options);
             return;
@@ -73,7 +63,6 @@ webentor-setup commands:
     [--with-typesense <true|false>] [--cwd <path>]
     Options not provided via flags are prompted interactively.
 
-  webentor-setup upgrade-starter --from <x.y.z> --to <x.y.z> [--cwd <path>] [--dry-run <true|false>]
   webentor-setup doctor [--cwd <path>]
 
 TXT;
@@ -404,184 +393,6 @@ function commandDoctor(array $options): void
     }
 }
 
-function commandUpgradeStarter(array $options, string $runtimeRoot): void
-{
-    $from = $options['from'] ?? null;
-    $to = $options['to'] ?? null;
-
-    if ($from === null || $to === null) {
-        fwrite(STDERR, "Missing required options: --from and --to\n");
-        exit(1);
-    }
-
-    $cwd = realpath($options['cwd'] ?? getcwd()) ?: getcwd();
-    $dryRun = toBool($options['dry-run'] ?? 'true');
-
-    $manifestPath = "{$runtimeRoot}/upgrades/{$to}/manifest.json";
-    if (!file_exists($manifestPath)) {
-        fwrite(STDERR, "Upgrade manifest not found: {$manifestPath}\n");
-        exit(1);
-    }
-
-    $manifest = json_decode((string) file_get_contents($manifestPath), true, flags: JSON_THROW_ON_ERROR);
-    $transforms = $manifest['transforms'] ?? [];
-
-    $lines = [];
-    $lines[] = "# Webentor Upgrade Report";
-    $lines[] = "";
-    $lines[] = "- From: `{$from}`";
-    $lines[] = "- To: `{$to}`";
-    $lines[] = "- Dry run: `" . ($dryRun ? 'true' : 'false') . "`";
-    $lines[] = "- Generated: `" . gmdate(DATE_ATOM) . "`";
-    $lines[] = "";
-    $lines[] = "## Transform Results";
-
-    foreach ($transforms as $index => $transform) {
-        $result = applyTransform($cwd, $transform, $dryRun);
-        $lines[] = sprintf(
-            '%d. `%s` on `%s` -> %s',
-            $index + 1,
-            $transform['type'] ?? 'unknown',
-            $transform['path'] ?? '(n/a)',
-            $result,
-        );
-    }
-
-    $metadataPath = "{$cwd}/.webentor/project.json";
-    if (!isProjectOwnedPath('.webentor/project.json')) {
-        $lines[] = '';
-        if ($dryRun) {
-            $lines[] = '- Planned update for `.webentor/project.json` starterVersion.';
-        } else {
-            updateMetadataVersion($metadataPath, $to);
-            $lines[] = '- Updated `.webentor/project.json` starterVersion.';
-        }
-    }
-
-    $report = implode(PHP_EOL, $lines) . PHP_EOL;
-    $reportPath = "{$cwd}/upgrade-report-{$from}-to-{$to}.md";
-    file_put_contents($reportPath, $report);
-
-    echo $report;
-    echo "Report written to {$reportPath}\n";
-}
-
-function applyTransform(string $cwd, array $transform, bool $dryRun): string
-{
-    $type = $transform['type'] ?? '';
-    $path = $transform['path'] ?? '';
-
-    if ($path !== '') {
-        // Canonicalize the path before ownership check to prevent traversal bypasses
-        // (e.g. "scripts/../../../etc/passwd" must not pass the prefix check).
-        $absolutePathCandidate = realpath("{$cwd}/{$path}") ?: "{$cwd}/{$path}";
-        $cwdReal = realpath($cwd) ?: $cwd;
-        if (!str_starts_with($absolutePathCandidate, $cwdReal . DIRECTORY_SEPARATOR)) {
-            return 'SKIPPED (path outside project root)';
-        }
-        // Check against relative path as stored in manifest
-        if (isProjectOwnedPath($path)) {
-            return 'SKIPPED (project-owned path)';
-        }
-    }
-
-    $absolutePath = $path === '' ? '' : "{$cwd}/{$path}";
-
-    return match ($type) {
-        'remove_path' => transformRemovePath($absolutePath, $dryRun),
-        'replace_text' => transformReplaceText($absolutePath, $transform, $dryRun),
-        'ensure_directory' => transformEnsureDirectory($absolutePath, $dryRun),
-        default => 'SKIPPED (unknown transform type)',
-    };
-}
-
-function transformRemovePath(string $path, bool $dryRun): string
-{
-    if (!file_exists($path)) {
-        return 'NOOP (path missing)';
-    }
-
-    if ($dryRun) {
-        return 'PLANNED (remove path)';
-    }
-
-    if (is_dir($path)) {
-        rrmdir($path);
-    } else {
-        unlink($path);
-    }
-
-    return 'APPLIED';
-}
-
-function transformReplaceText(string $path, array $transform, bool $dryRun): string
-{
-    if (!file_exists($path)) {
-        return 'NOOP (file missing)';
-    }
-
-    $search = (string) ($transform['search'] ?? '');
-    $replace = (string) ($transform['replace'] ?? '');
-
-    $content = (string) file_get_contents($path);
-    if ($search === '' || !str_contains($content, $search)) {
-        return 'NOOP (search text not found)';
-    }
-
-    if ($dryRun) {
-        return 'PLANNED (text replacement)';
-    }
-
-    file_put_contents($path, str_replace($search, $replace, $content));
-    return 'APPLIED';
-}
-
-function transformEnsureDirectory(string $path, bool $dryRun): string
-{
-    if (is_dir($path)) {
-        return 'NOOP (directory exists)';
-    }
-
-    if ($dryRun) {
-        return 'PLANNED (create directory)';
-    }
-
-    mkdir($path, 0777, true);
-    return 'APPLIED';
-}
-
-function updateMetadataVersion(string $metadataPath, string $starterVersion): void
-{
-    $metadata = [];
-    if (file_exists($metadataPath)) {
-        $metadata = json_decode((string) file_get_contents($metadataPath), true) ?: [];
-    }
-
-    $metadata['starterVersion'] = $starterVersion;
-    $metadata['setupCliVersion'] = detectSetupCliVersion(dirname(dirname($metadataPath)) . '/scripts/setup-core');
-    $metadata['updatedAt'] = gmdate(DATE_ATOM);
-
-    if (!is_dir(dirname($metadataPath))) {
-        mkdir(dirname($metadataPath), 0777, true);
-    }
-
-    file_put_contents(
-        $metadataPath,
-        json_encode($metadata, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL,
-    );
-}
-
-function isProjectOwnedPath(string $path): bool
-{
-    foreach (PROJECT_OWNED_PATH_PREFIXES as $prefix) {
-        if ($path === $prefix || str_starts_with($path, $prefix)) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 /**
  * Create directory if missing. Returns true when created, false when already present.
  */
@@ -592,30 +403,6 @@ function ensureDir(string $path): bool
     }
     mkdir($path, 0777, true);
     return true;
-}
-
-function rrmdir(string $path): void
-{
-    $items = scandir($path);
-    if ($items === false) {
-        return;
-    }
-
-    foreach ($items as $item) {
-        if ($item === '.' || $item === '..') {
-            continue;
-        }
-
-        $itemPath = $path . DIRECTORY_SEPARATOR . $item;
-        if (is_dir($itemPath)) {
-            rrmdir($itemPath);
-            continue;
-        }
-
-        unlink($itemPath);
-    }
-
-    rmdir($path);
 }
 
 function toBool(string $value): bool

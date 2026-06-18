@@ -64,11 +64,15 @@ bin/webentor-setup init
 bin/webentor-setup init --project my-project --with-1password false --with-db-sync true --with-typesense false
 
 # Flags are optional overrides; omitted options are prompted interactively.
-bin/webentor-setup upgrade-starter --from 0.9.0 --to 1.0.0 --cwd /path/to/project --dry-run true
 bin/webentor-setup doctor --cwd /path/to/project
 ```
 
-## Upgrade Recipes
+## Upgrades
 
-Recipes are stored in `upgrades/<starter-version>/manifest.json`.
-Each manifest defines deterministic transforms that avoid project-owned paths.
+Sync the shared setup runtime (`scripts/setup-core`) from a tagged
+`webentor-setup` release via `git subtree pull` — see the
+[Starter Upgrades](../../docs/src/upgrading/starter-upgrades.md) guide.
+
+Mechanical code changes to consumer theme code (PHP/TS/CSS/JSON) required by a
+`webentor-core` update are handled by [`@webikon/webentor-codemods`](../webentor-codemods),
+not by this CLI.
