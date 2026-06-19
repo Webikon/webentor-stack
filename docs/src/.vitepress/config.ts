@@ -45,6 +45,7 @@ export default defineConfig({
           { text: 'Block Authoring', link: '/guides/block-authoring' },
           { text: 'Editor Components', link: '/guides/editor-components' },
           { text: 'Extend Button', link: '/guides/extend-e-button' },
+          { text: 'Extend Section Background', link: '/guides/extend-l-section' },
           { text: 'Core Frontend Components', link: '/guides/core-frontend-components' },
           { text: 'Images', link: '/guides/images' },
           { text: '1Password Setup', link: '/guides/1password-setup' },
