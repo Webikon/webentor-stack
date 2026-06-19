@@ -1,0 +1,311 @@
+# Dependency bumps for the webentor-core 0.13.0 upgrade.
+#
+# One rule per dependency, matched by its exact key (anchored regex, so e.g.
+# "eslint" never matches "eslint-plugin-prettier") with a value-is-string guard
+# (so a config object that shares a key — e.g. "lint-staged"/"prettier"/"stylelint"
+# — is never clobbered), rewritten to the 0.13.0 starter baseline range regardless
+# of the consumer's current value. The set is the complete
+# `git diff <0.12 baseline> -- <theme>/{package,composer}.json`.
+#
+# `files:` scopes npm rules to package.json and the composer rule to composer.json.
+# Held majors (react 18, eslint 9, vite 7, typescript 5, lint-staged 16) are
+# intentionally absent. `name`/`version` are never touched.
+id: deps-10up-block-components
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@10up/block-components"$' }
+    - has: { field: value, kind: string }
+fix: '"@10up/block-components": "^1.22.2"'
+---
+id: deps-eslint-js
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@eslint/js"$' }
+    - has: { field: value, kind: string }
+fix: '"@eslint/js": "^9.39.2"'
+---
+id: deps-ianvs-sort-imports
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@ianvs/prettier-plugin-sort-imports"$' }
+    - has: { field: value, kind: string }
+fix: '"@ianvs/prettier-plugin-sort-imports": "^4.7.1"'
+---
+id: deps-roots-vite-plugin
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@roots/vite-plugin"$' }
+    - has: { field: value, kind: string }
+fix: '"@roots/vite-plugin": "^1.3.1"'
+---
+id: deps-shufo-blade
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@shufo/prettier-plugin-blade"$' }
+    - has: { field: value, kind: string }
+fix: '"@shufo/prettier-plugin-blade": "^1.16.2"'
+---
+id: deps-tailwindcss-postcss
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@tailwindcss/postcss"$' }
+    - has: { field: value, kind: string }
+fix: '"@tailwindcss/postcss": "^4.3.1"'
+---
+id: deps-tailwindcss-vite
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@tailwindcss/vite"$' }
+    - has: { field: value, kind: string }
+fix: '"@tailwindcss/vite": "^4.3.1"'
+---
+id: deps-types-wordpress-block-editor
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@types/wordpress__block-editor"$' }
+    - has: { field: value, kind: string }
+fix: '"@types/wordpress__block-editor": "^15.0.6"'
+---
+id: deps-vitejs-plugin-react
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@vitejs/plugin-react"$' }
+    - has: { field: value, kind: string }
+fix: '"@vitejs/plugin-react": "^5.2.0"'
+---
+id: deps-webentor-core-npm
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@webikon/webentor-core"$' }
+    - has: { field: value, kind: string }
+fix: '"@webikon/webentor-core": "^0.13.0"'
+---
+id: deps-wp-block-editor
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@wordpress/block-editor"$' }
+    - has: { field: value, kind: string }
+fix: '"@wordpress/block-editor": "^15.21.1"'
+---
+id: deps-wp-block-library
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@wordpress/block-library"$' }
+    - has: { field: value, kind: string }
+fix: '"@wordpress/block-library": "^9.48.1"'
+---
+id: deps-wp-blocks
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@wordpress/blocks"$' }
+    - has: { field: value, kind: string }
+fix: '"@wordpress/blocks": "^15.21.1"'
+---
+id: deps-wp-components
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@wordpress/components"$' }
+    - has: { field: value, kind: string }
+fix: '"@wordpress/components": "^35.0.1"'
+---
+id: deps-wp-dependency-extraction
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@wordpress/dependency-extraction-webpack-plugin"$' }
+    - has: { field: value, kind: string }
+fix: '"@wordpress/dependency-extraction-webpack-plugin": "^6.48.1"'
+---
+id: deps-wp-i18n
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@wordpress/i18n"$' }
+    - has: { field: value, kind: string }
+fix: '"@wordpress/i18n": "^6.21.1"'
+---
+id: deps-wp-icons
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@wordpress/icons"$' }
+    - has: { field: value, kind: string }
+fix: '"@wordpress/icons": "^14.0.1"'
+---
+id: deps-eslint
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"eslint"$' }
+    - has: { field: value, kind: string }
+fix: '"eslint": "^9.39.2"'
+---
+id: deps-eslint-plugin-prettier
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"eslint-plugin-prettier"$' }
+    - has: { field: value, kind: string }
+fix: '"eslint-plugin-prettier": "^5.5.6"'
+---
+id: deps-lint-staged
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"lint-staged"$' }
+    - has: { field: value, kind: string }
+fix: '"lint-staged": "^16.4.0"'
+---
+id: deps-postcss
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"postcss"$' }
+    - has: { field: value, kind: string }
+fix: '"postcss": "^8.5.15"'
+---
+id: deps-prettier
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"prettier"$' }
+    - has: { field: value, kind: string }
+fix: '"prettier": "^3.8.4"'
+---
+id: deps-prettier-plugin-tailwindcss
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"prettier-plugin-tailwindcss"$' }
+    - has: { field: value, kind: string }
+fix: '"prettier-plugin-tailwindcss": "^0.8.0"'
+---
+id: deps-stylelint
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"stylelint"$' }
+    - has: { field: value, kind: string }
+fix: '"stylelint": "^17.13.0"'
+---
+id: deps-stylelint-config-recommended
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"stylelint-config-recommended"$' }
+    - has: { field: value, kind: string }
+fix: '"stylelint-config-recommended": "^18.0.0"'
+---
+id: deps-tailwindcss
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"tailwindcss"$' }
+    - has: { field: value, kind: string }
+fix: '"tailwindcss": "^4.3.1"'
+---
+id: deps-typescript-eslint
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"typescript-eslint"$' }
+    - has: { field: value, kind: string }
+fix: '"typescript-eslint": "^8.61.1"'
+---
+id: deps-vite
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"vite"$' }
+    - has: { field: value, kind: string }
+fix: '"vite": "^7.3.5"'
+---
+id: deps-alpinejs-intersect
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@alpinejs/intersect"$' }
+    - has: { field: value, kind: string }
+fix: '"@alpinejs/intersect": "^3.15.12"'
+---
+id: deps-webentor-core-composer
+language: json
+files: ['**/composer.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"webikon/webentor-core"$' }
+    - has: { field: value, kind: string }
+fix: '"webikon/webentor-core": "^0.13"'

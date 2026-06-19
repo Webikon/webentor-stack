@@ -16,13 +16,13 @@ Run from your **project root** (the directory containing `web/app/themes/…`):
 # See what's available
 pnpm dlx @webikon/webentor-codemods list
 
-# Preview a migration (dry-run — prints a diff, writes nothing)
-pnpm dlx @webikon/webentor-codemods run <id>
+# Preview the codemod for a core version (dry-run — prints a diff, writes nothing)
+pnpm dlx @webikon/webentor-codemods run 0.13.0
 
 # Apply it
-pnpm dlx @webikon/webentor-codemods run <id> --apply
+pnpm dlx @webikon/webentor-codemods run 0.13.0 --apply
 
-# Or run every migration for a core version range at once
+# Or run every migration across a core version range at once
 pnpm dlx @webikon/webentor-codemods run --since 0.12.0 --to 0.13.0 --apply
 ```
 
@@ -37,9 +37,12 @@ applying, rebuild the theme and clear caches (`wp acorn optimize:clear`).
 
 ## Available migrations
 
+Migrations are **named by the webentor-core version** they bring you to — the id
+*is* the target version, so "run the 0.13.0 codemod" reads literally.
+
 | id | core | what |
 | --- | --- | --- |
-| `theme-editor-enqueue-iframe` | 0.12 → 0.13 | Move editor canvas styles to `enqueue_block_assets` (WP 7.0 iframe editor) |
+| `0.13.0` | 0.12 → 0.13 | WP 7.0 iframe editor-asset enqueue change (`app/setup.php`) + the full dependency bump set (`package.json` + `composer.json`) |
 
 See each migration's `migrations/<id>/README.md` for before/after detail.
 
@@ -47,22 +50,28 @@ See each migration's `migrations/<id>/README.md` for before/after detail.
 
 ```
 migrations/
-  index.json                     registry (id, title, appliesTo range, rule files)
-  <id>/
-    rules/*.yml                  ast-grep rewrite rule(s), applied in order
+  index.json                     registry (id = version, title, appliesTo range, rule files)
+  <version>/                     e.g. 0.13.0
+    rules/*.yml                  ast-grep rewrite rule(s), applied in order; one .yml
+                                 may hold several rules as `---`-separated documents
     README.md                    what/why + before→after
-  __fixtures__/<id>/
-    before.php / after.php       golden pair (drives the tests)
-    customized.php               a shape that must NOT match (no-op guard)
+  __fixtures__/<version>/
+    before/  after/              golden project subtrees (drive the tests); each holds
+                                 the files a rule touches, e.g. app/setup.php,
+                                 package.json, composer.json
+    customized/                  (optional) a subtree that must NOT change (no-op guard)
 bin/webentor-codemods.mjs        the CLI runner (wraps the bundled ast-grep)
 ```
 
 ### Adding a future migration
 
-1. Create `migrations/<id>/rules/<rule>.yml` (an ast-grep rule with a `fix`).
-2. Add a `before.php`/`after.php` (and optional `customized.php`) golden pair
-   under `migrations/__fixtures__/<id>/`.
-3. Register it in `migrations/index.json` (`id`, `appliesTo`, `rules`).
+1. Create `migrations/<version>/rules/<rule>.yml` ast-grep rule(s) with a `fix`.
+   Rules can target multiple languages (PHP, JSON, …) — ast-grep dispatches each
+   rule to the files matching its `language`. JSON dependency rules use
+   `files:` globs to scope to `package.json` / `composer.json`.
+2. Add `before/` + `after/` (and optional `customized/`) fixture subtrees under
+   `migrations/__fixtures__/<version>/`.
+3. Register it in `migrations/index.json` (`id` = the version, `appliesTo`, `rules`).
 
 The runner and the test suite are generic — no code changes needed. Migrations
 are **idempotent** (re-running is a no-op) and **conservative** (anything that
