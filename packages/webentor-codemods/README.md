@@ -43,6 +43,7 @@ Migrations are **named by the webentor-core version** they bring you to — the 
 | id | core | what |
 | --- | --- | --- |
 | `0.13.0` | 0.12 → 0.13 | WP 7.0 iframe editor-asset enqueue change (`app/setup.php`) + the full dependency bump set (`package.json` + `composer.json`) |
+| `0.15.0` | 0.13 → 0.15 | Vite 8 / Rolldown: dependency bumps (`package.json` + `composer.json`) + the static-asset `import.meta.glob` fix (`resources/scripts/app.ts`). The `vite.config.js` externals rewrite is a documented manual step. |
 
 See each migration's `migrations/<id>/README.md` for before/after detail.
 

@@ -1,0 +1,32 @@
+# Vite 8 / Rolldown static-asset glob fix (resources/scripts/app.ts, TS).
+#
+# On Vite 7 a bare `import.meta.glob(['../images/**', '../fonts/**'])` was enough to
+# register static assets into the build manifest. On Vite 8 / Rolldown a bare glob
+# no longer emits them — the call must be eager and resolve each match to its
+# versioned URL, i.e. `{ eager: true, query: '?url', import: 'default' }`. Without
+# this, asset() lookups for images/fonts (e.g. block-preview thumbnails) 404.
+#
+# Matches the single-argument asset glob only (the argument array must contain an
+# `images`/`fonts` pattern), so unrelated `import.meta.glob` calls and the
+# already-migrated two-argument form are left untouched (idempotent + conservative).
+# A customized glob (different paths) won't match — migrate it by hand per the README.
+id: app-asset-glob-vite8
+language: typescript
+files: ['**/resources/scripts/app.ts']
+rule:
+  pattern: import.meta.glob($ARR)
+  has:
+    field: arguments
+    has:
+      kind: array
+      stopBy: end
+      has:
+        kind: string
+        stopBy: end
+        regex: 'images|fonts'
+fix: |-
+  import.meta.glob($ARR, {
+    eager: true,
+    query: '?url',
+    import: 'default',
+  })

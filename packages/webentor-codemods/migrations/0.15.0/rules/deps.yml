@@ -1,0 +1,83 @@
+# Dependency bumps for the webentor-core 0.15.0 upgrade (Vite 8 / Rolldown).
+#
+# Baseline = the 0.13.0 starter (theme 2.0.7). This is the COMPLETE
+# `git diff starter-v2.0.7 -- <theme>/{package,composer}.json` dependency delta
+# to the 0.15.0 baseline — only the Vite-8 toolchain ranges and the webentor-core
+# bump changed; everything else carried over from 0.13.0 unchanged and is therefore
+# absent here (run the 0.13.0 codemod first if coming from an older baseline).
+#
+# Same shape as the 0.13.0 deps rules: one rule per dependency, matched by its
+# exact key (anchored regex) with a value-is-string guard (so a config object that
+# shares a key is never clobbered), rewritten to the 0.15.0 baseline range
+# regardless of the consumer's current value. `files:` scopes npm rules to
+# package.json and the composer rule to composer.json. `name`/`version` are never
+# touched.
+id: deps-roots-vite-plugin
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@roots/vite-plugin"$' }
+    - has: { field: value, kind: string }
+fix: '"@roots/vite-plugin": "^2.2.0"'
+---
+id: deps-vitejs-plugin-react
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@vitejs/plugin-react"$' }
+    - has: { field: value, kind: string }
+fix: '"@vitejs/plugin-react": "^6.0.0"'
+---
+id: deps-webentor-configs
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@webikon/webentor-configs"$' }
+    - has: { field: value, kind: string }
+fix: '"@webikon/webentor-configs": "^1.1.0"'
+---
+id: deps-laravel-vite-plugin
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"laravel-vite-plugin"$' }
+    - has: { field: value, kind: string }
+fix: '"laravel-vite-plugin": "^3.0.0"'
+---
+id: deps-vite
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"vite"$' }
+    - has: { field: value, kind: string }
+fix: '"vite": "^8.0.0"'
+---
+id: deps-webentor-core-npm
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@webikon/webentor-core"$' }
+    - has: { field: value, kind: string }
+fix: '"@webikon/webentor-core": "^0.15.0"'
+---
+id: deps-webentor-core-composer
+language: json
+files: ['**/composer.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"webikon/webentor-core"$' }
+    - has: { field: value, kind: string }
+fix: '"webikon/webentor-core": "^0.15"'

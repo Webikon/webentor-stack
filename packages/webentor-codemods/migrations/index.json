@@ -12,6 +12,18 @@
       },
       "rules": ["rules/editor-enqueue-iframe.yml", "rules/deps.yml"],
       "docs": "README.md"
+    },
+    {
+      "id": "0.15.0",
+      "title": "Upgrade consumer theme to webentor-core 0.15.0 (Vite 8 / Rolldown)",
+      "description": "Vite 8 / Rolldown toolchain migration: dependency bumps (vite ^8, @roots/vite-plugin ^2.2.0, @vitejs/plugin-react ^6, laravel-vite-plugin ^3, @webikon/webentor-configs ^1.1.0, webentor-core ^0.15) plus the resources/scripts/app.ts static-asset import.meta.glob fix. The vite.config.js externals rewrite is a documented manual step (see README).",
+      "appliesTo": {
+        "package": "webentor-core",
+        "from": "0.13.0",
+        "to": "0.15.0"
+      },
+      "rules": ["rules/deps.yml", "rules/app-glob-vite8.yml"],
+      "docs": "README.md"
     }
   ]
 }

@@ -1,5 +1,24 @@
 # Webentor Codemods Changelog
 
+## 0.2.0
+
+- Add the `0.15.0` migration (webentor-core 0.13 → 0.15 — the **Vite 8 / Rolldown**
+  toolchain move), with two automated rule sets plus one documented manual step:
+  - `deps.yml` (JSON): rewrites the theme's `package.json` + `composer.json` to the
+    0.15.0 baseline — `webentor-core` `^0.15`, `vite` `^8`, `@roots/vite-plugin`
+    `^2.2.0`, `@vitejs/plugin-react` `^6`, `laravel-vite-plugin` `^3`,
+    `@webikon/webentor-configs` `^1.1.0`. This is the complete dependency delta from
+    the 0.13.0 baseline (only the Vite-8 toolchain ranges changed).
+  - `app-glob-vite8.yml` (TS): adds `{ eager: true, query: '?url', import: 'default' }`
+    to the static-asset `import.meta.glob(['../images/**', '../fonts/**'])` in
+    `resources/scripts/app.ts` (a bare glob no longer emits assets under Rolldown).
+    Conservative — only the single-argument asset glob matches; unrelated globs and
+    the already-migrated form are untouched.
+  - The `vite.config.js` WordPress-externals rewrite (now
+    `...wordpressExternals(command)` from `@webikon/webentor-configs/vite`) is too
+    project-specific to codemod safely and is documented as a manual before→after in
+    `migrations/0.15.0/README.md`.
+
 ## 0.1.0
 
 - Initial release of `@webikon/webentor-codemods` — a reusable, ast-grep–powered
