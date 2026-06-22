@@ -177,7 +177,7 @@ Manual version and changelog edits are expected for release work in this reposit
 
 Reference map for locating version sources per package.
 
-- `webentor-core` (beta, `0.9.x`):
+- `webentor-core` (beta, `0.x`):
  - `packages/webentor-core/package.json` -> `"version"` (manual)
  - `packages/webentor-core/composer.json` -> `"version"` (manual; keep in sync with `package.json`)
  - `packages/webentor-core/CHANGELOG.md` -> add new entry at top (manual)

@@ -25,10 +25,10 @@ This brings the shared setup runtime into `scripts/setup-core/`:
 ```bash
 git remote add webentor-setup https://github.com/Webikon/webentor-setup.git
 git fetch webentor-setup --tags
-git subtree add --prefix=scripts/setup-core webentor-setup v1.0.2 --squash
+git subtree add --prefix=scripts/setup-core webentor-setup v1.1.0 --squash
 ```
 
-Replace `v1.0.2` with the latest `webentor-setup` tag.
+Replace `v1.1.0` with the latest `webentor-setup` tag.
 
 ## 4. Initialize project scaffolding
 

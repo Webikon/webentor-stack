@@ -30,8 +30,12 @@ pnpm dlx @webikon/webentor-codemods run <id>
 pnpm dlx @webikon/webentor-codemods run <id> --apply
 
 # Or run every migration for a core version range at once
-pnpm dlx @webikon/webentor-codemods run --since 0.12.0 --to 0.13.0 --apply
+pnpm dlx @webikon/webentor-codemods run --since 0.13.0 --to 0.15.0 --apply
 ```
+
+Migration ids encode their package + target version: **webentor-core** migrations
+use the bare core version (`0.13.0`, `0.15.0`); other packages use a
+`<package>-<version>` prefix (e.g. `starter-2.1.1` for a starter-only release).
 
 Options:
 
@@ -53,33 +57,29 @@ wp acorn optimize:clear
 - **Conservative** — anything that doesn't match the exact targeted shape (a
   heavily customized hook, say) is left untouched and reported, so you can
   migrate it by hand.
+- **Additive** — the changelog sync (below) inserts entries above existing ones;
+  it never clobbers your own changelog content.
+
+## Changelog sync
+
+Besides code transforms, a migration keeps your project's changelogs up to date
+with the stack: it prepends the release's version block to the project root
+`changelog.md` and the theme `web/app/themes/*/changelog.md` (under the
+`# … Changelog` H1). Already-present versions are skipped, so a range run
+(`run --since …`) backfills the full history in order.
 
 ## Available migrations
 
-| id | core | what it does |
+| id | scope | what it does |
 | --- | --- | --- |
-| `theme-editor-enqueue-iframe` | 0.12 → 0.13 | Moves the theme's `editor.css` + `button.style.css` enqueues from `enqueue_block_editor_assets` to a new `enqueue_block_assets` hook (`is_admin()` guarded), so WP 7.0's iframed editor styles the canvas correctly. The editor JS stays on `enqueue_block_editor_assets`. |
+| `0.13.0` | core 0.12 → 0.13 | Moves the theme's `editor.css` + `button.style.css` enqueues from `enqueue_block_editor_assets` to a new `enqueue_block_assets` hook (`is_admin()` guarded) for WP 7.0's iframed editor; the editor JS stays put. Plus the full `package.json` + `composer.json` dependency bump set and changelog sync (2.0.7). |
+| `0.15.0` | core 0.13 → 0.15 | Vite 8 / Rolldown: `package.json` + `composer.json` dependency bumps, the `resources/scripts/app.ts` static-asset `import.meta.glob` fix, and changelog sync (2.1.0). The `vite.config.js` externals rewrite is a documented manual step (printed by the migration). |
 
 ## Authoring a new migration
 
-Migrations live in `packages/webentor-codemods/migrations/`:
-
-```
-migrations/
-  index.json                 registry: id, title, appliesTo range, rule files
-  <id>/
-    rules/*.yml              ast-grep rewrite rule(s), applied in order
-    README.md                what/why + before→after
-  __fixtures__/<id>/
-    before.php / after.php   golden pair (drives the tests)
-    customized.php           a shape that must NOT match (no-op guard)
-```
-
-1. Add the rule(s) under `migrations/<id>/rules/`.
-2. Add a `before.php`/`after.php` golden pair (and optional `customized.php`)
-   under `migrations/__fixtures__/<id>/`.
-3. Register the migration in `migrations/index.json`.
-
-The runner and tests are generic — no code changes needed. `pnpm test` asserts
-each migration is byte-exact (before → after), idempotent, and a safe no-op on
-customized fixtures.
+Migrations live in `packages/webentor-codemods/migrations/` — each is a folder of
+ast-grep rule files and/or changelog blocks plus directory-based golden fixtures,
+registered in `migrations/index.json`. The runner and tests are generic, so adding
+one needs no code changes. See the package's
+[README](https://github.com/Webikon/webentor-stack/tree/main/packages/webentor-codemods#how-its-built)
+for the full layout, the id naming convention, and the step-by-step.
