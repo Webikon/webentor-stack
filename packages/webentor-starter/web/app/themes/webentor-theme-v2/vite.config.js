@@ -1,9 +1,8 @@
 import fs from 'node:fs';
 import { v4wp } from '@kucrut/vite-for-wp';
-import { wp_scripts } from '@kucrut/vite-for-wp/plugins';
 import { wordpressThemeJson } from '@roots/vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
-import react from '@vitejs/plugin-react';
+import { wordpressExternals } from '@webikon/webentor-configs/vite';
 import { glob } from 'glob';
 // import laravel from 'laravel-vite-plugin';
 import { defineConfig, normalizePath } from 'vite';
@@ -31,7 +30,7 @@ fs.writeFileSync(
   JSON.stringify(webentorConfig.safelist),
 );
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   base: '/app/themes/webentor-theme-v2/public/build/',
   publicDir: 'public-assets',
   plugins: [
@@ -63,11 +62,10 @@ export default defineConfig({
       outDir: 'public/build',
     }),
 
-    wp_scripts(),
-    react({ jsxRuntime: 'classic' }),
-
-    // NOT USED as we use v4wp plugin
-    // wordpressPlugin(),
+    // WordPress externals (@wordpress/* -> wp.*, react -> window.React) — hybrid per command:
+    // roots wordpressPlugin + interop shims for the build, kucrut wp_scripts() for the dev server.
+    // See @webikon/webentor-configs/vite.
+    ...wordpressExternals(command),
 
     // Generate the theme.json file in the public/build/assets directory
     // based on the Tailwind config and the theme.json file from base theme folder
@@ -101,4 +99,4 @@ export default defineConfig({
       '@blocks': '/resources/blocks',
     },
   },
-});
+}));

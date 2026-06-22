@@ -65,6 +65,19 @@ importers:
       typescript-eslint:
         specifier: ^8.0.0
         version: 8.56.0(eslint@9.39.2(jiti@2.7.0))(typescript@5.9.3)
+    devDependencies:
+      '@kucrut/vite-for-wp':
+        specifier: ^0.12.0
+        version: 0.12.0(rollup-plugin-external-globals@0.13.0(rollup@4.62.0))(vite-plugin-external@6.2.2)(vite@8.0.16(@types/node@25.9.3)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))
+      '@roots/vite-plugin':
+        specifier: ^2.2.0
+        version: 2.2.0(vite@8.0.16(@types/node@25.9.3)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))(webpack@5.105.2(esbuild@0.27.7)(postcss@8.5.15))
+      '@vitejs/plugin-react':
+        specifier: ^6.0.0
+        version: 6.0.2(vite@8.0.16(@types/node@25.9.3)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))
+      vite:
+        specifier: ^8.0.0
+        version: 8.0.16(@types/node@25.9.3)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0)
 
   packages/webentor-core:
     dependencies:
@@ -109,8 +122,8 @@ importers:
         specifier: ^6.0.0
         version: 6.0.2(vite@8.0.16(@types/node@25.9.3)(esbuild@0.27.7)(jiti@1.21.7)(terser@5.48.0)(yaml@2.9.0))
       '@webikon/webentor-configs':
-        specifier: ^1.0.2
-        version: 1.0.2(@eslint/js@9.39.2)(eslint-config-prettier@10.1.8(eslint@9.39.2(jiti@1.21.7)))(eslint-plugin-prettier@5.5.6(@types/eslint@9.6.1)(eslint-config-prettier@10.1.8(eslint@9.39.2(jiti@1.21.7)))(eslint@9.39.2(jiti@1.21.7))(prettier@3.8.4))(eslint-plugin-react@7.37.5(eslint@9.39.2(jiti@1.21.7)))(eslint@9.39.2(jiti@1.21.7))(globals@16.5.0)(stylelint-config-recommended@18.0.0(stylelint@17.13.0(typescript@5.9.3)))(stylelint@17.13.0(typescript@5.9.3))(typescript-eslint@8.61.1(eslint@9.39.2(jiti@1.21.7))(typescript@5.9.3))
+        specifier: workspace:*
+        version: link:../webentor-configs
       '@wordpress/block-editor':
         specifier: ^15.21.1
         version: 15.21.1(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.3(@types/react@18.3.31))(date-fns@4.4.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint@17.13.0(typescript@5.9.3))
@@ -2616,20 +2629,6 @@ packages:
 
   '@webassemblyjs/wast-printer@1.14.1':
     resolution: {integrity: sha512-kPSSXE6De1XOR820C90RIo2ogvZG+c3KiHzqUoO/F34Y2shGzesfqv7o57xrxovZJH/MetF5UjroJ/R/3isoiw==}
-
-  '@webikon/webentor-configs@1.0.2':
-    resolution: {integrity: sha512-B5DAWfCJ98+i9+ecPKeu4Ql4J/1eZGNr0Ow8Dw2mPYcTSvtdS5YazMDlqJkZu2x2XnHJmFwqBD2CcXKGABsqcw==}
-    engines: {node: '>=20.0.0'}
-    peerDependencies:
-      '@eslint/js': ^9.0.0
-      eslint: ^9.0.0
-      eslint-config-prettier: ^10.0.0
-      eslint-plugin-prettier: ^5.0.0
-      eslint-plugin-react: ^7.0.0
-      globals: ^16.0.0
-      stylelint: ^16.0.0
-      stylelint-config-recommended: ^17.0.0
-      typescript-eslint: ^8.0.0
 
   '@wordpress/a11y@4.48.1':
     resolution: {integrity: sha512-BPU7wRoz2XRmP3ZgVtENPKS4iO5/+bKNid/xLrvD6cP1qMhIGowQsBNqmkP1V5+q71hQM/ID6tpFjeLhmogfPg==}
@@ -7578,6 +7577,13 @@ snapshots:
       rollup-plugin-external-globals: 0.13.0(rollup@4.62.0)
       vite-plugin-external: 6.2.2
 
+  '@kucrut/vite-for-wp@0.12.0(rollup-plugin-external-globals@0.13.0(rollup@4.62.0))(vite-plugin-external@6.2.2)(vite@8.0.16(@types/node@25.9.3)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))':
+    dependencies:
+      vite: 8.0.16(@types/node@25.9.3)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0)
+    optionalDependencies:
+      rollup-plugin-external-globals: 0.13.0(rollup@4.62.0)
+      vite-plugin-external: 6.2.2
+
   '@leeoniya/ufuzzy@1.0.19': {}
 
   '@manypkg/find-root@1.1.0':
@@ -8302,6 +8308,13 @@ snapshots:
     transitivePeerDependencies:
       - webpack
 
+  '@roots/vite-plugin@2.2.0(vite@8.0.16(@types/node@25.9.3)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))(webpack@5.105.2(esbuild@0.27.7)(postcss@8.5.15))':
+    dependencies:
+      '@wordpress/dependency-extraction-webpack-plugin': 6.48.1(webpack@5.105.2(esbuild@0.27.7)(postcss@8.5.15))
+      vite: 8.0.16(@types/node@25.9.3)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0)
+    transitivePeerDependencies:
+      - webpack
+
   '@sentry/core@9.47.1': {}
 
   '@sentry/node-core@9.47.1(@opentelemetry/api@1.9.0)(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/resources@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/semantic-conventions@1.40.0)':
@@ -8897,6 +8910,11 @@ snapshots:
       '@rolldown/pluginutils': 1.0.1
       vite: 8.0.16(@types/node@25.9.3)(esbuild@0.27.7)(jiti@1.21.7)(terser@5.48.0)(yaml@2.9.0)
 
+  '@vitejs/plugin-react@6.0.2(vite@8.0.16(@types/node@25.9.3)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))':
+    dependencies:
+      '@rolldown/pluginutils': 1.0.1
+      vite: 8.0.16(@types/node@25.9.3)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0)
+
   '@vitejs/plugin-vue@5.2.4(vite@5.4.21(@types/node@25.9.3)(lightningcss@1.32.0)(terser@5.48.0))(vue@3.5.28(typescript@5.9.3))':
     dependencies:
       vite: 5.4.21(@types/node@25.9.3)(lightningcss@1.32.0)(terser@5.48.0)
@@ -9082,18 +9100,6 @@ snapshots:
     dependencies:
       '@webassemblyjs/ast': 1.14.1
       '@xtuc/long': 4.2.2
-
-  '@webikon/webentor-configs@1.0.2(@eslint/js@9.39.2)(eslint-config-prettier@10.1.8(eslint@9.39.2(jiti@1.21.7)))(eslint-plugin-prettier@5.5.6(@types/eslint@9.6.1)(eslint-config-prettier@10.1.8(eslint@9.39.2(jiti@1.21.7)))(eslint@9.39.2(jiti@1.21.7))(prettier@3.8.4))(eslint-plugin-react@7.37.5(eslint@9.39.2(jiti@1.21.7)))(eslint@9.39.2(jiti@1.21.7))(globals@16.5.0)(stylelint-config-recommended@18.0.0(stylelint@17.13.0(typescript@5.9.3)))(stylelint@17.13.0(typescript@5.9.3))(typescript-eslint@8.61.1(eslint@9.39.2(jiti@1.21.7))(typescript@5.9.3))':
-    dependencies:
-      '@eslint/js': 9.39.2
-      eslint: 9.39.2(jiti@1.21.7)
-      eslint-config-prettier: 10.1.8(eslint@9.39.2(jiti@1.21.7))
-      eslint-plugin-prettier: 5.5.6(@types/eslint@9.6.1)(eslint-config-prettier@10.1.8(eslint@9.39.2(jiti@1.21.7)))(eslint@9.39.2(jiti@1.21.7))(prettier@3.8.4)
-      eslint-plugin-react: 7.37.5(eslint@9.39.2(jiti@1.21.7))
-      globals: 16.5.0
-      stylelint: 17.13.0(typescript@5.9.3)
-      stylelint-config-recommended: 18.0.0(stylelint@17.13.0(typescript@5.9.3))
-      typescript-eslint: 8.61.1(eslint@9.39.2(jiti@1.21.7))(typescript@5.9.3)
 
   '@wordpress/a11y@4.48.1':
     dependencies:
@@ -13673,6 +13679,21 @@ snapshots:
       esbuild: 0.27.7
       fsevents: 2.3.3
       jiti: 1.21.7
+      terser: 5.48.0
+      yaml: 2.9.0
+
+  vite@8.0.16(@types/node@25.9.3)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0):
+    dependencies:
+      lightningcss: 1.32.0
+      picomatch: 4.0.4
+      postcss: 8.5.15
+      rolldown: 1.0.3
+      tinyglobby: 0.2.17
+    optionalDependencies:
+      '@types/node': 25.9.3
+      esbuild: 0.27.7
+      fsevents: 2.3.3
+      jiti: 2.7.0
       terser: 5.48.0
       yaml: 2.9.0
 
