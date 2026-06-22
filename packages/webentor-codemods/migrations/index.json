@@ -11,6 +11,10 @@
         "to": "0.13.0"
       },
       "rules": ["rules/editor-enqueue-iframe.yml", "rules/deps.yml"],
+      "changelog": [
+        { "entry": "changelog/root.md", "target": "changelog.md", "marker": "### 2.0.7" },
+        { "entry": "changelog/theme.md", "target": "web/app/themes/*/changelog.md", "marker": "### Version 2.0.7" }
+      ],
       "docs": "README.md"
     },
     {
@@ -23,6 +27,10 @@
         "to": "0.15.0"
       },
       "rules": ["rules/deps.yml", "rules/app-glob-vite8.yml"],
+      "changelog": [
+        { "entry": "changelog/root.md", "target": "changelog.md", "marker": "### 2.1.0" },
+        { "entry": "changelog/theme.md", "target": "web/app/themes/*/changelog.md", "marker": "### Version 2.1.0" }
+      ],
       "docs": "README.md"
     }
   ]

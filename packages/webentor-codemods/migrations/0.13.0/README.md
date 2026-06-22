@@ -97,3 +97,14 @@ major (8), `typescript` major (6), `lint-staged` major (17 — needs Node 22).
   0.12 → 0.13 upgrade; adjust by hand if you intentionally run newer.
 
 After applying, run `pnpm install` + `composer update` to refresh the lockfiles.
+
+## 3. Changelog sync
+
+Prepends the `2.0.7` version block to the project's changelogs so they match the
+stack:
+
+- `changelog.md` (project root) ← `changelog/root.md` (marker `### 2.0.7`)
+- `web/app/themes/*/changelog.md` ← `changelog/theme.md` (marker `### Version 2.0.7`)
+
+Idempotent (skipped if the heading is already present) and additive (inserted under
+the `# … Changelog` H1, above existing entries).

@@ -42,19 +42,41 @@ Migrations are **named by the webentor-core version** they bring you to — the 
 
 | id | core | what |
 | --- | --- | --- |
-| `0.13.0` | 0.12 → 0.13 | WP 7.0 iframe editor-asset enqueue change (`app/setup.php`) + the full dependency bump set (`package.json` + `composer.json`) |
-| `0.15.0` | 0.13 → 0.15 | Vite 8 / Rolldown: dependency bumps (`package.json` + `composer.json`) + the static-asset `import.meta.glob` fix (`resources/scripts/app.ts`). The `vite.config.js` externals rewrite is a documented manual step. |
+| `0.13.0` | 0.12 → 0.13 | WP 7.0 iframe editor-asset enqueue change (`app/setup.php`) + the full dependency bump set (`package.json` + `composer.json`) + changelog sync (2.0.7) |
+| `0.15.0` | 0.13 → 0.15 | Vite 8 / Rolldown: dependency bumps (`package.json` + `composer.json`) + the static-asset `import.meta.glob` fix (`resources/scripts/app.ts`) + changelog sync (2.1.0). The `vite.config.js` externals rewrite is a documented manual step. |
 
 See each migration's `migrations/<id>/README.md` for before/after detail.
+
+## Changelog sync
+
+Besides code rewrites, a migration can keep a consumer project's **changelogs**
+up to date with the stack. A project generated from the starter has a root
+`changelog.md` and a theme `web/app/themes/<theme>/changelog.md` that mirror the
+Webentor baseline — running a migration prepends that release's version block to
+them (under the `# … Changelog` H1), so they read exactly like the stack's.
+
+- **Idempotent:** if the version heading is already present, the file is skipped.
+- **Additive:** the block is inserted above existing entries; nothing is removed.
+  Project-specific entries you added stay put.
+- **Conservative:** if a target changelog isn't found, it's reported and skipped
+  (never created from scratch).
+- Runs as part of `run <id>` / `run --since …` — dry-run prints the block it would
+  insert; `--apply` writes it. Running a version *range* accumulates each release's
+  block in order.
+
+This is plain Markdown insertion (not ast-grep — headings don't parse cleanly as a
+syntax tree), implemented in `lib/changelog.mjs`.
 
 ## How it's built
 
 ```
 migrations/
-  index.json                     registry (id = version, title, appliesTo range, rule files)
+  index.json                     registry (id = version, title, appliesTo range, rules, changelog)
   <version>/                     e.g. 0.13.0
     rules/*.yml                  ast-grep rewrite rule(s), applied in order; one .yml
                                  may hold several rules as `---`-separated documents
+    changelog/*.md               (optional) version blocks prepended to consumer
+                                 changelogs (root + theme), declared in index.json
     README.md                    what/why + before→after
   __fixtures__/<version>/
     before/  after/              golden project subtrees (drive the tests); each holds
@@ -62,6 +84,7 @@ migrations/
                                  package.json, composer.json
     customized/                  (optional) a subtree that must NOT change (no-op guard)
 bin/webentor-codemods.mjs        the CLI runner (wraps the bundled ast-grep)
+lib/changelog.mjs                the changelog-sync step (plain Markdown insertion)
 ```
 
 ### Adding a future migration
@@ -72,7 +95,12 @@ bin/webentor-codemods.mjs        the CLI runner (wraps the bundled ast-grep)
    `files:` globs to scope to `package.json` / `composer.json`.
 2. Add `before/` + `after/` (and optional `customized/`) fixture subtrees under
    `migrations/__fixtures__/<version>/`.
-3. Register it in `migrations/index.json` (`id` = the version, `appliesTo`, `rules`).
+3. (Optional) To sync changelogs, drop the version block(s) in
+   `migrations/<version>/changelog/*.md` and add a `changelog` array to the index
+   entry: `[{ "entry": "changelog/root.md", "target": "changelog.md", "marker": "### <ver>" }, …]`.
+   The `marker` is the block's first heading and is used for the idempotency check.
+4. Register it in `migrations/index.json` (`id` = the version, `appliesTo`, `rules`,
+   optional `changelog`).
 
 The runner and the test suite are generic — no code changes needed. Migrations
 are **idempotent** (re-running is a no-op) and **conservative** (anything that

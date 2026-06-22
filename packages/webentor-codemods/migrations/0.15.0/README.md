@@ -72,6 +72,18 @@ import.meta.glob(['../images/**', '../fonts/**'], {
   any unrelated `import.meta.glob` (e.g. a module glob) are left untouched. A glob
   with customized paths won't match — migrate it by hand using the above.
 
+## Changelog sync
+
+Prepends the `2.1.0` version block to the project's changelogs so they match the
+stack:
+
+- `changelog.md` (project root) ← `changelog/root.md` (marker `### 2.1.0`)
+- `web/app/themes/*/changelog.md` ← `changelog/theme.md` (marker `### Version 2.1.0`)
+
+Idempotent (skipped if the heading is already present) and additive (inserted under
+the `# … Changelog` H1, above existing entries). If you've customized a changelog,
+your entries are preserved.
+
 ## 3. `vite.config.js` — WordPress externals (manual)
 
 This step is **not** codemodded — `vite.config.js` is too project-specific to

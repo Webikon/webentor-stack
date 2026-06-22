@@ -18,8 +18,9 @@
 import { createRequire } from 'node:module';
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join, resolve, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { applyChangelogStep } from '../lib/changelog.mjs';
 
 const require = createRequire(import.meta.url);
 const PKG_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -114,7 +115,10 @@ function runMigration(migration, { targetPath, apply }) {
   const bin = astGrepBin();
   const migDir = join(MIGRATIONS_DIR, migration.id);
   const rules = migration.rules ?? [];
-  if (!rules.length) fail(`migration "${migration.id}" declares no rules`);
+  const changelog = migration.changelog ?? [];
+  if (!rules.length && !changelog.length) {
+    fail(`migration "${migration.id}" declares no rules`);
+  }
 
   console.log(
     `\n▶ ${migration.id}${apply ? ' (apply)' : ' (dry-run — pass --apply to write)'}`,
@@ -132,6 +136,27 @@ function runMigration(migration, { targetPath, apply }) {
       anyError = true;
     } else if (res.status !== 0) {
       anyError = true;
+    }
+  }
+
+  // Changelog sync (not an ast-grep rule — prepend version blocks if missing).
+  for (const step of changelog) {
+    const results = applyChangelogStep(migDir, step, { root: targetPath, apply });
+    for (const r of results) {
+      const where = r.status === 'missing' ? r.file : relative(targetPath, r.file) || r.file;
+      if (r.status === 'updated') {
+        console.log(`\nchangelog[${step.marker}] → ${where}${apply ? ' (written)' : ''}:`);
+        console.log(
+          r.preview
+            .split('\n')
+            .map((l) => `   + ${l}`)
+            .join('\n'),
+        );
+      } else if (r.status === 'unchanged') {
+        console.log(`changelog[${step.marker}] → ${where}: already present, skipped`);
+      } else {
+        console.log(`changelog[${step.marker}]: ${where} — ${r.reason} (skipped)`);
+      }
     }
   }
   return !anyError;

@@ -38,12 +38,13 @@
   },
   "files": [
     "bin",
+    "lib",
     "migrations",
     "README.md",
     "CHANGELOG.md"
   ],
   "scripts": {
-    "lint": "node --check bin/webentor-codemods.mjs",
+    "lint": "node --check bin/webentor-codemods.mjs && node --check lib/changelog.mjs",
     "test": "node --test"
   },
   "dependencies": {

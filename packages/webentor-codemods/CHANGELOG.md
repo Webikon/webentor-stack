@@ -2,6 +2,15 @@
 
 ## 0.2.0
 
+- **New capability — changelog sync.** A migration can now declare a `changelog`
+  block (in `index.json`) that prepends a release's version section to a consumer
+  project's root `changelog.md` and theme `web/app/themes/*/changelog.md`, under the
+  `# … Changelog` H1, so they stay up to date and match the stack. Idempotent (skips
+  if the version heading is already present), additive (never clobbers existing
+  entries), and conservative (missing targets are reported, not created). It's plain
+  Markdown insertion (`lib/changelog.mjs`), not ast-grep. The `0.13.0` migration
+  syncs the `2.0.7` blocks and `0.15.0` syncs the `2.1.0` blocks, so a range run
+  (`run --since …`) accumulates the full history.
 - Add the `0.15.0` migration (webentor-core 0.13 → 0.15 — the **Vite 8 / Rolldown**
   toolchain move), with two automated rule sets plus one documented manual step:
   - `deps.yml` (JSON): rewrites the theme's `package.json` + `composer.json` to the
