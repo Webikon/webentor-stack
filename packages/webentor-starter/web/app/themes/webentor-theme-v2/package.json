@@ -1,6 +1,6 @@
 {
   "name": "@webikon/webentor-theme",
-  "version": "2.0.7",
+  "version": "2.1.0",
   "private": true,
   "engines": {
     "node": ">=20.0.0"
@@ -40,7 +40,7 @@
     "@tailwindcss/vite": "^4.3.1",
     "@types/wordpress__block-editor": "^15.0.6",
     "@vitejs/plugin-react": "^6.0.0",
-    "@webikon/webentor-core": "^0.13.0",
+    "@webikon/webentor-core": "^0.15.0",
     "@webikon/webentor-configs": "^1.1.0",
     "@wordpress/block-editor": "^15.21.1",
     "@wordpress/block-library": "^9.48.1",
