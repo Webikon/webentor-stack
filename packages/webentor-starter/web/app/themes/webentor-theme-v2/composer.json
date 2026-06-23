@@ -1,7 +1,7 @@
 {
   "name": "webikon/webentor-theme",
   "type": "wordpress-theme",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Webentor starter theme",
   "homepage": "https://webikon.sk",
   "authors": [
@@ -37,7 +37,7 @@
     "log1x/acf-composer": "^3.0",
     "log1x/sage-directives": "^2.0",
     "log1x/sage-svg": "^2.0",
-    "roots/acorn": "^5.0",
+    "roots/acorn": "^6.0",
     "roots/acorn-prettify": "^1.0",
     "stoutlogic/acf-builder": "^1.12",
     "webikon/webentor-core": "^0.15"
