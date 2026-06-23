@@ -1,0 +1,55 @@
+{
+  "name": "acme/acme-theme",
+  "type": "wordpress-theme",
+  "version": "1.4.0",
+  "description": "Acme project theme",
+  "homepage": "https://acme.example",
+  "authors": [
+    {
+      "name": "Acme s.r.o.",
+      "email": "dev@acme.example",
+      "homepage": "https://acme.example"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "github",
+      "url": "https://github.com/webikon/webentor-core.git"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/"
+    }
+  },
+  "require": {
+    "php": ">=8.3",
+    "johnbillion/extended-cpts": "^5.0",
+    "log1x/acf-composer": "^3.4",
+    "log1x/sage-directives": "^2.0",
+    "log1x/sage-svg": "^2.0",
+    "roots/acorn": "^6.0",
+    "roots/acorn-prettify": "^1.0",
+    "stoutlogic/acf-builder": "^1.12",
+    "webikon/webentor-core": "^0.15",
+    "wpackagist-plugin/safe-svg": "^2.2"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.8.0"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "scripts": {
+    "post-autoload-dump": [
+      "Roots\\Acorn\\ComposerScripts::postAutoloadDump"
+    ],
+    "lint": [
+      "phpcs --extensions=php --standard=PSR12 app"
+    ]
+  }
+}

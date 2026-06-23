@@ -74,6 +74,7 @@ with the stack: it prepends the release's version block to the project root
 | --- | --- | --- |
 | `0.13.0` | core 0.12 → 0.13 | Moves the theme's `editor.css` + `button.style.css` enqueues from `enqueue_block_editor_assets` to a new `enqueue_block_assets` hook (`is_admin()` guarded) for WP 7.0's iframed editor; the editor JS stays put. Plus the full `package.json` + `composer.json` dependency bump set and changelog sync (2.0.7). |
 | `0.15.0` | core 0.13 → 0.15 | Vite 8 / Rolldown: `package.json` + `composer.json` dependency bumps, the `resources/scripts/app.ts` static-asset `import.meta.glob` fix, and changelog sync (2.1.0). The `vite.config.js` externals rewrite is a documented manual step (printed by the migration). |
+| `starter-2.1.1` | starter + theme 2.1.0 → 2.1.1 | Acorn 6 / Laravel 13: bumps `roots/acorn` to `^6.0` in the theme `composer.json` and syncs the root + theme changelogs (2.1.1). Does **not** bump `webentor-core`. The Acorn 6 `.env` changes (pin `CACHE_PREFIX`/`SESSION_COOKIE`/`REDIS_PREFIX`; rename `MAIL_ENCRYPTION` → `MAIL_SCHEME`) are a documented manual step. Select with `--package webentor-starter` for range runs. |
 
 ## Authoring a new migration
 

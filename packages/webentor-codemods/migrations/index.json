@@ -32,6 +32,22 @@
         { "entry": "changelog/theme.md", "target": "web/app/themes/*/changelog.md", "marker": "### Version 2.1.0" }
       ],
       "docs": "README.md"
+    },
+    {
+      "id": "starter-2.1.1",
+      "title": "Upgrade consumer theme to Acorn 6 (Laravel 13) — theme 2.1.1",
+      "description": "Starter/theme-only release (no webentor-core bump): bump roots/acorn ^5.0 -> ^6.0 (Acorn 6 / Laravel 13) in the theme composer.json. webentor-core stays ^0.15 (covers the transparent 0.15.1 patch). The Acorn 6 .env changes (CACHE_PREFIX/SESSION_COOKIE/REDIS_PREFIX pinning, MAIL_ENCRYPTION -> MAIL_SCHEME) are a documented manual step (see README).",
+      "appliesTo": {
+        "package": "webentor-starter",
+        "from": "2.1.0",
+        "to": "2.1.1"
+      },
+      "rules": ["rules/deps.yml"],
+      "changelog": [
+        { "entry": "changelog/root.md", "target": "changelog.md", "marker": "### 2.1.1" },
+        { "entry": "changelog/theme.md", "target": "web/app/themes/*/changelog.md", "marker": "### Version 2.1.1" }
+      ],
+      "docs": "README.md"
     }
   ]
 }

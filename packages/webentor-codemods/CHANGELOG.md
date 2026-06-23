@@ -1,5 +1,23 @@
 # Webentor Codemods Changelog
 
+## 0.3.0
+
+- Add the `starter-2.1.1` migration (theme **2.1.0 → 2.1.1**, **Acorn 6 / Laravel
+  13**) — the first **package-scoped** migration (`appliesTo.package:
+  webentor-starter`), selectable by id or `--package webentor-starter`. It does
+  **not** bump `webentor-core`.
+  - `deps.yml` (JSON): rewrites the theme's `composer.json` `roots/acorn` to `^6.0`.
+    This is the complete dependency delta from the 2.1.0 baseline — `roots/acorn` is
+    the only change; `webikon/webentor-core` stays `^0.15` (it already covers the
+    transparent `0.15.1` patch). Scoped to `composer.json` (the project root
+    `composer.json` has no `roots/acorn`), value-is-string guarded, idempotent.
+  - Changelog sync prepends the `2.1.1` block to the project root `changelog.md`
+    (marker `### 2.1.1`) and the theme `web/app/themes/*/changelog.md` (marker
+    `### Version 2.1.1`), matching the coupled starter + theme `2.1.1` bump.
+  - The Acorn 6 `.env` runtime changes (pin `CACHE_PREFIX`/`SESSION_COOKIE`/
+    `REDIS_PREFIX` to preserve caches/sessions; rename `MAIL_ENCRYPTION` →
+    `MAIL_SCHEME`) are a documented manual step (see the migration README).
+
 ## 0.2.0
 
 - **New capability — changelog sync.** A migration can now declare a `changelog`

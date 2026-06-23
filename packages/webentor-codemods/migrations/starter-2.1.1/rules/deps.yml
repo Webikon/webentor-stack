@@ -1,0 +1,24 @@
+# Dependency bump for the webentor-theme 2.1.1 upgrade (Acorn 6 / Laravel 13).
+#
+# Baseline = the 2.1.0 starter theme (webentor-core 0.15.x). This is the COMPLETE
+# `git diff starter-v2.1.0 -- <theme>/composer.json` dependency delta to the 2.1.1
+# baseline — only the `roots/acorn` major changed; everything else (including
+# `webikon/webentor-core ^0.15`, which already covers the transparent 0.15.1 patch)
+# carried over from 2.1.0 unchanged and is therefore absent here. Run the `0.15.0`
+# codemod first if coming from an older baseline.
+#
+# Same shape as the 0.15.0 deps rules: one rule per dependency, matched by its
+# exact key (anchored regex) with a value-is-string guard (so a config object that
+# shares a key is never clobbered), rewritten to the 2.1.1 baseline range
+# regardless of the consumer's current value. `files:` scopes the rule to
+# composer.json (the project root composer.json has no `roots/acorn`, so only the
+# theme manifest matches). `name`/`version` are never touched.
+id: deps-roots-acorn-composer
+language: json
+files: ['**/composer.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"roots/acorn"$' }
+    - has: { field: value, kind: string }
+fix: '"roots/acorn": "^6.0"'
