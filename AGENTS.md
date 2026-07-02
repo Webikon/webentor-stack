@@ -220,6 +220,7 @@ Do not introduce additional split mirrors unless explicitly requested.
 
 ## AI Editing Rules
 
+- **This is a PUBLIC repository. Never reference client / consumer projects in anything published here.** When a fix originates from a bug reported on a specific consumer site, do NOT name that project, its domains (`*.sk`, `.test`), or any of its data (post titles, people's names, cities, CPT contents) in commit messages, PR titles/bodies, changelogs, code comments, or docs. Describe the bug and its reproduction generically (e.g. "picking three posts in a scrambled order"). Consumer-specific reproduction and verification stay in the consumer project's own private repo/notes.
 - Prefer minimal, contract-preserving edits.
 - Preserve comments that explain operational intent, especially in setup scripts.
 - Do not silently remove troubleshooting paths (1Password, env fallback, platform-specific behavior).
