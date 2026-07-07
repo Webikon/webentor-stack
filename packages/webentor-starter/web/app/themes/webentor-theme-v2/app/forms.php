@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Gravity Forms markup customizations.
+ */
+
 namespace App;
 
 /**
@@ -8,7 +12,8 @@ namespace App;
 add_filter('gform_submit_button', function ($button, $form) {
     $button_classes = 'btn btn--primary btn--size-large';
 
-    return "<button class='{$button_classes}' id='gform_submit_button_{$form['id']}'>{$form['button']['text']}</button>";
+    return "<button class='{$button_classes}' id='gform_submit_button_{$form['id']}'>"
+        . "{$form['button']['text']}</button>";
 }, 10, 2);
 
 /**

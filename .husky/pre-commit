@@ -13,6 +13,12 @@ if [ -z "$STAGED_CORE_FILES" ]; then
   exit 0
 fi
 
+echo "Linting staged webentor-core files..."
+if ! pnpm --filter './packages/webentor-core' exec lint-staged; then
+  echo "lint-staged failed. Commit aborted."
+  exit 1
+fi
+
 # Only rebuild when staged source or package metadata can change the bundle output.
 if printf "%s\n" "$STAGED_CORE_FILES" | grep -E '(^packages/webentor-core/.*\.(ts|tsx|js|jsx|css|scss|sass|less)$)|(^packages/webentor-core/package\.json$)' > /dev/null; then
   echo "webentor-core source changes detected, running package build..."

@@ -8,6 +8,8 @@
   <!-- Ignore WordPress and Composer dependencies -->
   <exclude-pattern>.devbox</exclude-pattern>
   <exclude-pattern>web/wp</exclude-pattern>
+  <!-- Valet/Herd loads this driver class in the global namespace -->
+  <exclude-pattern>LocalValetDriver.php</exclude-pattern>
   <exclude-pattern>web/app/mu-plugins/disable-comments.php</exclude-pattern>
   <exclude-pattern>web/app/plugins</exclude-pattern>
   <exclude-pattern>web/app/themes/</exclude-pattern>

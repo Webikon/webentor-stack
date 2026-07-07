@@ -6,6 +6,7 @@
  * @param bool|string[]           $allowed_block_types  Array of block type slugs, or boolean to enable/disable all.
  * @param WP_Block_Editor_Context $block_editor_context The current block editor context.
  */
+
 add_filter('allowed_block_types_all', function ($allowed_block_types, $block_editor_context) {
     // Allow all WP core blocks
     $allowed_core = [
@@ -121,7 +122,9 @@ add_filter('allowed_block_types_all', function ($allowed_block_types, $block_edi
         'gravityforms/form',
     ];
 
-    $allowed_block_types = is_array($allowed_block_types) ? array_merge($allowed_block_types, $allowed_core) : $allowed_core;
+    $allowed_block_types = is_array($allowed_block_types)
+        ? array_merge($allowed_block_types, $allowed_core)
+        : $allowed_core;
 
     return $allowed_block_types;
 }, 99, 2);

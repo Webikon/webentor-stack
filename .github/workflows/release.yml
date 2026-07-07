@@ -4,13 +4,13 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: write
+  actions: write
+
 jobs:
   release:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      packages: write
-      pull-requests: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -20,17 +20,21 @@ jobs:
           node-version: '20'
       - name: Enable corepack
         run: corepack enable
-      - name: Install dependencies
-        run: pnpm install --ignore-scripts
 
-      # Changesets manages independent package versions in monorepo.
-      - name: Version and publish
-        uses: changesets/action@v1
-        with:
-          version: pnpm version-packages
-          publish: pnpm changeset publish
-          commit: 'chore(release): version packages'
-          title: 'chore(release): version packages'
+      # Versioning is manual (see AGENTS.md "Release Workflow"): a release is
+      # a reviewed commit that bumps version files. This workflow only acts on
+      # what is committed — it never decides versions itself.
+      - name: Check version sources are in sync
+        run: node scripts/check-versions.mjs
+
+      - name: Publish npm packages not yet on the registry
+        run: node scripts/publish-npm.mjs
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # Tag pushes with GITHUB_TOKEN don't trigger `on: push: tags`, so the
+      # script also dispatches the split workflows directly.
+      - name: Tag mirrored packages and dispatch split workflows
+        run: bash scripts/release-tags.sh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

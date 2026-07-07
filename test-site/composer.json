@@ -54,7 +54,6 @@
     "wpackagist-plugin/duracelltomi-google-tag-manager": "^1.20"
   },
   "require-dev": {
-    "phpro/grumphp": "^1.4.0",
     "squizlabs/php_codesniffer": "^3.7.1",
     "roave/security-advisories": "dev-latest",
     "friendsofphp/php-cs-fixer": "^3.13",
@@ -67,7 +66,6 @@
       "composer/installers": true,
       "roots/wordpress-core-installer": true,
       "ffraenz/private-composer-installer": true,
-      "phpro/grumphp": true,
       "php-http/discovery": true
     }
   },
@@ -88,9 +86,6 @@
     "wordpress-install-dir": "web/wp"
   },
   "scripts": {
-    "post-autoload-dump": [
-      "@php -r \"if(file_exists('vendor/bin/grumphp')) {echo exec('vendor/bin/grumphp git:init');}\""
-    ],
     "test": [
       "phpcs"
     ]

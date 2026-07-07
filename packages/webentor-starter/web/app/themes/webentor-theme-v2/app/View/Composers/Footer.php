@@ -55,10 +55,13 @@ class Footer extends Composer
 
         foreach ($nav as $key => $item) {
             // Menu active item
-            /* $is_current = \Webentor\Core\is_current_menu_item($item['link']['url'], \Webentor\Core\get_current_url());
+            /* $is_current = \Webentor\Core\is_current_menu_item(
+                $item['link']['url'],
+                \Webentor\Core\get_current_url()
+            );
 
             if ($is_current) {
-                $nav[$key]['current'] = \Webentor\Core\is_current_menu_item($item['link']['url'], \Webentor\Core\get_current_url());
+                $nav[$key]['current'] = $is_current;
 
                 continue;
             } */
