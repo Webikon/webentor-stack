@@ -41,22 +41,23 @@ log_err() {
 
 usage() {
   cat <<'USAGE'
-Usage: bash scripts/test-release.sh [--ci] [--changeset] [--publish] [--split] [--all]
+Usage: bash scripts/test-release.sh [--ci] [--versions] [--publish] [--split] [--tags] [--all]
 
 Flags:
   --ci         Run CI-equivalent local checks
-  --changeset  Run changeset dry-run checks
+  --versions   Run the version source consistency check
   --publish    Run npm publish dry-run for releasable packages
   --split      Run subtree split dry-run checks
-  --all        Run all phases (default when no flags are passed, includes demo bump)
+  --tags       Run release tagging dry-run
+  --all        Run all phases (default when no flags are passed)
 USAGE
 }
 
 run_ci=false
-run_changeset=false
+run_versions=false
 run_publish=false
 run_split=false
-run_demo=false
+run_tags=false
 run_all=false
 
 if [ "$#" -eq 0 ]; then
@@ -68,14 +69,17 @@ while [ "$#" -gt 0 ]; do
     --ci)
       run_ci=true
       ;;
-    --changeset)
-      run_changeset=true
+    --versions)
+      run_versions=true
       ;;
     --publish)
       run_publish=true
       ;;
     --split)
       run_split=true
+      ;;
+    --tags)
+      run_tags=true
       ;;
     --all)
       run_all=true
@@ -95,10 +99,10 @@ done
 
 if [ "$run_all" = true ]; then
   run_ci=true
-  run_changeset=true
+  run_versions=true
   run_publish=true
   run_split=true
-  run_demo=true
+  run_tags=true
 fi
 
 declare -a failed_phases=()
@@ -148,39 +152,12 @@ phase_ci() {
   fi
 }
 
-phase_changeset() {
-  pnpm changeset status || return 1
-
-  local worktree_dir
-  worktree_dir="$(mktemp -d "${TMPDIR:-/tmp}/webentor-release-changeset.XXXXXX")"
-  if ! git worktree add --detach "$worktree_dir" HEAD >/dev/null; then
-    rm -rf "$worktree_dir"
-    return 1
-  fi
-
-  if ! (
-    cd "$worktree_dir"
-    pnpm changeset version --no-git-tag || exit 1
-
-    local changed_files
-    changed_files="$(git diff --name-only || true)"
-    if [ -z "$changed_files" ]; then
-      log_warn "No version/changelog changes were produced in dry-run worktree."
-    else
-      log_info "Dry-run changeset touched:"
-      printf "%s\n" "$changed_files"
-    fi
-  ); then
-    git worktree remove --force "$worktree_dir" >/dev/null 2>&1 || true
-    rm -rf "$worktree_dir"
-    return 1
-  fi
-
-  git worktree remove --force "$worktree_dir" >/dev/null 2>&1 || true
-  rm -rf "$worktree_dir"
+phase_versions() {
+  node scripts/check-versions.mjs || return 1
 }
 
 phase_publish() {
+  node scripts/publish-npm.mjs --dry-run || return 1
   pnpm -r --filter './packages/webentor-configs' --filter './packages/webentor-core' publish --dry-run --access public --no-git-checks || return 1
 }
 
@@ -225,22 +202,8 @@ phase_split() {
   cleanup_split_branches
 }
 
-phase_demo_bump() {
-  bash -n scripts/bump-demo.sh || return 1
-
-  if ! command -v gh >/dev/null 2>&1; then
-    log_warn "Skipping demo bump execution check (gh CLI not installed locally)."
-    return 0
-  fi
-
-  (
-    set -euo pipefail
-    WEBENTOR_DEMO_REPO="example/webentor-demo"
-    WEBENTOR_DEMO_TOKEN="local-dry-run-token"
-    RELEASE_SHA="local-dry-run"
-    # Intentional source check: validates script contract in a subshell with dummy env.
-    source ./scripts/bump-demo.sh
-  ) || return 1
+phase_tags() {
+  DRY_RUN=true bash scripts/release-tags.sh || return 1
 }
 
 log_info "Running local release workflow dry-run in: $ROOT_DIR"
@@ -249,8 +212,8 @@ if [ "$run_ci" = true ]; then
   run_phase "Phase 1 - CI checks" phase_ci
 fi
 
-if [ "$run_changeset" = true ]; then
-  run_phase "Phase 2 - Changesets dry-run" phase_changeset
+if [ "$run_versions" = true ]; then
+  run_phase "Phase 2 - Version source consistency" phase_versions
 fi
 
 if [ "$run_publish" = true ]; then
@@ -261,8 +224,8 @@ if [ "$run_split" = true ]; then
   run_phase "Phase 4 - subtree split dry-run" phase_split
 fi
 
-if [ "$run_demo" = true ]; then
-  run_phase "Phase 5 - demo bump dry-run" phase_demo_bump
+if [ "$run_tags" = true ]; then
+  run_phase "Phase 5 - release tags dry-run" phase_tags
 fi
 
 if [ "${#failed_phases[@]}" -gt 0 ]; then

@@ -134,44 +134,53 @@ Shared release is not complete until demo CI is green.
 - Use independent semver per package; do not force shared version numbers across the monorepo.
 - On every release request, update `docs/src/compatibility-matrix.md` with the tested-together version set.
 
-## Release Workflow (Manual versioning)
+## Release Workflow (Manual versioning, automated rollout)
 
-For released packages in this monorepo, maintainers choose version bumps and write
-changelog entries manually. Do not rely on `.changeset` files or generated version PRs
-to decide release contents. The source of truth is the version and changelog files
-committed in the repository.
+Maintainers choose version bumps and write changelog entries manually — the
+committed version and changelog files are the source of truth. Everything
+after the merge is automated: publishing, tagging, and mirror splits react to
+what is committed on `main`.
 
 ### Release preparation
 
 1. Decide the semver bump for each affected package.
-2. Edit the authoritative version files listed in the "Version Source Map" below.
-3. Update the package changelog manually with a curated release entry.
-4. Keep every mirrored version field in sync for packages that have multiple version sources.
-5. Update `docs/src/compatibility-matrix.md` with the tested-together version set.
-6. Commit and push the release preparation through the normal review flow.
+2. Run `pnpm release:prep <pkg>=<x.y.z> [...]` (pkg: `core`, `configs`,
+   `setup`, `codemods`, `starter`, `theme`). It stamps every mirrored version
+   source, scaffolds the changelog entry, inserts the compatibility-matrix
+   row, and updates `.webentor/project.json` baselines. Bump packages that
+   release together in ONE invocation so the matrix gains a single row.
+3. Replace the scaffolded TODO changelog line(s) with curated entries.
+4. Run `pnpm check:versions` (CI enforces the same check on every PR/push).
+5. Commit and push the release preparation through the normal review flow.
 
-### Existing release workflow
+### What happens on merge to `main`
 
-- Keep the current release workflow structure in place after release preparation is merged.
-- `release.yml` remains the repository release automation entry point on push to `main`.
-- Push a namespaced tag to trigger split-mirror workflows when needed:
- - `core-v*` -> `split-webentor-core.yml` (also pings Packagist)
- - `setup-v*` -> `split-webentor-setup.yml`
- - `starter-v*` -> `split-webentor-starter.yml`
-- Example: `git tag core-v0.9.14 && git push origin core-v0.9.14`
+`release.yml` runs automatically:
+
+1. `scripts/check-versions.mjs` — aborts if any mirrored version source drifted.
+2. `scripts/publish-npm.mjs` — publishes any npm package (`core`, `configs`,
+   `codemods`) whose committed version is not on the registry yet.
+3. `scripts/release-tags.sh` — pushes the namespaced tag (`core-v*`,
+   `setup-v*`, `starter-v*`) for any mirrored package version that has no tag
+   yet and dispatches the matching split workflow:
+   - `core-v*` -> `split-webentor-core.yml` (also pings Packagist)
+   - `setup-v*` -> `split-webentor-setup.yml`
+   - `starter-v*` -> `split-webentor-starter.yml`
+
+No manual tag pushes are needed for a normal release. To re-run a mirror split
+manually, dispatch the split workflow with the tag as input, or push the tag
+by hand (`git tag core-v0.9.14 && git push origin core-v0.9.14`).
 
 ### AI agent release instructions
 
 When asked to release a package:
 
 1. Identify the affected package(s) and choose the correct bump level.
-2. Edit the version files directly in the repository.
-3. Update the relevant changelog file(s) manually.
-4. Keep all related version sources synchronized for that package.
-5. Update `docs/src/compatibility-matrix.md`.
-6. Commit and push through the normal release flow, then push the namespaced tag when needed.
-
-Manual version and changelog edits are expected for release work in this repository.
+2. Run `pnpm release:prep` with all packages releasing together.
+3. Replace the scaffolded TODO changelog line(s) with curated entries.
+4. Verify with `pnpm check:versions` and `pnpm test-release`.
+5. Commit and push through the normal review flow. Publishing and tagging
+   happen automatically after the merge to `main`.
 
 ## Version Source Map
 
@@ -196,14 +205,18 @@ Reference map for locating version sources per package.
   - npm publish via the existing release workflow (no Composer mirror)
 - `webentor-starter` (stable, `2.x`):
   - `packages/webentor-starter/composer.json` -> `"version"` (manual)
-  - `packages/webentor-starter/changelog.md` -> add new entry at top (manual)
+  - `packages/webentor-starter/CHANGELOG.md` -> add new entry at top (manual)
   - Runtime is mirrored via split workflow (no npm publish)
 - `webentor-theme-v2` (stable, `2.x`, inside starter):
   - `packages/webentor-starter/web/app/themes/webentor-theme-v2/package.json` -> `"version"` (manual)
   - `packages/webentor-starter/web/app/themes/webentor-theme-v2/composer.json` -> `"version"` (manual)
   - `packages/webentor-starter/web/app/themes/webentor-theme-v2/style.css` -> `Version:` header (manual)
-  - `packages/webentor-starter/web/app/themes/webentor-theme-v2/changelog.md` -> add new entry at top (manual)
+  - `packages/webentor-starter/web/app/themes/webentor-theme-v2/CHANGELOG.md` -> add new entry at top (manual)
   - Keep all theme version sources synchronized in the same bump
+
+`pnpm release:prep` edits all of these in one command; `pnpm check:versions`
+(and the `versions` CI job) fails on any mismatch, including the
+compatibility-matrix top row and `.webentor/project.json` baselines.
 
 ## Mirror Policy
 
@@ -235,9 +248,11 @@ Before handoff, run relevant checks:
 
 - Shell syntax for setup scripts:
   - `find packages/webentor-setup -type f -name '*.sh' -print0 | xargs -0 -n1 bash -n`
-- Shell syntax for split mirror scripts:
+- Shell syntax for split mirror and release scripts:
   - `bash -n scripts/split-webentor-setup.sh`
   - `bash -n scripts/split-webentor-starter.sh`
+  - `bash -n scripts/release-tags.sh`
+- Version source consistency: `pnpm check:versions`
 - Setup CLI syntax:
   - `php -l packages/webentor-setup/src/webentor-setup.php`
 - JSON validity for changed `package.json` or manifest files.

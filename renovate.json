@@ -1,0 +1,67 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "rangeStrategy": "bump",
+  "schedule": ["before 6am on the first day of the month"],
+  "prConcurrentLimit": 5,
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "description": "WordPress JS packages move together with WP releases",
+      "groupName": "wordpress packages",
+      "matchPackageNames": ["@wordpress/**"]
+    },
+    {
+      "description": "Lint/format toolchain",
+      "groupName": "lint and format tooling",
+      "matchPackageNames": [
+        "eslint",
+        "@eslint/**",
+        "typescript-eslint",
+        "eslint-config-**",
+        "eslint-plugin-**",
+        "stylelint",
+        "stylelint-config-**",
+        "prettier",
+        "prettier-plugin-**",
+        "@ianvs/prettier-plugin-sort-imports",
+        "@shufo/prettier-plugin-blade"
+      ]
+    },
+    {
+      "description": "Build toolchain (Vite ecosystem + Tailwind)",
+      "groupName": "build tooling",
+      "matchPackageNames": [
+        "vite",
+        "vite-plugin-**",
+        "@vitejs/**",
+        "@kucrut/vite-for-wp",
+        "@roots/vite-plugin",
+        "rollup-plugin-**",
+        "tailwindcss",
+        "@tailwindcss/**",
+        "postcss",
+        "postcss-**"
+      ]
+    },
+    {
+      "description": "The starter theme tree is a standalone pnpm/composer project consumed by real sites - keep its updates separate and conservative",
+      "matchFileNames": [
+        "packages/webentor-starter/web/app/themes/webentor-theme-v2/**",
+        "packages/webentor-starter/composer.json"
+      ],
+      "groupName": "starter + theme dependencies",
+      "schedule": ["before 6am on the first day of the month"]
+    },
+    {
+      "description": "test-site is a provisioned E2E harness seed, not a released artifact",
+      "matchFileNames": ["test-site/**"],
+      "enabled": false
+    },
+    {
+      "description": "Internal workspace packages are released manually, never by bot",
+      "matchPackageNames": ["@webikon/**", "webikon/**"],
+      "enabled": false
+    }
+  ]
+}

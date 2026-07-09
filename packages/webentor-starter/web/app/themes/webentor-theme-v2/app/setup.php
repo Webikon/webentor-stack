@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Theme setup: assets, block editor integration, theme supports.
+ */
+
 namespace App;
 
 use Illuminate\Support\Facades\File;
@@ -10,7 +14,8 @@ use Illuminate\Support\Facades\File;
  * @return void
  */
 add_action('enqueue_block_editor_assets', function (): void {
-    $dependencies = File::exists(get_template_directory() . '/public/build/editor.deps.json') ? File::json(get_template_directory() . '/public/build/editor.deps.json') : [];
+    $depsPath = get_template_directory() . '/public/build/editor.deps.json';
+    $dependencies = File::exists($depsPath) ? File::json($depsPath) : [];
 
     \Kucrut\Vite\enqueue_asset(
         get_template_directory() . '/public/build',

@@ -1,11 +1,12 @@
 <?php
 
-namespace App;
-
 /**
  * Register post types and taxonomies.
  * https://github.com/johnbillion/extended-cpts
  */
+
+namespace App;
+
 add_action('init', function () {
     // CPTs
     // register_extended_post_type('lector', [

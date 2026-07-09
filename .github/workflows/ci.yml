@@ -34,24 +34,52 @@ jobs:
             docs:
               - 'docs/**'
 
-  core:
-    needs: [changes]
-    if: ${{ needs.changes.outputs.core == 'true' }}
+  # Guards the manual versioning flow: every mirrored version source
+  # (package.json/composer.json/CHANGELOG/style.css/compatibility matrix/
+  # project.json) must agree before anything merges.
+  versions:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: Check version sources are in sync
+        run: node scripts/check-versions.mjs
+
+  core:
+    needs: [changes]
+    if: ${{ needs.changes.outputs.core == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
       - name: Enable corepack
         run: corepack enable
       - name: Install core deps
-        run: pnpm install --ignore-scripts --filter './packages/webentor-core...'
+        # {dir}... selects the package AND its workspace dependencies, so
+        # webentor-configs gets its own deps installed (a bare './dir...'
+        # filter silently skips them and breaks eslint config resolution).
+        run: pnpm install --ignore-scripts --filter '{packages/webentor-core}...'
+      # NOTE: `typecheck` is not gated here yet — core has pre-existing tsc
+      # errors (missing @wordpress/* type deps + block typing issues). Add it
+      # to this job once `pnpm --filter './packages/webentor-core' typecheck`
+      # passes.
       - name: Lint/build/test core
         run: |
           pnpm --filter './packages/webentor-core' --if-present run lint
           pnpm --filter './packages/webentor-core' --if-present run build
           pnpm --filter './packages/webentor-core' --if-present run test
+      - name: PHP lint core (phpcs)
+        working-directory: packages/webentor-core
+        run: |
+          composer install --no-interaction --prefer-dist
+          composer lint
 
   configs:
     needs: [changes]
@@ -65,7 +93,7 @@ jobs:
       - name: Enable corepack
         run: corepack enable
       - name: Install configs deps
-        run: pnpm install --ignore-scripts --filter './packages/webentor-configs...'
+        run: pnpm install --ignore-scripts --filter '{packages/webentor-configs}...'
       - name: Lint/build/test configs
         run: |
           pnpm --filter './packages/webentor-configs' --if-present run lint
@@ -97,7 +125,7 @@ jobs:
       - name: Enable corepack
         run: corepack enable
       - name: Install codemods deps
-        run: pnpm install --filter './packages/webentor-codemods...'
+        run: pnpm install --filter '{packages/webentor-codemods}...'
       - name: Lint/test codemods
         run: |
           pnpm --filter './packages/webentor-codemods' --if-present run lint
@@ -112,18 +140,28 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
+          tools: phpcs
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
       - name: Enable corepack
         run: corepack enable
-      - name: Install starter root dependencies
+      # A full starter `composer install` needs premium-plugin secrets
+      # (ACF Pro, Gravity Forms), so CI validates the manifest and lints
+      # instead of installing.
+      - name: Validate starter composer manifest
         working-directory: packages/webentor-starter
-        run: composer install --no-interaction --prefer-dist
+        run: composer validate --no-check-all --no-check-publish
+      - name: PHP lint starter (phpcs)
+        working-directory: packages/webentor-starter
+        run: phpcs
+      - name: PHP lint theme (phpcs)
+        working-directory: packages/webentor-starter/web/app/themes/webentor-theme-v2
+        run: phpcs --extensions=php --standard=PSR12 app
       - name: Build starter theme
         working-directory: packages/webentor-starter/web/app/themes/webentor-theme-v2
         run: |
-          pnpm install --ignore-scripts
+          pnpm install --ignore-workspace --ignore-scripts
           pnpm build
 
   docs:
