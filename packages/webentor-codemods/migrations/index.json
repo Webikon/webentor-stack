@@ -48,6 +48,22 @@
         { "entry": "changelog/theme.md", "target": "web/app/themes/*/changelog.md", "marker": "### Version 2.1.1" }
       ],
       "docs": "README.md"
+    },
+    {
+      "id": "starter-2.1.2",
+      "title": "Align consumer theme with the WP 7.0 runtime — theme 2.1.2",
+      "description": "Manifest-only release (package.json only, no webentor-core constraint change): align the @wordpress/* devDependency ranges with the versions WP 7.0 bundles (these deps are externalized to window.wp.*), declare the previously undeclared externalized imports (compose/data/element/hooks/html-entities), and replace the unused @wordpress/dependency-extraction-webpack-plugin. Core 0.15.4 (WP 7.0 inspector-spacing fixes) is a transparent in-range patch — pull it with pnpm up / composer update.",
+      "appliesTo": {
+        "package": "webentor-starter",
+        "from": "2.1.1",
+        "to": "2.1.2"
+      },
+      "rules": ["rules/deps.yml"],
+      "changelog": [
+        { "entry": "changelog/root.md", "target": "changelog.md", "marker": "### 2.1.2" },
+        { "entry": "changelog/theme.md", "target": "web/app/themes/*/changelog.md", "marker": "### Version 2.1.2" }
+      ],
+      "docs": "README.md"
     }
   ]
 }

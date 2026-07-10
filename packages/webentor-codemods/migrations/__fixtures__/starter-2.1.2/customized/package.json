@@ -1,0 +1,12 @@
+{
+  "name": "acme-project-tooling",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Acme project-root tooling manifest — none of the migrated dependencies live here",
+  "scripts": {
+    "lint": "prettier --check ."
+  },
+  "devDependencies": {
+    "prettier": "^3.6.0"
+  }
+}

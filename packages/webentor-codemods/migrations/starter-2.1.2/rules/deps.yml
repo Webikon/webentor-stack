@@ -1,0 +1,149 @@
+# Dependency alignment for the webentor-theme 2.1.2 upgrade (WP 7.0 runtime).
+#
+# Baseline = the 2.1.1 starter theme (webentor-core 0.15.x). This is the COMPLETE
+# `git diff starter-v2.1.1 -- <theme>/{package,composer}.json` dependency delta to
+# the 2.1.2 baseline:
+#   - the six declared `@wordpress/*` ranges -> the versions WP 7.0 actually
+#     bundles (these deps are externalized to `window.wp.*`, so the WP bundle is
+#     the runtime; declared ranges only drive types/lint)
+#   - `@wordpress/dependency-extraction-webpack-plugin` (unused webpack-era
+#     leftover) is REPLACED IN PLACE by the newly declared `@wordpress/compose`
+#     (one edit = removal + addition, keeps JSON valid and alphabetical order)
+#   - `@wordpress/data`/`element`/`hooks`/`html-entities` are INSERTED before the
+#     `@wordpress/i18n` pair (previously undeclared externalized imports)
+# The `webentor-core` ranges are intentionally NOT touched: core 0.15.4 is a
+# transparent patch within the existing ^0.15 (pnpm up / composer update pull it
+# in-range). Everything else carried over from 2.1.1 unchanged and is therefore
+# absent here. Run the `starter-2.1.1` codemod first if coming from an older
+# baseline; composer.json is untouched by this migration.
+#
+# Same shape as the earlier deps rules: matched by exact key (anchored regex)
+# with a value-is-string guard, rewritten to the 2.1.2 baseline range regardless
+# of the consumer's current value. `name`/`version` are never touched.
+#
+# Insert idempotency: the i18n pair is owned by exactly one of two complementary
+# rules -- the INSERT rule fires only while `@wordpress/data` is absent (fresh
+# 2.1.1 baseline); the plain i18n REWRITE fires only once `@wordpress/data` is
+# present (already-migrated / re-run). Same idea guards the plugin->compose swap
+# (skipped if `@wordpress/compose` already exists, so no duplicate key is ever
+# produced; in that unlikely case remove the webpack plugin entry by hand).
+id: deps-wp-block-editor
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@wordpress/block-editor"$' }
+    - has: { field: value, kind: string }
+fix: '"@wordpress/block-editor": "^15.13.2"'
+---
+id: deps-wp-block-library
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@wordpress/block-library"$' }
+    - has: { field: value, kind: string }
+fix: '"@wordpress/block-library": "^9.40.2"'
+---
+id: deps-wp-blocks
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@wordpress/blocks"$' }
+    - has: { field: value, kind: string }
+fix: '"@wordpress/blocks": "^15.13.1"'
+---
+id: deps-wp-components
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@wordpress/components"$' }
+    - has: { field: value, kind: string }
+fix: '"@wordpress/components": "^32.2.1"'
+---
+id: deps-wp-icons
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@wordpress/icons"$' }
+    - has: { field: value, kind: string }
+fix: '"@wordpress/icons": "^11.7.1"'
+---
+# Replace the unused webpack-era plugin entry with the newly declared
+# @wordpress/compose (in place: removal + addition in one edit). Guarded so a
+# manifest that already declares @wordpress/compose is never given a duplicate.
+id: deps-wp-depextract-to-compose
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@wordpress/dependency-extraction-webpack-plugin"$' }
+    - has: { field: value, kind: string }
+    - inside:
+        kind: object
+        not:
+          has:
+            kind: pair
+            has: { field: key, regex: '^"@wordpress/compose"$' }
+fix: '"@wordpress/compose": "^7.40.1"'
+---
+# Re-align @wordpress/compose wherever it is already declared (no-op right after
+# the swap above; keeps deviant/already-migrated manifests on the baseline).
+id: deps-wp-compose
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@wordpress/compose"$' }
+    - has: { field: value, kind: string }
+fix: '"@wordpress/compose": "^7.40.1"'
+---
+# INSERT rule: fresh 2.1.1 baseline (no @wordpress/data yet) — expands the i18n
+# pair into the four newly declared packages + the realigned i18n itself.
+id: deps-wp-insert-externalized-before-i18n
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@wordpress/i18n"$' }
+    - has: { field: value, kind: string }
+    - inside:
+        kind: object
+        not:
+          has:
+            kind: pair
+            has: { field: key, regex: '^"@wordpress/data"$' }
+fix: |-
+  "@wordpress/data": "^10.40.1",
+  "@wordpress/element": "^6.40.1",
+  "@wordpress/hooks": "^4.40.1",
+  "@wordpress/html-entities": "^4.40.1",
+  "@wordpress/i18n": "^6.13.1"
+---
+# REWRITE rule: complementary to the insert above — only fires once
+# @wordpress/data exists, so the two rules can never both edit the i18n pair.
+id: deps-wp-i18n
+language: json
+files: ['**/package.json']
+rule:
+  kind: pair
+  all:
+    - has: { field: key, regex: '^"@wordpress/i18n"$' }
+    - has: { field: value, kind: string }
+    - inside:
+        kind: object
+        has:
+          kind: pair
+          has: { field: key, regex: '^"@wordpress/data"$' }
+fix: '"@wordpress/i18n": "^6.13.1"'

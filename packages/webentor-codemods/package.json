@@ -1,6 +1,6 @@
 {
   "name": "@webikon/webentor-codemods",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Reusable, polyglot codemods for migrating Webentor Stack consumer projects (theme PHP/TS/CSS/JSON) across webentor-core updates",
   "homepage": "https://webikon.sk",
   "license": "MIT",

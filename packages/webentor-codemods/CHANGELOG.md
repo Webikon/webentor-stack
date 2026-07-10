@@ -1,5 +1,22 @@
 # Webentor Codemods Changelog
 
+## 0.3.1
+
+- Add the `starter-2.1.2` migration (theme **2.1.1 → 2.1.2**, WP 7.0 dependency
+  alignment). Selectable by id or `--package webentor-starter`. It does **not**
+  change the `webentor-core` ranges — core `0.15.4` is a transparent patch
+  within the existing `^0.15` (`pnpm up` / `composer update` pull it in-range).
+  - `deps.yml` (JSON): the complete manifest delta from the 2.1.1 baseline —
+    rewrites the six declared `@wordpress/*` ranges to the WP-7.0-bundled
+    versions, replaces the unused
+    `@wordpress/dependency-extraction-webpack-plugin` entry with
+    `@wordpress/compose`, and inserts the newly declared externalized imports
+    (`data`/`element`/`hooks`/`html-entities`, guarded so re-runs never
+    duplicate). Value-is-string guarded, idempotent; `composer.json` untouched.
+  - Changelog sync prepends the `2.1.2` block to the project root `changelog.md`
+    (marker `### 2.1.2`) and the theme `web/app/themes/*/changelog.md` (marker
+    `### Version 2.1.2`), matching the coupled starter + theme `2.1.2` bump.
+
 ## 0.3.0
 
 - Add the `starter-2.1.1` migration (theme **2.1.0 → 2.1.1**, **Acorn 6 / Laravel

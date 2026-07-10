@@ -1,0 +1,26 @@
+{
+  "name": "acme/acme-project",
+  "type": "project",
+  "description": "Acme project root (Bedrock) — no theme-level dependencies here",
+  "homepage": "https://acme.example",
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://wpackagist.org"
+    }
+  ],
+  "require": {
+    "php": ">=8.3",
+    "composer/installers": "^2.3",
+    "roots/bedrock-autoloader": "^1.0",
+    "roots/wordpress": "^6.9",
+    "wpackagist-plugin/safe-svg": "^2.2"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}

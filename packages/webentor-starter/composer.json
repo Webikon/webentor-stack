@@ -1,7 +1,7 @@
 {
   "name": "webikon/webentor-starter",
   "type": "project",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "license": "MIT",
   "description": "WordPress boilerplate with Composer, easier configuration, and an improved folder structure",
   "homepage": "https://roots.io/bedrock/",
