@@ -21,6 +21,12 @@ jobs:
       - name: Enable corepack
         run: corepack enable
 
+      # pnpm publish rewrites workspace:* deps (e.g. webentor-core's
+      # @webikon/webentor-configs) to real versions, which requires an
+      # installed workspace.
+      - name: Install workspace dependencies
+        run: pnpm install --frozen-lockfile
+
       # Versioning is manual (see AGENTS.md "Release Workflow"): a release is
       # a reviewed commit that bumps version files. This workflow only acts on
       # what is committed — it never decides versions itself.
