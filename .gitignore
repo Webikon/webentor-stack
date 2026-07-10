@@ -7,11 +7,16 @@ dist/
 .superpowers-webentor
 
 # Scratch dir for throwaway scripts / captured output (never committed)
-/.artifacts/
+.artifacts/
+
+# Local working notes and generated audit reports (never committed)
+/tasks/
+/packages/webentor-starter/reports/
+/test-site/reports/
 
 # Playwright
 /playwright-report/
 /blob-report/
 /tests/e2e/results/
 /tests/e2e/.auth/
-/.playwright-mcp/
+.playwright-mcp/
