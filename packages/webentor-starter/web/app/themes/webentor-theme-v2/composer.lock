@@ -7247,23 +7247,24 @@
         },
         {
             "name": "webikon/webentor-core",
-            "version": "0.15.1",
+            "version": "0.15.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Webikon/webentor-core.git",
-                "reference": "77c3fdf887210a87143d9c2b69ace8c4b680a882"
+                "reference": "eaab33d276e896b1567b113d0b0f904c70c06c5f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Webikon/webentor-core/zipball/77c3fdf887210a87143d9c2b69ace8c4b680a882",
-                "reference": "77c3fdf887210a87143d9c2b69ace8c4b680a882",
+                "url": "https://api.github.com/repos/Webikon/webentor-core/zipball/eaab33d276e896b1567b113d0b0f904c70c06c5f",
+                "reference": "eaab33d276e896b1567b113d0b0f904c70c06c5f",
                 "shasum": ""
             },
             "require": {
                 "kucrut/vite-for-wp": "^0.11.6"
             },
             "require-dev": {
-                "php": ">=8.2"
+                "php": ">=8.2",
+                "squizlabs/php_codesniffer": "^3.8.0"
             },
             "type": "library",
             "extra": {
@@ -7278,6 +7279,11 @@
                     "Webentor\\Core\\Providers\\": "app/Providers/",
                     "Webentor\\Core\\View\\": "app/View/"
                 }
+            },
+            "scripts": {
+                "lint": [
+                    "phpcs"
+                ]
             },
             "license": [
                 "MIT"
@@ -7297,10 +7303,10 @@
             "description": "Webentor Core package",
             "homepage": "https://webikon.sk",
             "support": {
-                "source": "https://github.com/Webikon/webentor-core/tree/v0.15.1",
+                "source": "https://github.com/Webikon/webentor-core/tree/v0.15.4",
                 "issues": "https://github.com/Webikon/webentor-core/issues"
             },
-            "time": "2026-06-23T05:45:15+00:00"
+            "time": "2026-07-10T09:42:10+00:00"
         }
     ],
     "packages-dev": [
