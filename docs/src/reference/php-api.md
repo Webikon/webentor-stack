@@ -255,6 +255,26 @@ get_msls_languages(): array
 
 ## Filters
 
+### `webentor/block_bindings_supported_attributes`
+
+Controls which block attributes are exposed to Block Bindings, and therefore to
+Pattern Overrides (WordPress 7.0+). Keys are block names, values are lists of
+top-level attribute names. See [Pattern Overrides](/guides/pattern-overrides).
+
+```php
+add_filter('webentor/block_bindings_supported_attributes', function (array $map): array {
+    $map['webentor/l-section'] = ['img'];      // override Section background per instance
+    $map['webentor/my-block'] = ['quote'];     // opt a theme block in
+
+    return $map;
+});
+```
+
+List content attributes only. Object attributes are overridden as a whole, so
+prefer flat scalar attributes for anything new.
+
+---
+
 ### `webentor/skip_render_block_blade`
 
 Allows skipping the Blade rendering pipeline for a specific block. Return `true`
