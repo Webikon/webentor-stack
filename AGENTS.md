@@ -160,12 +160,29 @@ what is committed on `main`.
 1. `scripts/check-versions.mjs` — aborts if any mirrored version source drifted.
 2. `scripts/publish-npm.mjs` — publishes any npm package (`core`, `configs`,
    `codemods`) whose committed version is not on the registry yet.
-3. `scripts/release-tags.sh` — pushes the namespaced tag (`core-v*`,
-   `setup-v*`, `starter-v*`) for any mirrored package version that has no tag
-   yet and dispatches the matching split workflow:
-   - `core-v*` -> `split-webentor-core.yml` (also pings Packagist)
-   - `setup-v*` -> `split-webentor-setup.yml`
-   - `starter-v*` -> `split-webentor-starter.yml`
+3. `scripts/release-tags.sh` — for every released package (`core`, `configs`,
+   `codemods`, `setup`, `starter`; the theme ships inside the starter and has no
+   tag of its own) ensures three things exist for the committed version:
+   - **the namespaced tag** (`core-v*`, `configs-v*`, `codemods-v*`, `setup-v*`,
+     `starter-v*`) if it does not exist yet;
+   - **a GitHub Release** on that tag, titled with the package's canonical
+     manifest name (`@webikon/webentor-core@0.15.7`,
+     `webikon/webentor-setup@1.1.0`) and carrying that version's CHANGELOG
+     section as its notes;
+   - **a split-workflow dispatch**, for mirrored packages only:
+     - `core-v*` -> `split-webentor-core.yml` (also pings Packagist)
+     - `setup-v*` -> `split-webentor-setup.yml`
+     - `starter-v*` -> `split-webentor-starter.yml`
+
+   The tag and Release checks are independent: a version whose tag exists but
+   whose Release is missing gets the Release backfilled on the next run. Split
+   dispatch only fires for a freshly created tag, so mirrors are never
+   re-pushed. Run with `DRY_RUN=true` to preview.
+
+The Release title deliberately reproduces the `@webikon/webentor-*@*` scheme the
+changesets action used before it was removed, so the Releases page reads
+continuously across the migration even though the underlying tags use
+`<ns>-v<version>`.
 
 No manual tag pushes are needed for a normal release. To re-run a mirror split
 manually, dispatch the split workflow with the tag as input, or push the tag
