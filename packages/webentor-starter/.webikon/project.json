@@ -1,0 +1,6 @@
+{
+    "schema_version": 2,
+    "slug": "webentor-starter",
+    "stack": "webentor-v2",
+    "theme_path": "web/app/themes/webentor-theme-v2"
+}

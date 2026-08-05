@@ -7,7 +7,9 @@
  * - the top CHANGELOG.md entry for every released package
  * - the theme's style.css "Version:" header
  * - the top data row of docs/src/compatibility-matrix.md
- * - version baselines in packages/webentor-starter/.webentor/project.json
+ * - the shape of packages/webentor-starter/.webikon/project.json, and the
+ *   starter's root composer.json name/version (the reporter derives the starter
+ *   release from that version, so an unversioned manifest blanks it fleet-wide)
  *
  * Exits non-zero with a per-check message when any source drifts. Run via
  * `pnpm check:versions`; CI runs it on every push/PR.
@@ -43,32 +45,6 @@ function changelogVersion(path) {
 function styleCssVersion(path) {
   const match = readFileSync(path, 'utf8').match(/^Version:\s*(\S+)/m);
   return match ? match[1] : null;
-}
-
-// Minimal range check covering the forms used in project.json:
-// exact "1.1.0", caret "^1.1.0" / "^0.15" (npm caret semantics).
-function satisfies(range, version) {
-  if (range === 'latest' || range === '*') return true;
-  const ver = version.split('.').map(Number);
-  if (!range.startsWith('^')) {
-    return range === version;
-  }
-  const base = range
-    .slice(1)
-    .split('.')
-    .map((n) => Number(n));
-  while (base.length < 3) base.push(0);
-  // Lower bound: version >= base.
-  for (let i = 0; i < 3; i++) {
-    if (ver[i] > base[i]) break;
-    if (ver[i] < base[i]) return false;
-  }
-  // Upper bound: first non-zero component of base must match.
-  const pivot = base[0] > 0 ? 0 : base[1] > 0 ? 1 : 2;
-  for (let i = 0; i <= pivot; i++) {
-    if (ver[i] !== base[i]) return false;
-  }
-  return true;
 }
 
 function expectEqual(label, expected, actual, source) {
@@ -140,35 +116,89 @@ if (matrixRows.length === 0) {
   expectEqual(matrixPath, setup, mSetup, 'top row setupCliVersion');
 }
 
-// --- Starter project.json baselines ----------------------------------------
+// --- Starter .webikon/project.json schema (v2) -------------------------------
+//
+// No version baselines to check any more: the file declares four facts and the
+// maintenance reporter derives every version from the artefact that owns it.
+// What CAN rot is the schema itself, so guard that instead — a starter shipping
+// a malformed or stale-shaped metadata file propagates it to every new project.
 
-const projectJsonPath = join(
-  root,
-  'packages/webentor-starter/.webentor/project.json',
-);
-if (existsSync(projectJsonPath)) {
+const PROJECT_STACKS = [
+  'webentor-v2',
+  'webentor-v2-hybrid',
+  'webentor-v1',
+  'sage',
+  'classic',
+];
+
+const starterDir = join(root, 'packages/webentor-starter');
+const projectJsonPath = join(starterDir, '.webikon/project.json');
+
+if (!existsSync(projectJsonPath)) {
+  fail(`${projectJsonPath}: missing — the starter must ship its own metadata`);
+} else {
   const project = readJson(projectJsonPath);
-  const baselines = [
-    ['coreVersion', core],
-    ['configsVersion', configs],
-    ['setupCliVersion', setup],
-  ];
-  for (const [field, actual] of baselines) {
-    if (project[field] && !satisfies(project[field], actual)) {
-      fail(
-        `${projectJsonPath}: ${field} "${project[field]}" does not cover released version ${actual}`,
-      );
-    }
-  }
-  if (
-    project.starterVersion &&
-    project.starterVersion !== 'latest' &&
-    !satisfies(project.starterVersion, starter)
-  ) {
+
+  if (project.schema_version !== 2) {
     fail(
-      `${projectJsonPath}: starterVersion "${project.starterVersion}" does not cover released version ${starter}`,
+      `${projectJsonPath}: schema_version is ${JSON.stringify(project.schema_version)}, expected 2`,
     );
   }
+
+  // setup_cli_version is optional: the starter ships no scripts/setup-core (it is
+  // added per-project by `git subtree add`), so the starter must NOT declare one.
+  const extra = Object.keys(project).filter(
+    (key) =>
+      !['schema_version', 'slug', 'stack', 'theme_path', 'setup_cli_version'].includes(
+        key,
+      ),
+  );
+  if ('setup_cli_version' in project && !existsSync(join(starterDir, 'scripts/setup-core'))) {
+    fail(
+      `${projectJsonPath}: declares setup_cli_version but the starter ships no scripts/setup-core`,
+    );
+  }
+  if (extra.length > 0) {
+    fail(
+      `${projectJsonPath}: unexpected keys [${extra.join(', ')}] — versions and flags are derived, not declared`,
+    );
+  }
+
+  if (project.slug !== 'webentor-starter') {
+    fail(
+      `${projectJsonPath}: slug is "${project.slug}", expected "webentor-starter"`,
+    );
+  }
+
+  if (!PROJECT_STACKS.includes(project.stack)) {
+    fail(
+      `${projectJsonPath}: stack "${project.stack}" is not one of ${PROJECT_STACKS.join(', ')}`,
+    );
+  }
+
+  // theme_path is what the reporter uses to find the core-consuming theme, so a
+  // path that does not resolve means every consumer reports the wrong versions.
+  if (!project.theme_path) {
+    fail(`${projectJsonPath}: theme_path is missing`);
+  } else if (!existsSync(join(starterDir, project.theme_path))) {
+    fail(
+      `${projectJsonPath}: theme_path "${project.theme_path}" does not exist in the starter`,
+    );
+  }
+}
+
+// The reporter derives the starter release from the root composer.json version,
+// so an unversioned or misnamed manifest silently blanks it fleet-wide.
+const starterComposer = readJson(join(starterDir, 'composer.json'));
+if (starterComposer.name !== 'webikon/webentor-starter') {
+  fail(
+    `packages/webentor-starter/composer.json: name is "${starterComposer.name}", expected "webikon/webentor-starter"`,
+  );
+}
+if (!/^\d+\.\d+\.\d+$/.test(starterComposer.version ?? '')) {
+  fail(
+    `packages/webentor-starter/composer.json: version is ${JSON.stringify(starterComposer.version)}, expected a semver string`,
+  );
 }
 
 // --- Shared tooling devDependencies (core vs theme) --------------------------

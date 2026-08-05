@@ -13,14 +13,21 @@
 ## Subtree sync issues
 
 - Re-sync setup subtree from `webentor-setup` and re-run `webentor-setup doctor`.
+- `doctor` exits 1 with a `setup_cli_version` mismatch after a `git subtree pull`:
+  the pull moved `scripts/setup-core/composer.json` but not the declaration in
+  `.webikon/project.json`. Set the declaration to the value `doctor` prints — never
+  edit the subtree's composer.json to match the declaration. `DECLARED …, but no
+  setup-core present` means the opposite: remove the field.
 
 ## Missing setup metadata file
 
-- If `webentor-setup doctor` reports missing `.webentor/project.json`, run:
+- If `webentor-setup doctor` reports missing `.webikon/project.json`, run:
   `scripts/setup-core/bin/webentor-setup init`
   (interactive prompts guide you through project slug and feature toggles)
 - This generates all scaffolding (`scripts/.env.setup`, `scripts/setup.sh`,
-  hooks, project-specific, and `.webentor/project.json`). Commit after init.
+  hooks, project-specific, and `.webikon/project.json`). Commit after init.
+- Re-running `init` on an existing project is safe: it keeps a hand-set `stack`
+  and removes the retired `.webentor/project.json` if it is still present.
 
 ---
 

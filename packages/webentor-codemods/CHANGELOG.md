@@ -1,5 +1,31 @@
 # Webentor Codemods Changelog
 
+## 0.3.2
+
+- Add the `starter-2.1.3` migration (theme **2.1.2 → 2.1.3**, project metadata
+  moved to `.webikon/project.json` schema v2). Selectable by id or
+  `--package webentor-starter`. No dependency ranges moved in 2.1.3 —
+  `webentor-core` stays `^0.15`.
+  - **Changelog-only: it declares no `rules`.** The release's actual change is
+    creating `.webikon/project.json`, deleting `.webentor/project.json`, and
+    resolving a project-specific `theme_path` — none of which `ast-grep` can do,
+    since it rewrites existing syntax rather than adding or removing files. The
+    migration carries the two changelog steps and a README documenting the manual
+    step (run `init` from `webentor-setup` ≥ 1.2.0, which resolves `theme_path`
+    against the themes that actually declare `webentor-core`).
+  - It also keeps the migration chain unbroken: `appliesTo.from` is `2.1.2`, so a
+    `run --since 2.1.2 --package webentor-starter` range run reaches 2.1.3.
+    Without the entry that range matched nothing, and a consumer's changelogs
+    never recorded the metadata move.
+- First migration with no `rules` key. The runner already allowed this — it only
+  rejects a migration when `rules` **and** `changelog` are both empty
+  (`bin/webentor-codemods.mjs`), so the engine is unchanged. The golden-fixture
+  test harness did assume `migration.rules` was always present, so
+  `test/migrations.test.mjs` now skips the `before/`→`after/` tree tests for a
+  rules-less migration (there is no rule to apply, so the trio would assert
+  nothing) and asserts instead that it declares changelog steps — otherwise it
+  would be a no-op. Changelog steps stay covered by `changelog.test.mjs`.
+
 ## 0.3.1
 
 - Add the `starter-2.1.2` migration (theme **2.1.1 → 2.1.2**, WP 7.0 dependency

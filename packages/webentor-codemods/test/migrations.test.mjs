@@ -14,6 +14,11 @@
  *
  * Adding a new migration with a `before/`+`after/` fixture pair needs no test
  * changes.
+ *
+ * A migration may declare no `rules` at all (changelog-only, when the release's
+ * change is something ast-grep cannot express — creating or deleting a file).
+ * Those have no rule fixtures to compare, so the tree tests are skipped; their
+ * changelog steps are covered by `changelog.test.mjs`.
  */
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -93,23 +98,32 @@ for (const migration of registry.migrations) {
   const before = join(fxDir, 'before');
   const after = join(fxDir, 'after');
 
-  test(`${migration.id}: before → after is byte-exact`, () => {
-    assert.ok(existsSync(before), `missing fixture dir: ${before}`);
-    assert.ok(existsSync(after), `missing fixture dir: ${after}`);
-    const got = applyRulesToTree(migration, before);
-    assertTreeEqual(got, after);
-  });
+  if ((migration.rules ?? []).length) {
+    test(`${migration.id}: before → after is byte-exact`, () => {
+      assert.ok(existsSync(before), `missing fixture dir: ${before}`);
+      assert.ok(existsSync(after), `missing fixture dir: ${after}`);
+      const got = applyRulesToTree(migration, before);
+      assertTreeEqual(got, after);
+    });
 
-  test(`${migration.id}: idempotent (re-apply to after/ is a no-op)`, () => {
-    const got = applyRulesToTree(migration, after);
-    assertTreeEqual(got, after);
-  });
+    test(`${migration.id}: idempotent (re-apply to after/ is a no-op)`, () => {
+      const got = applyRulesToTree(migration, after);
+      assertTreeEqual(got, after);
+    });
 
-  const customized = join(fxDir, 'customized');
-  if (existsSync(customized)) {
-    test(`${migration.id}: customized tree is left untouched`, () => {
-      const got = applyRulesToTree(migration, customized);
-      assertTreeEqual(got, customized);
+    const customized = join(fxDir, 'customized');
+    if (existsSync(customized)) {
+      test(`${migration.id}: customized tree is left untouched`, () => {
+        const got = applyRulesToTree(migration, customized);
+        assertTreeEqual(got, customized);
+      });
+    }
+  } else {
+    test(`${migration.id}: declares changelog steps (nothing to apply otherwise)`, () => {
+      assert.ok(
+        (migration.changelog ?? []).length,
+        'a migration with no rules must declare changelog steps, or it does nothing',
+      );
     });
   }
 }

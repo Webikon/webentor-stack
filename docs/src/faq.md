@@ -49,33 +49,94 @@ and fill in values yourself, or fetch them from another secrets manager.
 
 ---
 
-### What is .webentor/project.json for?
+### What is .webikon/project.json for?
 
-It is CLI-facing metadata created by `webentor-setup init`. It records which
-version of `webentor-starter`, `webentor-core`, and the setup CLI a project was
-initialized with.
+It declares the project's identity for tooling that inspects the repo. It is
+created by `webentor-setup init` and holds four required fields plus one optional
+— nothing else:
 
-It is not read by the bash setup runtime. Do not edit it manually.
+```json
+{
+  "schema_version": 2,
+  "slug": "my-project",
+  "stack": "webentor-v2",
+  "theme_path": "web/app/themes/webentor-theme-v2",
+  "setup_cli_version": "1.1.0"
+}
+```
+
+- `slug` — stable project identifier (a directory name is not one)
+- `stack` — one of `webentor-v2`, `webentor-v2-hybrid`, `webentor-v1`, `sage`,
+  `classic`. Project layout (Bedrock vs classic) is never encoded here; it is
+  detected at runtime instead.
+- `theme_path` — the theme that consumes `webentor-core`
+- `setup_cli_version` — **optional**; see below
+
+**It caches exactly one version, deliberately.** The retired v1 file
+(`.webentor/project.json`) recorded `starterVersion`, `coreVersion`,
+`configsVersion`, `setupCliVersion` and the setup toggles, and every one of them
+went stale the moment a package was updated without re-running `init`. Those
+facts are now read from the artifact that owns each one:
+
+- `webentor-core` version → the **theme's** `vendor/composer/installed.json` or
+  `composer.lock` (core is a dependency of the theme, not of the project root)
+- starter release → root `composer.json` `version`
+- `@webikon/webentor-configs` version → the theme's `node_modules`,
+  `pnpm-lock.yaml`, or `package.json`
+- setup CLI version → `scripts/setup-core/composer.json` `version` when readable,
+  otherwise the `setup_cli_version` declaration (see below)
+- DB sync / Typesense / 1Password toggles → `scripts/.env.setup`. Nothing outside
+  the checkout reads these, and no tooling acts on them.
+- PHP, WordPress, and theme versions → the WordPress runtime
+
+**Why `setup_cli_version` is the exception.** Its artifact —
+`scripts/setup-core/composer.json` — lives under `scripts/`, which is
+deploy-excluded, so a deployed site cannot read it at all. The declaration carries
+the value across the deploy boundary. "Must not be derivable" therefore has a
+sharper reading than it looks: derivable *in the repo* is not derivable *from a
+deployed site*, and a reporter running against production only ever sees the
+latter.
+
+`init` writes the field by mirroring that composer.json, and never substitutes the
+running CLI's own version — so a project with no `scripts/setup-core/` (a hybrid,
+a plain Sage or classic project) gets no field, and must not have one added by
+hand. Because it is declared rather than derived, it is the one field that can go
+stale: a `git subtree pull` of setup-core moves the artifact without touching the
+declaration. `webentor-setup doctor` compares the two and **exits 1 on mismatch**,
+printing the exact fix, and
+`webikon:update-webentor-packages-in-project` blocks the update until they agree.
+Always fix the declaration to match the artifact, never the reverse.
+
+It is not read by the bash setup runtime. Re-running `init` rewrites it but
+never overwrites a hand-set `stack` (pass `--stack <value>` to change it) and
+deletes `.webentor/project.json` if it is still there. `stack`, `theme_path` and
+`setup_cli_version` are the only fields worth correcting by hand.
 
 ---
 
 ### What does webentor-setup doctor check?
 
-`doctor` verifies that the minimum required tools are installed and that the
-project metadata file exists:
+`doctor` verifies that the minimum required tools are installed, that the
+project metadata file exists, and that its one declared version is current:
 
 - `php` available in PATH
 - `composer` available in PATH
 - `pnpm` available in PATH
 - `wp` (WP-CLI) available in PATH (optional)
 - `scripts/.env.setup` exists
-- `.webentor/project.json` exists
+- `.webikon/project.json` exists
+- `setup_cli_version` matches `scripts/setup-core/composer.json` — **exit 1 on
+  mismatch**, or when the field is declared with no setup-core present. `n/a` when
+  the project has no setup-core and declares nothing.
 
 Run it with:
 
 ```bash
 scripts/setup-core/bin/webentor-setup doctor
 ```
+
+Run it after every `git subtree pull` of setup-core — that is the operation that
+moves the artifact without touching the declaration.
 
 ---
 
@@ -93,6 +154,11 @@ git subtree pull \
   vX.Y.Z \
   --squash
 ```
+
+A subtree pull is a **two-part change**: bump `setup_cli_version` in
+`.webikon/project.json` to match the new `scripts/setup-core/composer.json` in the
+same commit. Otherwise `webentor-setup doctor` exits 1 and the maintenance
+dashboard keeps reporting the old version, since production reads the declaration.
 
 Validate the pull, then commit it. See
 [Starter Upgrades](./upgrading/starter-upgrades.md) for the full process.

@@ -35,8 +35,9 @@ jobs:
               - 'docs/**'
 
   # Guards the manual versioning flow: every mirrored version source
-  # (package.json/composer.json/CHANGELOG/style.css/compatibility matrix/
-  # project.json) must agree before anything merges.
+  # (package.json/composer.json/CHANGELOG/style.css/compatibility matrix) must
+  # agree before anything merges. Also guards the shape of the starter's
+  # .webikon/project.json, which declares no versions of its own.
   versions:
     runs-on: ubuntu-latest
     steps:

@@ -38,6 +38,22 @@ git subtree pull --prefix=scripts/setup-core webentor-setup vX.Y.Z --squash
 
 Default source is release tags (`vX.Y.Z`), not `main`.
 
+## Bump the declared setup CLI version
+
+A subtree pull is a **two-part change**. `.webikon/project.json` declares
+`setup_cli_version` because its artifact — `scripts/setup-core/composer.json` —
+lives under the deploy-excluded `scripts/`, so a deployed site can only report the
+declaration. Pull the subtree without updating it and the maintenance dashboard
+reports a setup CLI version the project does not run.
+
+Set the declaration to match the artifact — never the reverse:
+
+```bash
+jq -r .version scripts/setup-core/composer.json   # the value to declare
+```
+
+Then edit `setup_cli_version` in `.webikon/project.json`, in this same commit.
+
 ## Validation after pull
 
 ```bash
@@ -46,10 +62,13 @@ php -l scripts/setup-core/src/webentor-setup.php
 scripts/setup-core/bin/webentor-setup doctor --cwd .
 ```
 
+`doctor` exits 1 if `setup_cli_version` still disagrees with the pulled
+composer.json, and prints the exact fix.
+
 ## Commit and open PR
 
 ```bash
-git add scripts/setup-core
+git add scripts/setup-core .webikon/project.json
 git commit -m "chore(setup): sync setup-core to webentor-setup vX.Y.Z"
 git push -u origin chore/update-setup-core-vX-Y-Z
 ```

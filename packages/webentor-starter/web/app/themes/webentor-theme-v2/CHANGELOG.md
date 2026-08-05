@@ -1,5 +1,9 @@
 # Webentor Theme Changelog
 
+### Version 2.1.3
+
+- Version-sync release only: kept in lockstep with starter `2.1.3`, whose change is the project-metadata file at the starter root (`.webikon/project.json`). No theme file changed — no consumer action.
+
 ### Version 2.1.2
 
 - **Align `@wordpress/*` devDependencies with the WP 7.0 runtime.** These imports are externalized to `window.wp.*`, so the WP-bundled versions are what actually runs; declared ranges now match them instead of npm latest: `components` `^32.2.1`, `icons` `^11.7.1`, `block-editor` `^15.13.2`, `blocks` `^15.13.1`, `block-library` `^9.40.2`, `i18n` `^6.13.1`. Newly declares the externalized imports the theme/core code uses (`compose` `^7.40.1`, `data` `^10.40.1`, `element` `^6.40.1`, `hooks` `^4.40.1`, `html-entities` `^4.40.1`) and removes the unused webpack-era `@wordpress/dependency-extraction-webpack-plugin`. Types/lint-only; runtime is unchanged.
