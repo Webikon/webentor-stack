@@ -133,6 +133,32 @@ for (const [name, version] of Object.entries(bumps)) {
   console.log(`Stamped ${name} -> ${version}`);
 }
 
+// --- Starter composer.lock content-hash --------------------------------------
+
+// Composer hashes `version` into composer.lock's content-hash, so stamping the
+// starter manifest invalidates the lock and CI's `composer validate` exits 2.
+// `--lock` rewrites the hash only: no dependency resolution, no install.
+if (bumps.starter) {
+  const starterDir = join(root, 'packages/webentor-starter');
+  const composer = spawnSync(
+    'composer',
+    ['update', '--lock', '--no-install', '--no-interaction'],
+    { cwd: starterDir, stdio: 'inherit' },
+  );
+  if (composer.error?.code === 'ENOENT') {
+    console.warn(
+      '\n! composer not found — packages/webentor-starter/composer.lock still\n' +
+        "  carries the pre-bump content-hash, and CI's `composer validate` will\n" +
+        '  fail. Run `composer update --lock --no-install` there before pushing.',
+    );
+  } else if (composer.status !== 0) {
+    console.error('composer update --lock failed in packages/webentor-starter.');
+    process.exit(1);
+  } else {
+    console.log('Refreshed packages/webentor-starter/composer.lock content-hash.');
+  }
+}
+
 // --- Current version set (post-stamp) ----------------------------------------
 
 function manifestVersion(path) {
