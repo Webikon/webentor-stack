@@ -1,5 +1,10 @@
 # Webentor Starter Changelog
 
+### 2.1.3
+
+- **Ships `.webikon/project.json` (schema v2) in place of `.webentor/project.json`.** The metadata file the maintenance reporter reads moved, and now declares only `schema_version`, `slug`, `stack` and `theme_path` — every version it used to cache is derived from the manifest that owns it. The starter carries no `setup_cli_version` because it ships no `scripts/setup-core`.
+- **Consumer migration:** run `init` from a `scripts/setup-core` subtree at `webentor-setup` ≥ 1.2.0, which writes the new file and deletes the old one — `theme_path` in particular is resolved, not guessed. Projects without the subtree create `.webikon/project.json` by hand from the four fields above and delete `.webentor/project.json`.
+
 ### 2.1.2
 
 - Bump the bundled theme to `2.1.2` — `@wordpress/*` devDependencies aligned with the versions WP 7.0 actually bundles (they are externalized to `window.wp.*` at runtime), including newly declared `compose`/`data`/`element`/`hooks`/`html-entities` and removal of the unused `@wordpress/dependency-extraction-webpack-plugin`.

@@ -50,6 +50,11 @@ scripts/setup-core/bin/webentor-setup init \
   --with-typesense false
 ```
 
+`--stack <webentor-v2|webentor-v2-hybrid|webentor-v1|sage|classic>` sets the
+declared stack recorded in the project metadata. It defaults to `webentor-v2`
+for a starter-based project; pass it (or edit the file once) when the project
+does not descend from the starter.
+
 This generates:
 
 - `scripts/.env.setup` — runtime config derived from your answers/flags
@@ -58,7 +63,10 @@ This generates:
 - `scripts/project-specific/` — project helper directory
 - `scripts/ts-up.sh` — only when Typesense is enabled
 - `scripts/docker-compose.typesense.yml` — only when Typesense is enabled
-- `.webentor/project.json` — project metadata
+- `.webikon/project.json` — project metadata (`schema_version`, `slug`, `stack`,
+  `theme_path`, plus the optional `setup_cli_version` mirrored from
+  `scripts/setup-core/composer.json`; see
+  [FAQ](../faq.md#what-is-webikon-project-json-for))
 
 ## 5. Run project setup
 
@@ -81,7 +89,7 @@ pnpm dev
 - Setup finished without hard errors.
 - WordPress instance is reachable.
 - Theme dev server compiles with no unresolved imports.
-- `scripts/.env.setup` and `.webentor/project.json` are present.
+- `scripts/.env.setup` and `.webikon/project.json` are present.
 - Hooks and project-specific folders exist for future customization.
 
 ## Local environment overrides

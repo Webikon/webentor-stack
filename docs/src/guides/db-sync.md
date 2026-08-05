@@ -19,8 +19,10 @@ scripts/setup-core/bin/webentor-setup init --with-db-sync true
 ```
 
 Either way, the `init` command writes `SETUP_DB_SYNC=true` directly into the
-generated `scripts/.env.setup` and records `withDbSync: true` in
-`.webentor/project.json`. No manual editing required.
+generated `scripts/.env.setup`. No manual editing required. That file is the only
+place the toggle lives — `.webikon/project.json` records no feature toggles (its
+only declared value is the optional `setup_cli_version`), and any tooling
+reporting on DB sync reads `scripts/.env.setup`.
 
 ## Hook integration
 

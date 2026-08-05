@@ -3,7 +3,11 @@
 /**
  * Prepares a release in one command: stamps every mirrored version source for
  * the given package(s), scaffolds a CHANGELOG entry, inserts a new
- * compatibility-matrix row, and updates .webentor/project.json baselines.
+ * compatibility-matrix row.
+ *
+ * NOTE for starter releases: the root composer.json version stamped here is what
+ * the maintenance reporter reads to report a project's starter release. Bumping
+ * it is load-bearing, not bookkeeping.
  *
  * Usage:
  *   pnpm release:prep core=0.16.0
@@ -162,57 +166,9 @@ if (topRow.trim() === newRow.trim()) {
   console.log('Added compatibility matrix row.');
 }
 
-// --- Starter project.json baselines ------------------------------------------
-
-// Widens a caret range only when the new version escapes it, keeping the
-// range style already used in the file ("^0.15" stays two-segment).
-function widenRange(range, version) {
-  const segments = range.replace(/^\^/, '').split('.').length;
-  const parts = version.split('.');
-  return `^${parts.slice(0, Math.max(segments, 2)).join('.')}`;
-}
-
-const projectJsonPath = 'packages/webentor-starter/.webentor/project.json';
-const project = JSON.parse(readFileSync(join(root, projectJsonPath), 'utf8'));
-const baselineUpdates = [];
-
-function rangeCovers(range, version) {
-  // Same minimal caret semantics as scripts/check-versions.mjs.
-  if (range === 'latest' || range === '*') return true;
-  if (!range.startsWith('^')) return range === version;
-  const ver = version.split('.').map(Number);
-  const base = range.slice(1).split('.').map(Number);
-  while (base.length < 3) base.push(0);
-  for (let i = 0; i < 3; i++) {
-    if (ver[i] > base[i]) break;
-    if (ver[i] < base[i]) return false;
-  }
-  const pivot = base[0] > 0 ? 0 : base[1] > 0 ? 1 : 2;
-  for (let i = 0; i <= pivot; i++) {
-    if (ver[i] !== base[i]) return false;
-  }
-  return true;
-}
-
-if (bumps.core && !rangeCovers(project.coreVersion, versions.core)) {
-  baselineUpdates.push(['coreVersion', widenRange(project.coreVersion, versions.core)]);
-}
-if (bumps.configs && !rangeCovers(project.configsVersion, versions.configs)) {
-  baselineUpdates.push(['configsVersion', widenRange(project.configsVersion, versions.configs)]);
-}
-if (bumps.setup && project.setupCliVersion !== versions.setup) {
-  baselineUpdates.push(['setupCliVersion', versions.setup]);
-}
-
-for (const [field, value] of baselineUpdates) {
-  replaceOnce(
-    projectJsonPath,
-    new RegExp(`("${field}":\\s*")[^"]+(")`),
-    `$1${value}$2`,
-    `the "${field}" field`,
-  );
-  console.log(`Updated project.json ${field} -> ${value}`);
-}
+// The starter's .webikon/project.json needs no release-time stamping: it
+// declares slug/stack/theme_path only, and every version the reporter shows is
+// derived from the manifests stamped above. check-versions.mjs guards its shape.
 
 // --- Verify the result --------------------------------------------------------
 

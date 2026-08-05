@@ -25,9 +25,16 @@ tag with `git subtree pull`.
 
 ## setup metadata
 
-The `.webentor/project.json` file at the project root. It is created by
-`webentor-setup init` and records which versions of the stack a project is
-using, plus setup-time configuration like `withDbSync` and `withTypesense`.
+The `.webikon/project.json` file at the project root (schema v2). It is created
+by `webentor-setup init` and declares four required fields — `schema_version`,
+`slug`, `stack`, `theme_path` — plus the optional `setup_cli_version`, written
+only where the project has a `scripts/setup-core/` subtree. It carries no setup
+toggles and no version other than that one: everything else is read from the
+artifact that owns it (manifests and lockfiles for versions, `scripts/.env.setup`
+for toggles). `setup_cli_version` is the exception because its artifact sits under
+the deploy-excluded `scripts/`, unreadable from a deployed site. The retired v1
+file at `.webentor/project.json` is deleted by `init`. See
+[What is .webikon/project.json for?](./faq.md#what-is-webikon-project-json-for).
 
 ## setup runtime
 
@@ -58,7 +65,7 @@ Provides shared ESLint, Stylelint, Prettier, PHPCS, and Blade formatter configs.
 
 The package that contains the `setup-core` runtime (bash scripts + PHP CLI).
 Published as a standalone GitHub repository and consumed via `git subtree`.
-The `init` command generates all project scaffolding (`scripts/`, `.webentor/`)
+The `init` command generates all project scaffolding (`scripts/`, `.webikon/`)
 from CLI flags.
 
 ## webentor-starter
