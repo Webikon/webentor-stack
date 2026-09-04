@@ -18,7 +18,8 @@ be tested against a real WordPress site.
 
 **Prerequisites:** PHP, Composer, a running MySQL/MariaDB server (e.g. DBngin), WP-CLI, pnpm, and
 Herd. Before the first run, copy `test-site/.env.example` to `test-site/.env` and set your ACF Pro
-credentials (`PLUGIN_ACF_KEY`, `PLUGIN_ACF_SITE_URL`) — Composer needs them to install ACF Pro.
+credentials (`PLUGIN_ACF_KEY`, `PLUGIN_ACF_SITE_URL`) and Gravity Forms credentials
+(`PLUGIN_GF_KEY`, `PLUGIN_GF_SITE_URL`) — Composer needs them to install those premium plugins.
 
 ```bash
 pnpm test:setup       # provision the test-site (composer install, build theme, install WP, link Herd)

@@ -307,6 +307,12 @@ _setup_composer_core() {
         composer config --auth http-basic.connect.advancedcustomfields.com "${PLUGIN_ACF_KEY}" "${PLUGIN_ACF_SITE_URL}"
     fi
 
+    # Gravity Forms' official Composer repo authenticates with the license key as
+    # username and a site URL registered to that license as password.
+    if [ -n "${PLUGIN_GF_KEY:-}" ] && [ -n "${PLUGIN_GF_SITE_URL:-}" ]; then
+        composer config --auth http-basic.composer.gravity.io "${PLUGIN_GF_KEY}" "${PLUGIN_GF_SITE_URL}"
+    fi
+
     composer --working-dir="${WORKSPACE_FOLDER}" install --optimize-autoloader
 }
 

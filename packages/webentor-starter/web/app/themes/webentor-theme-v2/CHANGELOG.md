@@ -1,5 +1,19 @@
 # Webentor Theme Changelog
 
+### Version 2.1.4
+
+- **Gravity Forms button filters no longer rebuild GF's markup.** `gform_submit_button` used to
+  emit a hand-written `<button>`, dropping the `onclick` and `data-submission-type` GF 3 submits
+  through — GF logged "Unsupported submission flow detected" on every render. The filters now append
+  classes with `WP_HTML_Tag_Processor`, leaving every other attribute untouched, so the form editor's
+  full-width setting survives too. `gform_next_button` and `gform_previous_button` are now filtered
+  as well, so multi-page forms no longer mix themed and default buttons.
+- Add `resources/styles/misc/_datepicker.css` — GF 3 replaced the jQuery UI datepicker with a
+  WhatSock calendar, so the old `.ui-datepicker*` rules were dead. `dashicons` is enqueued per-form
+  for the toggle glyph.
+- Drop the dead `input[type='submit'].gform_button` rule from `_form.css`; the theme has emitted a
+  `<button>` for years.
+
 ### Version 2.1.3
 
 - Version-sync release only: kept in lockstep with starter `2.1.3`, whose change is the project-metadata file at the starter root (`.webikon/project.json`). No theme file changed — no consumer action.

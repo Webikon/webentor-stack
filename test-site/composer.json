@@ -22,6 +22,10 @@
     {
       "type": "composer",
       "url": "https://connect.advancedcustomfields.com"
+    },
+    {
+      "type": "composer",
+      "url": "https://composer.gravity.io"
     }
   ],
   "require": {
@@ -51,7 +55,8 @@
     "wpackagist-plugin/transients-manager": "^2.0",
     "wpackagist-plugin/user-role-editor": "^4.64",
     "wpackagist-plugin/block-catalog": "^1.6",
-    "wpackagist-plugin/duracelltomi-google-tag-manager": "^1.20"
+    "wpackagist-plugin/duracelltomi-google-tag-manager": "^1.20",
+    "gravity/gravityforms": "^3.1"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "^3.7.1",

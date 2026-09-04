@@ -1,5 +1,20 @@
 # Webentor Starter Changelog
 
+### 2.1.4
+
+- **Gravity Forms moves to the official Composer repository.** The inline `gravityforms/gravityforms`
+  package (whose dist URL carried a `{%PLUGIN_GF_KEY%}` placeholder and pinned no version) is
+  replaced by `{"type": "composer", "url": "https://composer.gravity.io"}` and
+  `gravity/gravityforms: ^3.1`, locked at **3.1.1**. Lock entries now pin the version in the dist
+  URL. The `gotoandplay/gravityforms-composer-installer` and `ffraenz/private-composer-installer`
+  `allow-plugins` entries existed only to service the inline package and are removed, as is a
+  duplicate unscoped `wpackagist.org` repository entry that defeated the scoped one above it.
+- Bump the bundled theme to `2.1.4` (GF 3 submit-button markup; see the theme changelog).
+- `squizlabs/php_codesniffer` to `3.13.6` — CVE-2026-67434 (OS command injection), dev-only.
+- **Consumer migration:** `pnpm dlx @webikon/webentor-codemods run starter-2.1.4` prints the
+  composer.json edits and the required `PLUGIN_GF_SITE_URL` env/CI change. The manifest edits are
+  structural (repository and `allow-plugins` entries), so they are documented rather than codemoded.
+
 ### 2.1.3
 
 - **Ships `.webikon/project.json` (schema v2) in place of `.webentor/project.json`.** The metadata file the maintenance reporter reads moved, and now declares only `schema_version`, `slug`, `stack` and `theme_path` — every version it used to cache is derived from the manifest that owns it. The starter carries no `setup_cli_version` because it ships no `scripts/setup-core`.

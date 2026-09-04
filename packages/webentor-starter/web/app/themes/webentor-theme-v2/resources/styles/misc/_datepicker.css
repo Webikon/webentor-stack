@@ -1,105 +1,336 @@
-:root {
-  --datepicker-width: 300px;
-  --datepicker-padding: 15px;
-  --datepicker-border: 1px solid var(--color-grey-100);
-  --datepicker-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  --datepicker-header-padding: 8px 0;
-  --datepicker-header-margin: 8px;
-  --datepicker-nav-size: 24px;
-  --datepicker-nav-top: 8px;
-  --datepicker-nav-side: 5px;
-  --datepicker-cell-padding: 8px;
-  --datepicker-border-radius: 4px;
+/**
+ * Gravity Forms 3.x datepicker.
+ *
+ * GF 3 replaced the jQuery UI datepicker with a WhatSock calendar, and
+ * `gform_disable_css` (app/forms.php) strips GF's stylesheets — re-enqueuing them
+ * would restyle every field on the form. These rules reproduce GF 3.1.0.4's own
+ * appearance, read off its computed styles, so re-check them when bumping GF.
+ * Two glyphs stand in for GF's `gform-icons-orbital` font, marked inline.
+ */
+
+.gfield--input-type-datepicker {
+  .ginput_container_date {
+    /* Positioning context for the calendar popup. */
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  /* GF overlays the toggle on the input's trailing edge. */
+  .gform-datepicker-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    inline-size: 22px;
+    block-size: 22px;
+    min-inline-size: 20px;
+    min-block-size: 20px;
+    margin-inline-start: -8px;
+    transform: translateX(-100%);
+    padding: 0;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    color: rgb(17 35 55);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    cursor: pointer;
+    appearance: none;
+    transition: 0.15s;
+  }
+
+  /* Glyph comes from dashicons, enqueued in app/forms.php. */
+  .gform-datepicker-toggle-icon {
+    display: block;
+    inline-size: 20px;
+    block-size: 20px;
+    font-size: 20px;
+    line-height: 20px;
+    color: rgb(17 35 55);
+    text-align: center;
+
+    &::before {
+      display: block;
+      inline-size: 20px;
+      block-size: 20px;
+    }
+  }
 }
 
-.ui-datepicker {
-  background: var(--color-white);
-  border: var(--datepicker-border);
-  padding: var(--datepicker-padding);
-  width: var(--datepicker-width);
-  box-shadow: var(--datepicker-shadow);
+.gform-datepicker-calendar {
+  position: absolute;
+  inset-block-start: 100%;
+  inset-inline-start: 0;
+  z-index: 9999;
+  inline-size: 274px;
+  max-inline-size: 100%;
+  margin-block-start: 6px;
+  padding-block: 16px 12px;
+  padding-inline: 12px;
+  transform: translateY(6px);
+  background-color: rgb(255 255 255);
+  border-radius: 3px;
+  box-shadow:
+    0 0 1px rgba(18, 25, 97, 0.24),
+    0 24px 24px rgba(18, 25, 97, 0.03),
+    0 2px 2px rgba(18, 25, 97, 0.03),
+    0 4px 4px rgba(18, 25, 97, 0.03),
+    0 8px 8px rgba(18, 25, 97, 0.03),
+    0 16px 16px rgba(18, 25, 97, 0.03);
+  text-align: center;
 
-  .ui-datepicker-header {
+  /* Month/year rows position their own prev/next arrows. */
+  .monthSelector,
+  .yearSelector {
     position: relative;
-    padding: var(--datepicker-header-padding);
-    margin-bottom: var(--datepicker-header-margin);
   }
 
-  .ui-datepicker-prev,
-  .ui-datepicker-next {
+  table.calendar .yearSelector td {
+    padding-block-end: 4px;
+  }
+
+  table.calendar .monthSelector td {
+    padding-block-end: 12px;
+  }
+
+  /* Arrow buttons — GF pins them to the row's edges and hides their label text. */
+  .nav.btn.month.prev,
+  .nav.btn.month.next,
+  .nav.btn.year.prev,
+  .nav.btn.year.next {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: absolute;
-    top: var(--datepicker-nav-top);
-    width: var(--datepicker-nav-size);
-    height: var(--datepicker-nav-size);
-    text-indent: -9999px;
-    cursor: pointer;
-    background-color: transparent;
-    border: none;
-  }
+    inset: unset;
+    inset-block-start: 17.5px;
+    inline-size: 24px;
+    block-size: 24px;
+    min-inline-size: 24px;
+    min-block-size: 24px;
+    margin-block-start: -10px;
 
-  .ui-datepicker-prev {
-    left: var(--datepicker-nav-side);
-    &:before {
-      content: '←';
-      text-indent: 0;
-      position: absolute;
-      left: 0;
-      color: var(--color-grey-400);
-    }
-  }
-
-  .ui-datepicker-next {
-    right: var(--datepicker-nav-side);
-    &:before {
-      content: '→';
-      text-indent: 0;
-      position: absolute;
-      right: 0;
-      color: var(--color-grey-400);
-    }
-  }
-
-  .ui-datepicker-title {
-    text-align: center;
+    /* GF's nav cells carry `btn`, which collides with the theme's .btn. */
+    padding: 0 !important;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    color: rgb(104 110 119);
+    font-size: 14px;
     font-weight: 500;
-    color: var(--color-grey-900);
+    line-height: 24px;
+    letter-spacing: normal;
+    cursor: pointer;
+    transition: 0.15s;
+
+    span {
+      display: none;
+    }
+
+    /* GF's own down-arrow.svg, inlined — its url() is relative to GF's stylesheet. */
+    &::before {
+      content: '';
+      display: block;
+      position: absolute;
+      inset: unset;
+      inline-size: 20px;
+      block-size: 20px;
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 20px;
+      background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='1024' height='1024' viewBox='0 0 1024 1024'%3E%3Cpath fill='%23686E77' d='M334.461 397.266l177.769 175.982 177.766-175.982c17.869-17.688 46.733-17.688 64.602 0s17.869 46.262 0 63.952l-210.3 208.183c-17.865 17.685-46.733 17.685-64.597 0l-210.3-208.183c-17.868-17.69-17.868-46.263 0-63.952 17.869-17.235 47.191-17.688 65.060 0v0z'%3E%3C/path%3E%3C/svg%3E");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 24px 24px;
+    }
+
+    &.disabled {
+      cursor: default;
+      opacity: 0.4;
+    }
   }
 
-  .ui-datepicker-calendar {
-    width: 100%;
+  .nav.btn.month.prev,
+  .nav.btn.year.prev {
+    inset-inline-start: 10px;
+
+    &::before {
+      transform: rotate(90deg);
+    }
+  }
+
+  .nav.btn.month.next,
+  .nav.btn.year.next {
+    inset-inline-end: 10px;
+
+    &::before {
+      transform: rotate(-90deg);
+    }
+  }
+
+  /* Month/year label, when GF renders a button instead of a select. */
+  .nav.current.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    min-block-size: 35px;
+    padding-block: 0;
+    padding-inline: 12px;
+    background-color: rgb(255 255 255);
+    border: 1px solid rgb(210 213 219);
+    border-radius: 3px;
+    box-shadow: 0 1px 4px rgba(18, 25, 97, 0.08);
+    color: rgb(17 35 55);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 14px;
+    letter-spacing: normal;
+    cursor: pointer;
+    transition: 0.15s;
+  }
+
+  /* GF initialises with monthSelect/yearSelect, so these are what render. */
+  select.nav {
+    display: block;
+    inline-size: 100%;
+    max-inline-size: 100%;
+    /* GF's --gf-ctrl-size; sets the header row height. */
+    block-size: 50px;
+    padding-block: 10px;
+    padding-inline: 16px;
+    background-color: rgb(234 236 240);
+    border: none;
+    border-radius: 1.6px;
+    box-shadow: 0 1px 4px rgba(18, 25, 97, 0.08);
+    color: rgb(59 67 81);
+    font-size: 18px;
+    line-height: 19.2px;
+    text-align: center;
+    cursor: pointer;
+    appearance: none;
+  }
+
+  table.calendar {
+    inline-size: 100%;
+    margin: 0 auto;
+    font-size: 0.9em;
     border-collapse: collapse;
+    table-layout: fixed;
 
     th {
-      padding: var(--datepicker-cell-padding);
+      block-size: 29px;
+      padding: 1px;
+      border: 0;
+      color: rgb(17 35 55);
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.33;
       text-align: center;
-      font-weight: 500;
-      color: var(--color-grey-400);
+      vertical-align: middle;
     }
 
     td {
-      padding: var(--datepicker-cell-padding);
+      border: 0;
+      padding: 1px;
       text-align: center;
+    }
 
-      a {
-        display: block;
-        padding: var(--datepicker-cell-padding);
-        text-decoration: none;
-        color: var(--color-grey-900);
-        border-radius: var(--datepicker-border-radius);
+    td[role='button']:not(.disabled) {
+      cursor: pointer;
+    }
 
-        &:hover {
-          background: var(--color-grey-50);
-        }
-      }
+    td.day {
+      block-size: 29px;
+      padding-block: 6px;
+      color: rgb(17 35 55);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.43;
+    }
 
-      &.ui-datepicker-today a {
-        background: var(--color-grey-50);
-      }
+    /* The span, not the cell, carries the fill and the radius. */
+    td.day span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      inline-size: 27px;
+      block-size: 100%;
+      margin: auto;
+      padding: 0.25em 0.2em;
+      border-radius: 3px;
+      color: rgb(17 35 55);
+      text-decoration: none;
+    }
 
-      &.ui-datepicker-current-day a {
-        background: var(--wbtr-color-primary);
-        color: var(--color-white);
-      }
+    td.day:where(:not(.selected):not(.dayMarked):not(.disabled)) span:hover {
+      background-color: rgb(244 248 255);
+      color: rgb(17 35 55);
+    }
+
+    /* Today. */
+    td[aria-current='date'] span {
+      background-color: rgb(244 248 255);
+      color: rgb(17 35 55);
+    }
+
+    /* The selected value. */
+    td.dayMarked span {
+      background-color: rgb(32 76 229);
+      color: rgb(255 255 255);
+    }
+
+    td.dayMarked span:hover,
+    td.dayMarked span:focus {
+      color: rgb(255 255 255);
+    }
+
+    /* Keyboard cursor — outlines the cell without filling it. */
+    td.selected span {
+      border: 1px solid rgb(32 76 229);
+    }
+
+    td.disabled span {
+      background-color: transparent;
+      color: rgb(207 211 217);
+      cursor: default;
+    }
+  }
+
+  .monthMessage {
+    margin-block-start: 12px;
+    text-wrap: balance;
+
+    p {
+      margin: 0 auto;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 19.5px;
+    }
+  }
+}
+
+/* GF widens the popup and its day cells from the sm breakpoint up. */
+@media (min-width: 640px) {
+  .gform-datepicker-calendar {
+    inline-size: 332px;
+    padding-block: 16px;
+    padding-inline: 16px;
+  }
+
+  .gform-datepicker-calendar table.calendar {
+    th,
+    td.day {
+      block-size: 40px;
+    }
+
+    td.day {
+      padding-block: 1px;
+    }
+
+    td.day span {
+      inline-size: 100%;
     }
   }
 }

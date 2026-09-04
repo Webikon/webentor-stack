@@ -1,5 +1,14 @@
 # Webentor Setup Changelog
 
+## 1.3.0
+
+- **`setup_composer` now writes Composer auth for Gravity Forms' official repository.** Gated on
+  `PLUGIN_GF_KEY` + `PLUGIN_GF_SITE_URL`, mirroring the existing ACF Pro pair. Without it a project
+  on the `composer.gravity.io` repository fails `composer install` on every fresh setup.
+- **Consumer migration:** add `PLUGIN_GF_SITE_URL` to the project's `.env`, its 1Password item, and
+  its CI variables. The value is the license key's site URL — it must carry a scheme
+  (`https://example.com`); a bare host is rejected with HTTP 402.
+
 ## 1.2.0
 
 - **`init` now writes `.webikon/project.json` (schema v2) and deletes `.webentor/project.json`.** The new file carries four required fields — `schema_version`, `slug`, `stack`, `theme_path` — plus the optional `setup_cli_version`, and nothing else. Every version and feature flag the old file cached is now derived by the maintenance reporter (≥ 2.5.0) from the artefact that owns it: the theme's Composer lock for `webentor-core`, the root `composer.json` `version` for the starter release, the theme's pnpm lock for `webentor-configs`, `scripts/setup-core/composer.json` for this CLI, and `scripts/.env.setup` for the toggles. Those cached values drifted on every project that re-ran `init`, or that updated a package without re-running it.

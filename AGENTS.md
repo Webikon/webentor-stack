@@ -146,6 +146,11 @@ Operational gotchas:
   `.block-editor-writing-flow` time out.
 - **ACF Pro key** (needed for `pnpm test:setup`): 1Password item "ACF PRO licence", Clients vault,
   in the `notesPlain` field. Goes into `test-site/.env` as `PLUGIN_ACF_KEY`; never commit `.env`.
+- **Gravity Forms key** (also needed for `pnpm test:setup` — the site installs GF so the theme's
+  `gform_submit_button` filter is testable): 1Password item "Gravity Forms licence", Clients vault,
+  `notesPlain`. Goes into `test-site/.env` as `PLUGIN_GF_KEY`, paired with `PLUGIN_GF_SITE_URL`.
+  `composer.gravity.io` authenticates with the key as username and a **scheme-qualified** site URL
+  as password — `https://webentor-test.test` works, a bare `webentor-test.test` returns 402.
 
 Block-console checker: `node scripts/check-blocks-console.mjs` logs into the test-site, inserts
 every top-level `webentor/*` block into a published page, and reports editor + frontend console

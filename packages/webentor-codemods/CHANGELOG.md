@@ -1,5 +1,18 @@
 # Webentor Codemods Changelog
 
+## 0.3.3
+
+- Add the `starter-2.1.4` migration (starter/theme **2.1.3 → 2.1.4**, Gravity Forms on the official
+  Composer repository). Selectable by id or `--package webentor-starter`.
+  - **Changelog-only: it declares no `rules`.** The composer.json change is structural — removing a
+    `repositories` entry and two `allow-plugins` entries, adding a repository — and `ast-grep`
+    rewrites existing syntax rather than adding or removing array members. A partial rewrite would
+    leave the manifest non-installable (`gravity/gravityforms` unresolvable until the repository is
+    added), so the whole edit is documented as one manual pass in the migration README.
+  - The theme's `gform_submit_button` rewrite is a hand-applied file change, and
+    `PLUGIN_GF_SITE_URL` has to be added to the project's `.env`, 1Password item and CI variables —
+    neither is reachable from a codemod.
+
 ## 0.3.2
 
 - Add the `starter-2.1.3` migration (theme **2.1.2 → 2.1.3**, project metadata

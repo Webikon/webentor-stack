@@ -1,0 +1,6 @@
+### 2.1.4
+
+- **Gravity Forms moves to the official Composer repository.** The inline `gravityforms/gravityforms` package (dist URL carrying a `{%PLUGIN_GF_KEY%}` placeholder, no version pinned) is replaced by the `https://composer.gravity.io` repository and `gravity/gravityforms: ^3.1`. Lock entries now pin the version in the dist URL, so an install is reproducible. The `gotoandplay/gravityforms-composer-installer` and `ffraenz/private-composer-installer` `allow-plugins` entries serviced only the inline package and are removed.
+- **This step is manual — the codemod cannot do it.** The change adds and removes `repositories` and `allow-plugins` array members, which `ast-grep` cannot produce; a partial rewrite would leave `gravity/gravityforms` unresolvable. Apply the composer.json edits in the migration README in one pass, then `composer update gravity/gravityforms -W`.
+- **New env var `PLUGIN_GF_SITE_URL`** is required alongside `PLUGIN_GF_KEY` — in `.env`, the project's 1Password item, and CI variables. `composer.gravity.io` authenticates with the license key as username and this URL as password; it must carry a scheme (`https://example.com`), a bare host is rejected with HTTP 402.
+- `squizlabs/php_codesniffer` to `3.13.6` — CVE-2026-67434 (OS command injection), dev-only.

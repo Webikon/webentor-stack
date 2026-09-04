@@ -75,6 +75,21 @@ else
 fi
 
 # ---------------------------------------------------------------------------
+# 2b. Gravity Forms Composer auth
+#     The official repo takes the license key as username and a site URL as
+#     password. Any scheme-qualified URL authenticates (a bare host does not),
+#     but GF records it against the license — so the harness sends its own host.
+# ---------------------------------------------------------------------------
+if [ -n "${PLUGIN_GF_KEY:-}" ] && [ -n "${PLUGIN_GF_SITE_URL:-}" ]; then
+  info "Configuring Composer auth for Gravity Forms..."
+  cd "$TEST_SITE_DIR"
+  composer config --auth http-basic.composer.gravity.io \
+    "$PLUGIN_GF_KEY" "$PLUGIN_GF_SITE_URL"
+else
+  error "PLUGIN_GF_KEY and PLUGIN_GF_SITE_URL are required. Set them in test-site/.env"
+fi
+
+# ---------------------------------------------------------------------------
 # 3. MySQL database
 # ---------------------------------------------------------------------------
 info "Creating database '$DB_NAME' if it doesn't exist..."
