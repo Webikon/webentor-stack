@@ -153,14 +153,45 @@ Config::define('WP_REDIS_PORT', env('REDIS_PORT') ?? '');
 Config::define('WP_REDIS_DISABLED', env('WP_REDIS_DISABLED'));
 
 /**
- * Define Sentry keys.
- * SENTRY_DSN_PHP and SENTRY_DSN_JS defined in gitlab for staging/prod
+ * Define SENTRY vars.
  */
-if (env('SENTRY_DSN_PHP')) {
-    Config::define('WP_SENTRY_PHP_DSN', env('SENTRY_DSN_PHP'));
+$sentry_php_dsn = env('WP_SENTRY_PHP_DSN') ?: env('SENTRY_PHP_DSN') ?: env('SENTRY_DSN_PHP');
+if ($sentry_php_dsn) {
+    Config::define('WP_SENTRY_PHP_DSN', $sentry_php_dsn);
 }
-if (env('SENTRY_DSN_JS')) {
-    Config::define('WP_SENTRY_BROWSER_DSN', env('SENTRY_DSN_JS'));
+$sentry_js_dsn = env('WP_SENTRY_BROWSER_DSN') ?: env('SENTRY_BROWSER_DSN') ?: env('SENTRY_DNS_BROWSER');
+if ($sentry_js_dsn) {
+    Config::define('WP_SENTRY_BROWSER_DSN', $sentry_js_dsn);
+}
+Config::define('SENTRY_DISABLED', env('SENTRY_DISABLED') ?? false);
+/**
+ * Override per environment with WP_SENTRY_ERROR_TYPES. An env value is a STRING
+ * and `E_ALL & ~E_DEPRECATED` cannot be evaluated from one safely, so two forms
+ * are accepted:
+ *   WP_SENTRY_ERROR_TYPES=4437      an explicit bitmask
+ *   WP_SENTRY_ERROR_TYPES=all       everything, while chasing something specific
+ *   WP_SENTRY_ERROR_TYPES=fatals    fatals only, for a noisy legacy site
+ */
+$sentry_error_presets = [
+    'all'     => E_ALL,
+    'default' => E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_USER_DEPRECATED & ~E_USER_NOTICE,
+    'fatals'  => E_ERROR | E_PARSE | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR,
+];
+$sentry_error_types = env('WP_SENTRY_ERROR_TYPES');
+
+if (is_numeric($sentry_error_types)) {
+    // Tested numerically, not by truthiness: 0 means "report nothing" and is a
+    // legitimate value a truthiness check would silently replace with the default.
+    Config::define('WP_SENTRY_ERROR_TYPES', (int) $sentry_error_types);
+} else {
+    $sentry_error_preset = is_string($sentry_error_types)
+        ? strtolower(trim($sentry_error_types))
+        : '';
+
+    Config::define(
+        'WP_SENTRY_ERROR_TYPES',
+        $sentry_error_presets[$sentry_error_preset] ?? $sentry_error_presets['default']
+    );
 }
 
 /**
