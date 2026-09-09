@@ -159,7 +159,7 @@ $sentry_php_dsn = env('WP_SENTRY_PHP_DSN') ?: env('SENTRY_PHP_DSN') ?: env('SENT
 if ($sentry_php_dsn) {
     Config::define('WP_SENTRY_PHP_DSN', $sentry_php_dsn);
 }
-$sentry_js_dsn = env('WP_SENTRY_BROWSER_DSN') ?: env('SENTRY_BROWSER_DSN') ?: env('SENTRY_DNS_BROWSER');
+$sentry_js_dsn = env('WP_SENTRY_BROWSER_DSN') ?: env('SENTRY_BROWSER_DSN') ?: env('SENTRY_DSN_JS');
 if ($sentry_js_dsn) {
     Config::define('WP_SENTRY_BROWSER_DSN', $sentry_js_dsn);
 }
