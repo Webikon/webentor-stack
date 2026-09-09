@@ -1,5 +1,11 @@
 # Webentor Starter Changelog
 
+### 2.1.6
+
+- **Fix the legacy Sentry browser DSN fallback.** 2.1.5 named it `SENTRY_DNS_BROWSER`; the
+  pre-2.1.5 name every existing project defines is `SENTRY_DSN_JS`, which is now accepted again.
+- **Consumer migration:** copy the Sentry block of `config/application.php` by hand; no codemod.
+
 ### 2.1.5
 
 - **Sentry configuration is environment-driven.** `config/application.php` accepts
