@@ -1,5 +1,17 @@
 # Webentor Starter Changelog
 
+### 2.1.5
+
+- **Sentry configuration is environment-driven.** `config/application.php` accepts
+  `WP_SENTRY_PHP_DSN` / `SENTRY_PHP_DSN` and `WP_SENTRY_BROWSER_DSN` / `SENTRY_BROWSER_DSN` (the
+  legacy `SENTRY_DSN_PHP` / `SENTRY_DNS_BROWSER` names still work), defines `SENTRY_DISABLED`, and
+  makes `WP_SENTRY_ERROR_TYPES` configurable per environment as a bitmask or the `all` / `default` /
+  `fatals` presets. The default drops deprecations and notices.
+- Verified against WordPress 7.1: every block validates, no editor or frontend deprecations.
+  `roots/wordpress` already allows `^7.0`; the lock stays on 7.0.
+- Bump the bundled theme to `2.1.5`.
+- **Consumer migration:** copy the Sentry block of `config/application.php` by hand; no codemod.
+
 ### 2.1.4
 
 - **Gravity Forms moves to the official Composer repository.** The inline `gravityforms/gravityforms`

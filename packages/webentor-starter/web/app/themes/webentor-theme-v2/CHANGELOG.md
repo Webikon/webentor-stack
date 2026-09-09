@@ -1,5 +1,10 @@
 # Webentor Theme Changelog
 
+### Version 2.1.5
+
+- Version bump in lockstep with starter 2.1.5; no theme code changes. Verified against
+  WordPress 7.1 (all blocks valid, no deprecations).
+
 ### Version 2.1.4
 
 - **Gravity Forms button filters no longer rebuild GF's markup.** `gform_submit_button` used to

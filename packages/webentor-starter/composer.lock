@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e9db3b5199e31e6e2bb440293784060c",
+    "content-hash": "d68a0ba63c69699cf29071003b63f720",
     "packages": [
         {
             "name": "cloudflare/cf-ip-rewrite",
