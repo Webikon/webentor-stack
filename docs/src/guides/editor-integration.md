@@ -29,6 +29,33 @@ addFilter('webentor.core.customTypographyKeys', 'theme/typo', () => [
 ]);
 ```
 
+## WordPress viewports follow the Tailwind breakpoints
+
+WordPress 7.1 adds its own per-viewport styling (View menu → **Responsive
+styles**, then Tablet / Mobile) for core block supports such as text alignment
+and colors. It uses two breakpoints from theme.json `settings.viewport`, which
+default to 480px and 782px — cutting straight through the `sm` and `md` ranges.
+
+Core derives `settings.viewport` from `settings.custom.breakpoints` so the two
+systems agree on where a range ends:
+
+| WordPress viewport | Media query               | Webentor range |
+| ------------------ | ------------------------- | -------------- |
+| Mobile             | `width <= md - 1px`       | `basic`, `sm`  |
+| Tablet             | `md - 1px < width <= lg - 1px` | `md`      |
+| Desktop            | `width > lg - 1px`        | `lg` and up    |
+
+With the starter breakpoints that is `mobile: 767px`, `tablet: 991px`. Declaring
+`settings.viewport` in theme.json yourself takes precedence, and the PHP filter
+`webentor/theme_json_viewport` can adjust the derived values.
+
+The two systems stay separate on purpose. WordPress viewport styles are
+desktop-first overrides emitted as `!important` CSS for core supports; Webentor
+responsive settings are mobile-first Tailwind classes. While a WordPress viewport
+is selected the block inspector shows only WordPress style panels — every
+Settings-tab control disappears, WordPress's own included. Switch back to
+Desktop to edit Webentor settings.
+
 ## Customize quick layout presets
 
 Register the preset filter in the same editor bootstrap where you already wire

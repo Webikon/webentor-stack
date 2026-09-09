@@ -275,6 +275,23 @@ prefer flat scalar attributes for anything new.
 
 ---
 
+### `webentor/theme_json_viewport`
+
+Adjusts the WordPress 7.1 `settings.viewport` breakpoints that core derives from
+`settings.custom.breakpoints` (`mobile` = `md` − 1px, `tablet` = `lg` − 1px).
+Not called when theme.json declares `settings.viewport` itself. See
+[Editor integration](/guides/editor-integration).
+
+```php
+add_filter('webentor/theme_json_viewport', function (array $viewport, array $breakpoints): array {
+    $viewport['tablet'] = '1199px'; // treat `lg` as tablet too
+
+    return $viewport;
+}, 10, 2);
+```
+
+---
+
 ### `webentor/skip_render_block_blade`
 
 Allows skipping the Blade rendering pipeline for a specific block. Return `true`
