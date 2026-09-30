@@ -1,20 +1,22 @@
 # Webentor Theme Changelog
 
-### Version 2.2.0
+### Version 2.1.7
 
-- **Node 24 floor** (`engines.node >=24.0.0`). Node 20 is past end of life.
+- **Node 24 floor** (`engines.node >=24.0.0`), the same as `webentor-core`. Node 20 is past
+  end of life.
+- Version aligned with the starter: both are 2.1.7 (2.1.6 skipped for the theme).
 - **`@wordpress/*` ranges describe WordPress 7.1.2**, which bundles block-editor 16,
   components 37, compose 8.4, element 8.3 and icons 15.2. These run from `window.wp`, so
   the ranges only drive types and lint. The same ranges are set in `webentor-core`. The
   unused `@wordpress/block-library` is removed.
 - Dependency refresh within range: Vite 8.3, Tailwind 4.3.3, typescript-eslint 8.71, Acorn 6.3,
-  acf-composer 3.4.7 and smaller patches. Dev: PHP_CodeSniffer 4.
+  acf-composer 3.4.7 and smaller patches. Dev: PHP_CodeSniffer 4, `lint-staged` 17 (needs
+  Node 22.22 or later, covered by the new floor).
 - Held majors, with the reason:
   - ESLint 10 and `@eslint/js` 10: `eslint-plugin-react` supports ESLint up to 9.7.
   - React 19: WordPress 7.1 still ships React 18.
   - TypeScript 7: `typescript-eslint` needs a version below 6.1.
   - `vite-plugin-external` 8: `@kucrut/vite-for-wp` 0.12 requires 6.
-  - `lint-staged` 17: needs Node 22.22 or later, and `webentor-core` still declares Node 20.
 
 ### Version 2.1.5
 

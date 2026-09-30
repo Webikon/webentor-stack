@@ -1,6 +1,6 @@
 # Webentor Starter Changelog
 
-### 2.2.0
+### 2.1.7
 
 - **WordPress 7.1.** The lock moves from 7.0 to 7.1.2. A Gutenberg packages audit for
   7.0 → 7.1.2 finds no breaking change that touches starter or theme code. A smoke install
@@ -20,8 +20,9 @@
 - **`LocalValetDriver.php` reads the uploads fallback host from `.env`**
   (`UPLOADS_FALLBACK_URL`) instead of hardcoding the starter's own DEV site. With the key
   unset, missing uploads simply 404 locally.
-- The CI starter job builds on Node 24, matching the theme's new floor.
-- Bump the bundled theme to `2.2.0`.
+- **Node 24** for the theme and `webentor-core` (`engines.node >=24.0.0`). The CI starter and
+  core jobs and the release job run on Node 24.
+- Bump the bundled theme to `2.1.7`; starter and theme now share one version number.
 - **Consumer migration:** copy `LocalValetDriver.php` and `web/app/maintenance.php`, then set
   `UPLOADS_FALLBACK_URL` in `.env` (DEV, or production once it exists). Plugin majors are a
   per-site decision in the monthly maintenance pass; the starter only sets what new projects
