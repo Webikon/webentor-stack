@@ -10,8 +10,8 @@ class LocalValetDriver extends BedrockValetDriver
 
     public function __construct()
     {
-        // TODO:Get from .env file?
-        $this->REMOTE_HOST = 'https://webentor-starter-project.dev.webikon.sk/';
+        // Herd loads this outside WordPress, so it reads .env itself. Empty = no remote fallback.
+        $this->REMOTE_HOST = $this->envValue(__DIR__ . '/.env', 'UPLOADS_FALLBACK_URL');
         $this->URI_PREFIX = '/app/uploads/';
     }
 
@@ -23,7 +23,7 @@ class LocalValetDriver extends BedrockValetDriver
             return $localFileFound;
         }
 
-        if (str_starts_with($uri, $this->URI_PREFIX)) {
+        if ($this->REMOTE_HOST !== '' && str_starts_with($uri, $this->URI_PREFIX)) {
             $this->tryRemoteFallback = true;
 
             return rtrim($this->REMOTE_HOST, '/') . $uri;
@@ -41,5 +41,18 @@ class LocalValetDriver extends BedrockValetDriver
         }
 
         parent::serveStaticFile($staticFilePath, $sitePath, $siteName, $uri);
+    }
+
+    private function envValue(string $file, string $key): string
+    {
+        $lines = is_readable($file) ? file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) : [];
+
+        foreach ($lines as $line) {
+            if (str_starts_with($line, $key . '=')) {
+                return trim(substr($line, strlen($key) + 1), " \t\"'");
+            }
+        }
+
+        return '';
     }
 }
