@@ -7,6 +7,8 @@ on:
 permissions:
   contents: write
   actions: write
+  # npm trusted publishing (OIDC); no NPM_TOKEN secret.
+  id-token: write
 
 jobs:
   release:
@@ -17,7 +19,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
       - name: Enable corepack
         run: corepack enable
 
@@ -35,8 +37,6 @@ jobs:
 
       - name: Publish npm packages not yet on the registry
         run: node scripts/publish-npm.mjs
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # Tag pushes with GITHUB_TOKEN don't trigger `on: push: tags`, so the
       # script also dispatches the split workflows directly.

@@ -6,7 +6,8 @@
  * version bump to main and this script publishes it (versioning itself is
  * manual - see AGENTS.md "Release Workflow").
  *
- * Auth comes from .npmrc (NPM_TOKEN). Pass --dry-run to only report what
+ * Auth is npm trusted publishing (OIDC from release.yml, needs npm >= 11.5.1);
+ * pnpm 10 delegates the upload to npm. Pass --dry-run to only report what
  * would be published.
  */
 

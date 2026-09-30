@@ -17,7 +17,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Webikon/webentor-stack/tree/main/packages/webentor-configs"
+    "url": "git+https://github.com/Webikon/webentor-stack.git",
+    "directory": "packages/webentor-configs"
   },
   "publishConfig": {
     "access": "public"
