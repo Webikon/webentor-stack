@@ -214,7 +214,11 @@ file has no such field.)
 
 1. `scripts/check-versions.mjs` — aborts if any mirrored version source drifted.
 2. `scripts/publish-npm.mjs` — publishes any npm package (`core`, `configs`,
-   `codemods`) whose committed version is not on the registry yet.
+   `codemods`) whose committed version is not on the registry yet. Auth is
+   npm trusted publishing (OIDC, `id-token: write`); there is no npm token
+   secret. Each package's npmjs.com trusted publisher must point at
+   `Webikon/webentor-stack` + `release.yml`, and `repository.url` must stay
+   `git+https://github.com/Webikon/webentor-stack.git`.
 3. `scripts/release-tags.sh` — for every released package (`core`, `configs`,
    `codemods`, `setup`, `starter`; the theme ships inside the starter and has no
    tag of its own) ensures three things exist for the committed version:
