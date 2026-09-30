@@ -1,5 +1,16 @@
 # Webentor Configs Changelog
 
+## 1.1.1
+
+- **Stylelint preset: Tailwind at-rules are exempt from `at-rule-prelude-no-invalid`.** Newer
+  CSS syntax data (pulled in transitively through `@csstools/*`, with any stylelint 17.14.x)
+  validates the `@apply` prelude as plain CSS, so every Tailwind class list failed lint:
+  26 errors in the starter theme alone. The rule keeps `stylelint-config-recommended`'s own
+  `@media` exception.
+- Peer ranges now match what projects run: `stylelint` `^16.23.0 || ^17.0.0` and
+  `stylelint-config-recommended` `^17.0.0 || ^18.0.0`. The previous `^16` / `^17` peers
+  warned on every project on the starter's stylelint 17.
+
 ## 1.1.0
 
 - Add `@webikon/webentor-configs/vite` export with `wordpressExternals(command)` — the shared

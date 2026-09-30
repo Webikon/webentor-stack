@@ -31,6 +31,24 @@ export function createStylelintConfig(overrides = {}) {
           ],
         },
       ],
+      // Newer CSS syntax data (via @csstools) validates @apply preludes as CSS, so every
+      // Tailwind class list fails. Keeps recommended's own `media` exception.
+      'at-rule-prelude-no-invalid': [
+        true,
+        {
+          ignoreAtRules: [
+            'media',
+            'theme',
+            'source',
+            'utility',
+            'variant',
+            'custom-variant',
+            'plugin',
+            'apply',
+            'reference',
+          ],
+        },
+      ],
       'function-no-unknown': [
         true,
         {
