@@ -1,5 +1,22 @@
 # Webentor Setup Changelog
 
+## 1.4.0
+
+- **Developers now authenticate to 1Password with their own account, not the shared service
+  account.** `OP_SERVICE_ACCOUNT_TOKEN` is honoured only when `CI=true`. Anywhere else setup warns,
+  drops the token for its own `op` calls, and uses the 1Password app integration, which prompts
+  the developer to approve. A service-account token exported in a shell profile is one long-lived
+  credential for the whole vault: a single paste leaks every project's `.env`, and revoking it
+  breaks every developer at once.
+- **A failed 1Password fetch no longer wipes an existing `.env`.** The read went straight into a
+  redirect onto `.env`, which truncated it before `op` ran, so an unanswered app prompt left an
+  empty file. It now goes to a private temp file and replaces `.env` only when non-empty, with
+  mode 600. `op`'s error, for example `authorization timeout`, is now shown instead of hidden.
+- **Consumer migration:** each developer removes `export OP_SERVICE_ACCOUNT_TOKEN=…` from their
+  shell profile and turns on the 1Password app's CLI integration (Settings → Developer). Then
+  pull the subtree:
+  `git subtree pull --prefix=scripts/setup-core git@github.com:Webikon/webentor-setup.git v1.4.0 --squash`.
+
 ## 1.3.0
 
 - **`setup_composer` now writes Composer auth for Gravity Forms' official repository.** Gated on

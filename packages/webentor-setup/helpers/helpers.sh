@@ -91,9 +91,17 @@ check_1password_auth() {
         return 1
     fi
 
+    # A service-account token is one long-lived credential for the whole vault: exported in a
+    # developer's shell profile, a single paste or shell-history slip leaks every project's .env.
+    # So it is honoured only in CI, and developers use their own account (1Password app
+    # integration), which is per-person, prompts, and is revoked with that person.
     if [ -n "${OP_SERVICE_ACCOUNT_TOKEN:-}" ]; then
-        info "Using 1Password service account token"
-        return 0
+        if [ "${CI:-}" = "true" ]; then
+            info "Using 1Password service account token (CI)"
+            return 0
+        fi
+        warning "OP_SERVICE_ACCOUNT_TOKEN is set outside CI; ignoring it and using your own 1Password account. Remove it from your shell profile."
+        unset OP_SERVICE_ACCOUNT_TOKEN
     fi
 
     if ! op account list >/dev/null 2>&1; then
@@ -169,10 +177,18 @@ fetch_env_from_1password() {
         return 1
     fi
 
-    if op read "op://${OP_VAULT_ID}/${OP_ITEM_ID}/env-valet" > "$target_env_file" 2>/dev/null; then
+    # Into a private temp file, then moved: a redirect straight onto .env truncates it before op
+    # runs, so an unanswered app prompt used to wipe a working .env. op's stderr stays visible
+    # (it names the cause, never a value).
+    local tmp_env
+    tmp_env=$(umask 077 && mktemp "${target_env_file}.XXXXXX") || return 1
+    if op read "op://${OP_VAULT_ID}/${OP_ITEM_ID}/env-valet" > "$tmp_env" && [ -s "$tmp_env" ]; then
+        chmod 600 "$tmp_env" 2>/dev/null || true
+        mv -f "$tmp_env" "$target_env_file"
         success "Fetched .env from 1Password"
         return 0
     fi
+    rm -f "$tmp_env"
 
     warning "Failed to fetch .env from 1Password item op://${OP_VAULT_ID}/${OP_ITEM_ID}/env-valet"
     return 1
