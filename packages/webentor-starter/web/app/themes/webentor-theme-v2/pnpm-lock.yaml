@@ -52,8 +52,8 @@ importers:
         specifier: ^6.0.0
         version: 6.1.1(vite@8.3.1(@types/node@26.6.3)(jiti@1.21.7)(terser@5.51.2)(yaml@2.9.1))
       '@webikon/webentor-configs':
-        specifier: ^1.1.0
-        version: 1.1.0(d01a43327ac0b0abb25291724deecc8a)
+        specifier: ^1.1.1
+        version: 1.1.1(d01a43327ac0b0abb25291724deecc8a)
       '@webikon/webentor-core':
         specifier: ^0.15.9
         version: 0.15.9
@@ -1380,8 +1380,8 @@ packages:
   '@webassemblyjs/wast-printer@1.14.1':
     resolution: {integrity: sha512-kPSSXE6De1XOR820C90RIo2ogvZG+c3KiHzqUoO/F34Y2shGzesfqv7o57xrxovZJH/MetF5UjroJ/R/3isoiw==}
 
-  '@webikon/webentor-configs@1.1.0':
-    resolution: {integrity: sha512-wcBAy2bo/DU52WXj4XnNVfiMEMQhpIIz3woM734VS01qJA6Et7QIy6TZzpDNAxBidd4ikIo0n8bI9JJD6zBCNQ==}
+  '@webikon/webentor-configs@1.1.1':
+    resolution: {integrity: sha512-VGlaAiTXPz6P0VauNORxZUu8LBjdo2GM2bCpq4aWu3lzKeFEwcJRq7n36EATsNvRoVfUJtMWwb0tyFh+1LEBPA==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       '@eslint/js': ^9.0.0
@@ -1393,8 +1393,8 @@ packages:
       eslint-plugin-prettier: ^5.0.0
       eslint-plugin-react: ^7.0.0
       globals: ^16.0.0
-      stylelint: ^16.0.0
-      stylelint-config-recommended: ^17.0.0
+      stylelint: ^16.23.0 || ^17.0.0
+      stylelint-config-recommended: ^17.0.0 || ^18.0.0
       typescript-eslint: ^8.0.0
       vite: ^8.0.0
     peerDependenciesMeta:
@@ -2390,8 +2390,8 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
-  electron-to-chromium@1.5.442:
-    resolution: {integrity: sha512-najZYZ3+ZpjN1z3VOsrBiv5ej18vQgfV2lvEmxWzfmKrk4bdm3Owseyud4yGU6DfFn9pyunoAHDDyM4KmP78Ew==}
+  electron-to-chromium@1.5.443:
+    resolution: {integrity: sha512-TDJG36L9A3CWWwZ97HKaE+Iz1sW80pNp6sAU0owzCIV3Zc9eVyRqZK8Vz6NKuMIU8WjP0pIkoqCa0VRf/yFD0Q==}
 
   emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
@@ -5747,7 +5747,7 @@ snapshots:
       '@webassemblyjs/ast': 1.14.1
       '@xtuc/long': 4.2.2
 
-  '@webikon/webentor-configs@1.1.0(d01a43327ac0b0abb25291724deecc8a)':
+  '@webikon/webentor-configs@1.1.1(d01a43327ac0b0abb25291724deecc8a)':
     dependencies:
       '@eslint/js': 9.39.5
       eslint: 9.39.5(jiti@1.21.7)
@@ -7142,7 +7142,7 @@ snapshots:
     dependencies:
       baseline-browser-mapping: 2.11.26
       caniuse-lite: 1.0.30001814
-      electron-to-chromium: 1.5.442
+      electron-to-chromium: 1.5.443
       node-releases: 2.0.57
       update-browserslist-db: 1.3.3(browserslist@4.29.3)
 
@@ -7414,7 +7414,7 @@ snapshots:
       minimatch: 9.0.9
       semver: 7.8.5
 
-  electron-to-chromium@1.5.442: {}
+  electron-to-chromium@1.5.443: {}
 
   emoji-regex@8.0.0: {}
 
