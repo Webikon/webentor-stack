@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "03b0d916aa5910ab04cca0c993e8bcfa",
+    "content-hash": "e75c2c08651f25a660ebc98eba8b05f7",
     "packages": [
         {
             "name": "brick/math",
@@ -7169,16 +7169,16 @@
         },
         {
             "name": "webikon/webentor-core",
-            "version": "0.15.4",
+            "version": "0.15.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Webikon/webentor-core.git",
-                "reference": "eaab33d276e896b1567b113d0b0f904c70c06c5f"
+                "reference": "39946b3cb09dd5fa50449adc51b0fc79ee1076ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Webikon/webentor-core/zipball/eaab33d276e896b1567b113d0b0f904c70c06c5f",
-                "reference": "eaab33d276e896b1567b113d0b0f904c70c06c5f",
+                "url": "https://api.github.com/repos/Webikon/webentor-core/zipball/39946b3cb09dd5fa50449adc51b0fc79ee1076ad",
+                "reference": "39946b3cb09dd5fa50449adc51b0fc79ee1076ad",
                 "shasum": ""
             },
             "require": {
@@ -7225,10 +7225,10 @@
             "description": "Webentor Core package",
             "homepage": "https://webikon.sk",
             "support": {
-                "source": "https://github.com/Webikon/webentor-core/tree/v0.15.4",
+                "source": "https://github.com/Webikon/webentor-core/tree/v0.15.9",
                 "issues": "https://github.com/Webikon/webentor-core/issues"
             },
-            "time": "2026-07-10T09:42:10+00:00"
+            "time": "2026-09-09T09:08:14+00:00"
         }
     ],
     "packages-dev": [
