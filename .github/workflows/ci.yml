@@ -81,6 +81,7 @@ jobs:
       - name: PHP lint core (phpcs)
         working-directory: packages/webentor-core
         run: |
+          composer validate --no-interaction --no-check-publish
           composer install --no-interaction --prefer-dist
           composer lint
 
