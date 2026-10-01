@@ -1,6 +1,9 @@
 <?php
-// Throw 503 error and display "Under Maintenance" page
-header("HTTP/1.0 503 Service Unavailable");
+// Served by `wp maintenance-mode activate`, before WordPress loads: plain PHP only, no WP functions.
+header('HTTP/1.1 503 Service Unavailable');
+header('Content-Type: text/html; charset=utf-8');
+// Temporary, so crawlers neither index this page nor drop the real one. About one deploy window.
+header('Retry-After: 600');
 ?>
 
 <!doctype html>
@@ -8,6 +11,8 @@ header("HTTP/1.0 503 Service Unavailable");
     <head>
         <title>Under Maintenance</title>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noindex, nofollow">
         <style>
             body { text-align: center; padding: 100px 20px; }
             h1 { font-size: 50px; }

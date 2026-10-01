@@ -1,5 +1,33 @@
 # Webentor Starter Changelog
 
+### 2.1.7
+
+- **WordPress 7.1.** The lock moves from 7.0 to 7.1.2. A Gutenberg packages audit for
+  7.0 → 7.1.2 finds no breaking change that touches starter or theme code. A smoke install
+  activates all plugins without errors, all 28 Webentor blocks insert and validate in the
+  editor, and the front end and REST API respond without PHP notices.
+- **Plugin majors.**
+  - GTM4WP 2.0 is a rewrite. Options, filters and wp-config constants are unchanged; the
+    scroll tracking and weather/geo features are removed.
+  - Redis Object Cache 3.0 is mostly fixes. On a site that already uses the drop-in, run
+    `wp redis update-dropin`.
+  - `composer/installers` moves to 2, as in Bedrock.
+- Minor plugin updates: ACF Pro 6.8.10, WP Rocket 3.23.4 (which now pulls in
+  `wordpress/mcp-adapter`), WP Migrate DB Pro 2.7.11, Redirection 5.10, WP Mail SMTP 4.9,
+  Sentry 8.12 and smaller patches. Dev: PHP_CodeSniffer 4, matching what CI already runs.
+- **The maintenance page sends `Retry-After`**, plus `noindex`, a viewport and HTTP/1.1, so
+  crawlers treat a deploy as temporary.
+- **`LocalValetDriver.php` reads the uploads fallback host from `.env`**
+  (`UPLOADS_FALLBACK_URL`) instead of hardcoding the starter's own DEV site. With the key
+  unset, missing uploads simply 404 locally.
+- **Node 24** for the theme and `webentor-core` (`engines.node >=24.0.0`). The CI starter and
+  core jobs and the release job run on Node 24.
+- Bump the bundled theme to `2.1.7`; starter and theme now share one version number.
+- **Consumer migration:** copy `LocalValetDriver.php` and `web/app/maintenance.php`, then set
+  `UPLOADS_FALLBACK_URL` in `.env` (DEV, or production once it exists). Plugin majors are a
+  per-site decision in the monthly maintenance pass; the starter only sets what new projects
+  start on.
+
 ### 2.1.6
 
 - **Fix the legacy Sentry browser DSN fallback.** 2.1.5 named it `SENTRY_DNS_BROWSER`; the
