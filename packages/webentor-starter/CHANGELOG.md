@@ -1,5 +1,20 @@
 # Webentor Starter Changelog
 
+### 2.1.9
+
+- **Fix: the 2.1.7 and 2.1.8 locks do not install on PHP 8.3.** They were resolved on PHP 8.4,
+  so the theme locked Symfony 8.1 (13 packages, PHP >=8.4.1) through Acorn. On PHP 8.3,
+  `composer install` refuses the lock. The starter's dev tools had the same problem
+  (`sebastian/diff` 9, `symfony/stopwatch` 8). The theme is back on Symfony 7.4 LTS.
+- Starter and theme `composer.json` pin `config.platform.php` to `8.3.0`, so a
+  `composer update` resolves for the floor whatever PHP runs it. CI checks both locks
+  against PHP 8.3 (`composer check-platform-reqs --lock`).
+- Verified on PHP 8.3.15: both locks install, WordPress 7.1.2 boots with the theme and all
+  23 plugins active, and the front end and REST API return 200 with nothing in the PHP log.
+- **Consumer migration:** projects that took the 2.1.7 or 2.1.8 lock: add the
+  `config.platform.php` pin to the root and theme `composer.json`, then run
+  `composer update 'symfony/*' sebastian/diff --with-dependencies` in each.
+
 ### 2.1.8
 
 - Bump the bundled theme to `2.1.8`, which locks `webentor-core` **0.15.10** (npm and Composer):
