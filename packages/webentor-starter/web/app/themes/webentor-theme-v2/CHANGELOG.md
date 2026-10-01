@@ -1,5 +1,11 @@
 # Webentor Theme Changelog
 
+### Version 2.1.9
+
+- **Fix: the lock installs on PHP 8.3 again.** 2.1.7 and 2.1.8 locked Symfony 8.1 (PHP >=8.4.1)
+  through Acorn; it is back on Symfony 7.4 LTS. `config.platform.php` is pinned to `8.3.0`, so
+  updates resolve for the floor. See the starter changelog for the migration.
+
 ### Version 2.1.8
 
 - Locks `webentor-core` 0.15.10 (npm and Composer), up from 0.15.9. See the core changelog.

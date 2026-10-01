@@ -159,6 +159,12 @@ jobs:
       - name: Validate starter composer manifest
         working-directory: packages/webentor-starter
         run: composer validate --no-check-all --no-check-publish
+      # The locks must install on the PHP floor (8.3): an update run on a newer PHP
+      # can lock packages that require it. Reads the lock only, so no secrets.
+      - name: Locks install on the PHP floor
+        run: |
+          composer check-platform-reqs --lock --working-dir=packages/webentor-starter
+          composer check-platform-reqs --lock --working-dir=packages/webentor-starter/web/app/themes/webentor-theme-v2
       - name: PHP lint starter (phpcs)
         working-directory: packages/webentor-starter
         run: phpcs

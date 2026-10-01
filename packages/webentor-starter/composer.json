@@ -1,7 +1,7 @@
 {
   "name": "webikon/webentor-starter",
   "type": "project",
-  "version": "2.1.8",
+  "version": "2.1.9",
   "license": "MIT",
   "description": "WordPress boilerplate with Composer, easier configuration, and an improved folder structure",
   "homepage": "https://roots.io/bedrock/",
@@ -95,6 +95,9 @@
       "roots/wordpress-core-installer": true,
       "phpro/grumphp": true,
       "php-http/discovery": true
+    },
+    "platform": {
+      "php": "8.3.0"
     }
   },
   "autoload": {
