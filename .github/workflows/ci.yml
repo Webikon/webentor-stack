@@ -45,7 +45,7 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           package-manager-cache: false
-          node-version: '20'
+          node-version: '24'
       - name: Check version sources are in sync
         run: node scripts/check-versions.mjs
 
@@ -81,6 +81,7 @@ jobs:
       - name: PHP lint core (phpcs)
         working-directory: packages/webentor-core
         run: |
+          composer validate --no-interaction --no-check-publish
           composer install --no-interaction --prefer-dist
           composer lint
 
@@ -93,7 +94,7 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           package-manager-cache: false
-          node-version: '20'
+          node-version: '24'
       - name: Enable corepack
         run: corepack enable
       - name: Install configs deps
@@ -126,7 +127,7 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           package-manager-cache: false
-          node-version: '20'
+          node-version: '24'
       - name: Enable corepack
         run: corepack enable
       - name: Install codemods deps
@@ -179,7 +180,7 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           package-manager-cache: false
-          node-version: '20'
+          node-version: '24'
       - name: Enable corepack
         run: corepack enable
       - name: Build docs

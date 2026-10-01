@@ -186,12 +186,14 @@ what is committed on `main`.
    `setup`, `codemods`, `starter`, `theme`). It stamps every mirrored version
    source (per-package manifests + CHANGELOG entries) and inserts the
    compatibility-matrix row. Bump packages that release together in ONE
-   invocation so the matrix gains a single row. On a `starter` bump it also
-   refreshes `packages/webentor-starter/composer.lock` — Composer hashes
-   `version` into the lock's `content-hash`, so stamping the manifest alone
-   leaves the lock stale and CI's `composer validate` exits 2. That step needs
-   `composer` on PATH; without it the script warns and you must run
-   `composer update --lock --no-install` in the starter yourself.
+   invocation so the matrix gains a single row. It also refreshes the
+   `content-hash` of every stamped `composer.lock` (core, starter, theme):
+   Composer hashes `version` into it, so a stamped manifest alone leaves the
+   lock stale and `composer validate` exits 2. The hash is computed offline
+   with Composer's own algorithm (needs `php`), then checked with
+   `composer validate`. No private-repo credentials are needed. Don't use
+   `composer update --lock` for this: it re-resolves every package and fails
+   without Gravity Forms or ACF Pro auth.
 3. Replace the scaffolded TODO changelog line(s) with curated entries.
 4. Run `pnpm check:versions` (CI enforces the same check on every PR/push).
 5. Commit and push the release preparation through the normal review flow.

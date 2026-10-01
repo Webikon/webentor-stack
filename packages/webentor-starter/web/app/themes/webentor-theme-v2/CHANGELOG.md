@@ -1,5 +1,9 @@
 # Webentor Theme Changelog
 
+### Version 2.1.8
+
+- Locks `webentor-core` 0.15.10 (npm and Composer), up from 0.15.9. See the core changelog.
+
 ### Version 2.1.7
 
 - **Node 24 floor** (`engines.node >=24.0.0`), the same as `webentor-core`. Node 20 is past

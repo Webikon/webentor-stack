@@ -1,5 +1,13 @@
 # Webentor Starter Changelog
 
+### 2.1.8
+
+- Bump the bundled theme to `2.1.8`, which locks `webentor-core` **0.15.10** (npm and Composer):
+  WordPress 7.1 components, with the Query Loop taxonomy filter off the deprecated
+  `FormTokenField` prop. Transparent within `^0.15`.
+- **Consumer migration:** `pnpm up @webikon/webentor-core` and `composer update webikon/webentor-core`
+  in the theme. Nothing else.
+
 ### 2.1.7
 
 - **WordPress 7.1.** The lock moves from 7.0 to 7.1.2. A Gutenberg packages audit for
