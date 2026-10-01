@@ -20,9 +20,9 @@
  * outcome.
  */
 
-import { readFileSync, writeFileSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { spawnSync } from 'child_process';
-import { join } from 'path';
+import { dirname, join } from 'path';
 
 const root = join(import.meta.dirname, '..');
 const themeDir = 'packages/webentor-starter/web/app/themes/webentor-theme-v2';
@@ -133,29 +133,64 @@ for (const [name, version] of Object.entries(bumps)) {
   console.log(`Stamped ${name} -> ${version}`);
 }
 
-// --- Starter composer.lock content-hash --------------------------------------
+// --- composer.lock content-hash ----------------------------------------------
 
-// Composer hashes `version` into composer.lock's content-hash, so stamping the
-// starter manifest invalidates the lock and CI's `composer validate` exits 2.
-// `--lock` rewrites the hash only: no dependency resolution, no install.
-if (bumps.starter) {
-  const starterDir = join(root, 'packages/webentor-starter');
-  const composer = spawnSync(
-    'composer',
-    ['update', '--lock', '--no-install', '--no-interaction'],
-    { cwd: starterDir, stdio: 'inherit' },
+// Composer hashes `version` into composer.lock's content-hash, so every stamped
+// composer.json with a lock beside it goes stale and `composer validate` exits 2.
+// `composer update --lock` would re-resolve every locked package and so needs
+// credentials for each private repo (Gravity Forms, ACF Pro). The hash depends
+// on composer.json alone: this is Locker::getContentHash, run in PHP so
+// json_encode matches byte for byte. `composer validate` then confirms offline.
+const CONTENT_HASH_PHP = `
+$c = json_decode(file_get_contents($argv[1]), true, 512, JSON_THROW_ON_ERROR);
+$keys = ['name', 'version', 'require', 'require-dev', 'conflict', 'replace',
+  'provide', 'minimum-stability', 'prefer-stable', 'repositories', 'extra'];
+$r = [];
+foreach (array_intersect($keys, array_keys($c)) as $k) $r[$k] = $c[$k];
+if (isset($c['config']['platform'])) $r['config']['platform'] = $c['config']['platform'];
+ksort($r);
+echo md5(json_encode($r, 0));
+`;
+
+function run(cmd, args, opts = {}) {
+  const res = spawnSync(cmd, args, { encoding: 'utf8', ...opts });
+  if (res.error?.code === 'ENOENT') return null;
+  return res;
+}
+
+const stampedLocks = Object.keys(bumps)
+  .flatMap((name) => PACKAGES[name].manifests)
+  .filter((m) => m.endsWith('composer.json'))
+  .map((m) => dirname(m))
+  .filter((dir) => existsSync(join(root, dir, 'composer.lock')));
+
+for (const dir of stampedLocks) {
+  const hash = run('php', ['-r', CONTENT_HASH_PHP, join(root, dir, 'composer.json')]);
+  if (hash === null) {
+    console.error(`php not found: ${dir}/composer.lock keeps the pre-bump content-hash.`);
+    process.exit(1);
+  }
+  if (hash.status !== 0 || !/^[0-9a-f]{32}$/.test(hash.stdout)) {
+    console.error(`Could not compute the content-hash for ${dir}/composer.json.\n${hash.stderr}`);
+    process.exit(1);
+  }
+  replaceOnce(
+    join(dir, 'composer.lock'),
+    /("content-hash": ")[0-9a-f]{32}(")/,
+    `$1${hash.stdout}$2`,
+    'the content-hash',
   );
-  if (composer.error?.code === 'ENOENT') {
-    console.warn(
-      '\n! composer not found — packages/webentor-starter/composer.lock still\n' +
-        "  carries the pre-bump content-hash, and CI's `composer validate` will\n" +
-        '  fail. Run `composer update --lock --no-install` there before pushing.',
-    );
-  } else if (composer.status !== 0) {
-    console.error('composer update --lock failed in packages/webentor-starter.');
+
+  const validate = run('composer', ['validate', '--no-interaction', '--no-check-publish'], {
+    cwd: join(root, dir),
+  });
+  if (validate === null) {
+    console.warn(`! composer not found: ${dir}/composer.lock is unverified (CI validates it).`);
+  } else if (validate.status !== 0) {
+    console.error(`composer validate failed in ${dir}:\n${validate.stdout}${validate.stderr}`);
     process.exit(1);
   } else {
-    console.log('Refreshed packages/webentor-starter/composer.lock content-hash.');
+    console.log(`Refreshed ${dir}/composer.lock content-hash.`);
   }
 }
 
