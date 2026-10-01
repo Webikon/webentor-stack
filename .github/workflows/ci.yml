@@ -44,6 +44,7 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
+          package-manager-cache: false
           node-version: '20'
       - name: Check version sources are in sync
         run: node scripts/check-versions.mjs
@@ -59,6 +60,7 @@ jobs:
           php-version: '8.3'
       - uses: actions/setup-node@v5
         with:
+          package-manager-cache: false
           node-version: '24'
       - name: Enable corepack
         run: corepack enable
@@ -90,6 +92,7 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
+          package-manager-cache: false
           node-version: '20'
       - name: Enable corepack
         run: corepack enable
@@ -122,6 +125,7 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
+          package-manager-cache: false
           node-version: '20'
       - name: Enable corepack
         run: corepack enable
@@ -144,6 +148,7 @@ jobs:
           tools: phpcs
       - uses: actions/setup-node@v5
         with:
+          package-manager-cache: false
           node-version: '24'
       - name: Enable corepack
         run: corepack enable
@@ -173,6 +178,7 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
+          package-manager-cache: false
           node-version: '20'
       - name: Enable corepack
         run: corepack enable
