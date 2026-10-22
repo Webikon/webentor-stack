@@ -148,9 +148,16 @@ if (env('DOMAIN_CURRENT_SITE')) {
 /**
  * REDIS CLIENT
  */
-Config::define('WP_REDIS_HOST', env('REDIS_HOST') ?? '');
-Config::define('WP_REDIS_PORT', env('REDIS_PORT') ?? '');
+// Only override when set: empty strings beat the drop-in's 127.0.0.1:6379 defaults, and phpredis needs an int port
+if (env('REDIS_HOST')) {
+    Config::define('WP_REDIS_HOST', env('REDIS_HOST'));
+}
+if (env('REDIS_PORT')) {
+    Config::define('WP_REDIS_PORT', (int) env('REDIS_PORT'));
+}
 Config::define('WP_REDIS_DISABLED', env('WP_REDIS_DISABLED'));
+// Default on: sites often share one Redis db, where a full flush would wipe every site's cache
+Config::define('WP_REDIS_SELECTIVE_FLUSH', env('WP_REDIS_SELECTIVE_FLUSH') ?? true);
 
 /**
  * Define SENTRY vars.
