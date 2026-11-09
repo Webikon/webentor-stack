@@ -1,5 +1,10 @@
 # Webentor Theme Changelog
 
+### Version 2.1.10
+
+- Security updates: Symfony 7.4.23 (runtime, via Acorn), Vite 8.3.7 and patched transitive dev deps.
+  Locks `webentor-core` 0.15.11 (custom block colours). See the starter changelog for the migration.
+
 ### Version 2.1.9
 
 - **Fix: the lock installs on PHP 8.3 again.** 2.1.7 and 2.1.8 locked Symfony 8.1 (PHP >=8.4.1)

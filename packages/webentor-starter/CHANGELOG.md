@@ -1,5 +1,14 @@
 # Webentor Starter Changelog
 
+### 2.1.10
+
+- **Security updates.** The theme locks Symfony 7.4.23 (runtime through Acorn: http-foundation,
+  http-kernel, routing, mime advisories) and `webentor-core` **0.15.11**, which renders custom
+  block colours. Starter dev tools lock Symfony 6.4.50 (yaml, config, filesystem); theme dev
+  tooling locks Vite 8.3.7 and patched transitive deps. Both Composer audits are clean.
+- **Consumer migration:** in the theme run `composer update 'symfony/*' webikon/webentor-core --with-dependencies`
+  and `pnpm up @webikon/webentor-core vite`.
+
 ### 2.1.9
 
 - **Fix: the 2.1.7 and 2.1.8 locks do not install on PHP 8.3.** They were resolved on PHP 8.4,
