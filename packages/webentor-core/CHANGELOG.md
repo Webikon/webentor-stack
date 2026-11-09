@@ -1,5 +1,15 @@
 # Webentor Core Changelog
 
+## 0.15.11
+
+- **Custom block colours render on the frontend.** Custom (`style.color.*`) picks were dropped
+  because Blade views only print palette classes. Core now adds them as inline `style` on the
+  block's outer element via `wp_apply_colors_support()`, which respects `supports.color`.
+- **Security updates** (dev and build tooling only): phpcs 3.13.6, Vite 8.3.7, Tailwind 4.3.5 and
+  patched transitive deps. Advisories that need an upstream major (minimatch, uuid, glob, deepmerge) stay open.
+- A transparent patch within `^0.15`: `pnpm up @webikon/webentor-core` and
+  `composer update webikon/webentor-core`.
+
 ## 0.15.10
 
 - **WordPress 7.1 components.** The Query Loop taxonomy filter hides the `FormTokenField`
